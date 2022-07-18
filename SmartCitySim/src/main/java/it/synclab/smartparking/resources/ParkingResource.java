@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.synclab.smartparking.service.ParkingService;
+import it.synclab.smartparking.model.MarkerList;
+import it.synclab.smartparking.model.Markers;
 import it.synclab.smartparking.model.Sensor;
 
 @RestController
@@ -56,6 +58,22 @@ public class ParkingResource {
 		}
 		logger.info("ParkingResource - end getSensorState");
 		return ResponseEntity.status(HttpStatus.OK).body(sensorState);
+	}
+	
+	@GetMapping("/sensor/getAllData")
+	@ResponseBody
+	public ResponseEntity<Object> getSensorsData() {
+		logger.info("ParkingResource - START getSensorData");
+		MarkerList list = null;
+		// Security user check
+		try {
+			list = parkingService.readSensorData();
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - end getSensorData");
+		return ResponseEntity.status(HttpStatus.OK).body(list);
 	}
 
 }
