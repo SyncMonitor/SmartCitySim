@@ -2,7 +2,6 @@ package it.synclab.smartparking;
 
 import org.json.JSONObject;
 import org.json.XML;
-import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.OkHttpClient;
@@ -43,7 +42,6 @@ public class ReadData {
     }
 	
 	
-	@Test
     public void readXmlSensorData() throws Exception {
         try {
             OkHttpClient client = new OkHttpClient();

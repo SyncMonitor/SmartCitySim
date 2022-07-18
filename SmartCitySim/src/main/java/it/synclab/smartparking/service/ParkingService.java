@@ -1,9 +1,9 @@
 package it.synclab.smartparking.service;
 
-import java.util.List;
 
 import org.json.JSONObject;
 import org.json.XML;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,19 +11,17 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import it.synclab.datasource.config.PostgreClient;
 import it.synclab.smartparking.model.MarkerList;
-import it.synclab.smartparking.model.Sensor;
 
 @Service
 public class ParkingService {
 	
 	private String sensorDataUrl = "https://syncmonitor.altervista.org/smartparking/test1.xml";
 
-	public List<Sensor> getSensorsState() {
-		// Read data from database
-		return null;
-	}
-
+	@Autowired
+	PostgreClient databaseClient;
+	
 	/*
 	 * 0 free 1 occupy
 	 **/

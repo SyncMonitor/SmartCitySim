@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import it.synclab.smartparking.service.ParkingService;
 import it.synclab.smartparking.model.MarkerList;
 import it.synclab.smartparking.model.Markers;
-import it.synclab.smartparking.model.Sensor;
 
 @RestController
 @RequestMapping("/parking")
@@ -27,22 +26,7 @@ public class ParkingResource {
 	@Autowired
 	private ParkingService parkingService;
 
-	@GetMapping("/sensor")
-	@ResponseBody
-	public ResponseEntity<Object> getSensorsState() {
-		logger.info("ParkingResource - START getSensorState");
-		int sensorState = 0;
-		List<Sensor> sensors = null;
-		// Security user check
-		try {
-			sensors = parkingService.getSensorsState();
-		} catch (Exception e) {
-			logger.error("ParkingResource -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		}
-		logger.info("ParkingResource - end getSensorState");
-		return ResponseEntity.status(HttpStatus.OK).body(sensors);
-	}
+	
 
 	@GetMapping("/sensor/{sensorId}")
 	@ResponseBody
