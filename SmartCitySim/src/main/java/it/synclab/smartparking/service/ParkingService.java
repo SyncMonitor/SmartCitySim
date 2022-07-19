@@ -12,6 +12,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import it.synclab.datasource.config.PostgreClient;
+import it.synclab.smartcity.repository.SensorsRepository;
 import it.synclab.smartparking.model.MarkerList;
 
 @Service
@@ -21,6 +22,10 @@ public class ParkingService {
 
 	@Autowired
 	PostgreClient databaseClient;
+	
+	
+	@Autowired
+	private SensorsRepository sensorsRepository;
 	
 	/*
 	 * 0 free 1 occupy
