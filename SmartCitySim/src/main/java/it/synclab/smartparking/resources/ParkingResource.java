@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,6 +59,22 @@ public class ParkingResource {
 		}
 		logger.info("ParkingResource - end getSensorData");
 		return ResponseEntity.status(HttpStatus.OK).body(list);
+	}
+	
+	
+	@PostMapping("/sensor/saveData")
+	@ResponseBody
+	public ResponseEntity<Object> saveSensorData() {
+		logger.info("ParkingResource - START saveSensorData");
+		// Security user check
+		try {
+			parkingService.saveSensorData();
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - end saveSensorData");
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 }

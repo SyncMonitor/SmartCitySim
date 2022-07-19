@@ -14,6 +14,7 @@ import com.squareup.okhttp.Response;
 import it.synclab.datasource.config.PostgreClient;
 import it.synclab.smartcity.repository.SensorsRepository;
 import it.synclab.smartparking.model.MarkerList;
+import it.synclab.smartparking.repository.model.Sensors;
 
 @Service
 public class ParkingService {
@@ -69,4 +70,14 @@ public class ParkingService {
 		return markersList;
 	}
 
+	public void saveSensorData() {
+		try {
+			Sensors sensor = new Sensors("Name", "Battery", "OtherProperty", true);	
+			sensorsRepository.save(sensor);
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	
 }
