@@ -12,7 +12,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import it.synclab.smartcity.repository.SensorsRepository;
+import it.synclab.smartparking.repository.SensorsRepository;
 import it.synclab.smartparking.repository.model.Sensors;
 
 //@RunWith(SpringRunner.class)

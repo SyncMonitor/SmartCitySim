@@ -1,4 +1,4 @@
-package it.synclab.datasource.config;
+package it.synclab.smartparking.datasource.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

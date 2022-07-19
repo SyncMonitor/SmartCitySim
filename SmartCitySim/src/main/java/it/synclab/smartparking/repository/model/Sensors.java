@@ -4,17 +4,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "sensors")
 public class Sensors {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+
 	private Long id;
 	String name;
 	String battery;
 	String type;
 	boolean isActive;
+	
+	public Sensors() {};
 
 	public Sensors( String name, String battery, String type, boolean isActive) {
 		this.name = name;
@@ -23,6 +26,8 @@ public class Sensors {
 		this.isActive = isActive;
 	}
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Long getId() {
 		return id;
 	}

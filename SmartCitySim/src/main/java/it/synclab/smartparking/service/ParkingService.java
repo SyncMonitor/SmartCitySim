@@ -1,33 +1,35 @@
 package it.synclab.smartparking.service;
 
-
-import org.json.JSONObject;
-import org.json.XML;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-import it.synclab.datasource.config.PostgreClient;
-import it.synclab.smartcity.repository.SensorsRepository;
+import org.json.JSONObject;
+import org.json.XML;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import it.synclab.smartparking.datasource.config.PostgreClient;
 import it.synclab.smartparking.model.MarkerList;
+import it.synclab.smartparking.repository.SensorsRepository;
 import it.synclab.smartparking.repository.model.Sensors;
 
-@Service
+@Component
 public class ParkingService {
-	
+
 	private String sensorDataUrl = "https://syncmonitor.altervista.org/smartparking/test1.xml";
 
+	
+	 @Autowired 
+	 PostgreClient databaseClient;
+	 
+
 	@Autowired
-	PostgreClient databaseClient;
-	
-	
-	@Autowired
-	private SensorsRepository sensorsRepository;
-	
+	private  SensorsRepository sensorsRepository;
+
+
+
 	/*
 	 * 0 free 1 occupy
 	 **/
@@ -72,12 +74,11 @@ public class ParkingService {
 
 	public void saveSensorData() {
 		try {
-			Sensors sensor = new Sensors("Name", "Battery", "OtherProperty", true);	
+			Sensors sensor = new Sensors("Name", "Battery", "OtherProperty", true);
 			sensorsRepository.save(sensor);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println(e);
 		}
 	}
-	
-	
+
 }
