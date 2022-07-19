@@ -8,9 +8,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>it.synclab</groupId>
-	<artifactId>smartparking</artifactId>
+	<artifactId>smartcitysim</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>smartparking</name>
+	<name>smartcitysim</name>
 	<description>Smart parking API</description>
 	<properties>
 		<java.version>17</java.version>
