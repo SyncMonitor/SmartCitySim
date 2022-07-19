@@ -11,6 +11,8 @@ import javax.persistence.Table;
 public class Sensors {
 
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	String name;
 	String battery;
@@ -26,8 +28,7 @@ public class Sensors {
 		this.isActive = isActive;
 	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	
 	public Long getId() {
 		return id;
 	}
