@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -63,6 +62,7 @@ public class ParkingResource {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
+	//Now this is useless cause we're writing ParkingArea using Sensor's db writer
 	@PostMapping("/parking/save-data")
 	@ResponseBody
 	public ResponseEntity<Object> saveParkingSensorData() {
@@ -77,7 +77,6 @@ public class ParkingResource {
 		logger.info("ParkingResource - end saveParkingSensorData");
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
-	
 
 	@GetMapping("/sensor/data/{sensorId}")
 	@ResponseBody
@@ -93,7 +92,7 @@ public class ParkingResource {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 		logger.info("ParkingResource - end getSensorData");
-		return ResponseEntity.status(HttpStatus.OK).build();
+		return ResponseEntity.status(HttpStatus.OK).body(s);
 	}
 
 	@GetMapping("/sensor/state/{sensorId}")
@@ -111,7 +110,7 @@ public class ParkingResource {
 		logger.info("ParkingResource - end getSensorState");
 		return ResponseEntity.status(HttpStatus.OK).body(sensorState);
 	}
-	
+
 	@PutMapping("/sensor/update-name/{sensorId}")
 	public ResponseEntity<Object> updateSensorNameById(@RequestBody String name, @PathVariable Long sensorId) {
 		logger.info("ParkingResource - START updateSensorNameById");
@@ -123,14 +122,34 @@ public class ParkingResource {
 		}
 		logger.info("ParkingResource - end updateSensorNameById");
 		return ResponseEntity.status(HttpStatus.OK).build();
-		
+	}
 
+	
+	@DeleteMapping("/sensor/delete/{sensorId}")
+	public ResponseEntity<Object> deleteSensorById(@PathVariable Long sensorId) {
+		logger.info("ParkingResource - START deleteSensorById");
+		try {
+			parkingService.deleteSensorById(sensorId);
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - end deleteSensorById");
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 	
-	@DeleteMapping("/employees/{id}")
-	public ResponseEntity<Object> deleteSensorById(@PathVariable Long id) {
-		return null;
-		// TODO
-
+	@DeleteMapping("/sensor/delete/all")
+	public ResponseEntity<Object> deleteSensors() {
+		logger.info("ParkingResource - START deleteSensors");
+		try {
+			parkingService.deleteAlSensors();
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - end deleteSensors");
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
+	
+	
 }

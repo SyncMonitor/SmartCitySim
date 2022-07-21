@@ -80,29 +80,29 @@ public class ParkingService {
 
 	}
 
-	public Sensor buildSensorFromMarker(Marker m) {
+	public Sensor buildSensorFromMarker(Marker marker) {
 		Sensor s = new Sensor();
 		List<ParkingArea> parkArea = new ArrayList<>();
 
-		if (m.getId() != null) {
-			s.setId(m.getId());
+		if (marker.getId() != null) {
+			s.setId(marker.getId());
 		}
 
-		if (m.getName() != null) {
-			s.setName(m.getName());
+		if (marker.getName() != null) {
+			s.setName(marker.getName());
 		}
 
-		if (m.getBattery() != null) {
-			s.setBattery(m.getBattery());
+		if (marker.getBattery() != null) {
+			s.setBattery(marker.getBattery());
 		}
 
-//		Attributo Type mancante da file xml
+//		Type attribute missing in XML file
 //		if(m.getType() != null) {}
 		s.setType("ParkingArea");
 
-		s.setActive(m.isActive());
+		s.setActive(marker.isActive());
 		
-		ParkingArea p = buildParkingAreaFromMarker(m);
+		ParkingArea p = buildParkingAreaFromMarker(marker);
 		parkArea.add(p);
 		
 		s.setParkingArea(parkArea);
@@ -125,10 +125,8 @@ public class ParkingService {
 		}
 	}
 
-	// Sensor's Getters
-
 	/*
-	 * 0 free 1 occupy
+	 * state = 0 : free, 1 : occupy
 	 **/
 	public boolean getSensorState(Long sensorId) {
 		boolean state = sensorsRepository.getSensorState(sensorId);
@@ -154,9 +152,18 @@ public class ParkingService {
 	public void updateSensorNameById(String name, Long sensorId) {
 		sensorsRepository.updateSensorName(name, sensorId);
 	}
+	
+	public void deleteSensorById(Long sensorId) {
+		sensorsRepository.deleteById(sensorId);
+	}
+	
+	public void deleteAlSensors() {
+		sensorsRepository.deleteAll();	
+	}
 
-	// Parking Service
+	// ParkingArea's Services
 
+	//Now this is useless cause we're writing ParkingArea using Sensor's db writer
 	public void saveParkingSensorData() {
 		try {
 			ParkingArea parkArea = new ParkingArea("latitude", "longitude", "address", true);
@@ -192,28 +199,28 @@ public class ParkingService {
 
 	}
 
-	public ParkingArea buildParkingAreaFromMarker(Marker m) {
-		ParkingArea p = new ParkingArea();
+	public ParkingArea buildParkingAreaFromMarker(Marker marker) {
+		ParkingArea parkArea = new ParkingArea();
 
-		if (m.getId() != null) {
-			p.setId(m.getId());
+		if (marker.getId() != null) {
+			parkArea.setId(marker.getId());
 		}
 
-		if (m.getLat() != null) {
-			p.setLatitude(m.getLat());
+		if (marker.getLat() != null) {
+			parkArea.setLatitude(marker.getLat());
 		}
 
-		if (m.getLng() != null) {
-			p.setLongitude(m.getLng());
+		if (marker.getLng() != null) {
+			parkArea.setLongitude(marker.getLng());
 		}
 
-		if (m.getAddress() != null) {
-			p.setAddress(m.getAddress());
+		if (marker.getAddress() != null) {
+			parkArea.setAddress(marker.getAddress());
 		}
 
-		p.setValue(m.isActive());
+		parkArea.setValue(marker.isActive());
 
-		return p;
+		return parkArea;
 	}
 
 	public List<ParkingArea> buildListOfParkingAreaFromMarker() {
@@ -251,6 +258,7 @@ public class ParkingService {
 
 	}
 
+	//This is never used
 	public void writeParkingAreaData() {
 
 		try {
@@ -265,5 +273,4 @@ public class ParkingService {
 			e.printStackTrace();
 		}
 	}
-
 }

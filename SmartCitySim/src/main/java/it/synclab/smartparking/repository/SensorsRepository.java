@@ -26,8 +26,12 @@ public interface SensorsRepository extends CrudRepository<Sensor, Long> {
 	public boolean getSensorState(Long sensorId);
 	
 	@Modifying
-	@Query("UPDATE Sensor c SET c.name = ?1 where id = ?2")
+	@Query("update Sensor c set c.name = ?1 where id = ?2")
 	public void updateSensorName(String name, Long sensorId);
+	
+	@Modifying
+	@Query("delete Sensor c where id = ?1")
+	public void deleteSensorById(Long sensorId);
 	
 	
 
