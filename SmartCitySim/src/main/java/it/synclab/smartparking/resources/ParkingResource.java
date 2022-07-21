@@ -7,9 +7,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -74,6 +77,7 @@ public class ParkingResource {
 		logger.info("ParkingResource - end saveParkingSensorData");
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
+	
 
 	@GetMapping("/sensor/data/{sensorId}")
 	@ResponseBody
@@ -106,5 +110,27 @@ public class ParkingResource {
 		}
 		logger.info("ParkingResource - end getSensorState");
 		return ResponseEntity.status(HttpStatus.OK).body(sensorState);
+	}
+	
+	@PutMapping("/sensor/update-name/{sensorId}")
+	public ResponseEntity<Object> updateSensorNameById(@RequestBody String name, @PathVariable Long sensorId) {
+		logger.info("ParkingResource - START updateSensorNameById");
+		try {
+			parkingService.updateSensorNameById(name, sensorId);
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - end updateSensorNameById");
+		return ResponseEntity.status(HttpStatus.OK).build();
+		
+
+	}
+	
+	@DeleteMapping("/employees/{id}")
+	public ResponseEntity<Object> deleteSensorById(@PathVariable Long id) {
+		return null;
+		// TODO
+
 	}
 }

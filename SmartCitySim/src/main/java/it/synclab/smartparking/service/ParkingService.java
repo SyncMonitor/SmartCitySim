@@ -150,6 +150,10 @@ public class ParkingService {
 		Sensor s = sensorsRepository.getSensorById(sensorId);
 		return s;
 	}
+	
+	public void updateSensorNameById(String name, Long sensorId) {
+		sensorsRepository.updateSensorName(name, sensorId);
+	}
 
 	// Parking Service
 
