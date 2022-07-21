@@ -73,9 +73,7 @@ public class ParkingResource {
 		logger.info("ParkingResource - START saveSensorData");
 		// Security user check
 		try {
-			List<ParkingArea> l = new ArrayList<>();
-			l.add(new ParkingArea("SensorLatitude","SensorLongitude","SensorAddress","sensorValue"));
-			parkingService.saveSensorData(new Sensor("SensorName", "SensorBattery", "SensorType", false, l));
+			parkingService.writeSensorsData();
 		} catch (Exception e) {
 			logger.error("ParkingResource -  error", e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

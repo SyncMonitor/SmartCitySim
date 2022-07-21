@@ -5,6 +5,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -32,7 +33,7 @@ public class ParkingService {
 	private SensorsRepository sensorsRepository;
 
 	@Autowired
-	private ParkingAreaRepository parkingSensorsRepository;
+	private ParkingAreaRepository parkingAreaRepository;
 
 	public MarkerList convertXMLtoJson(String xml) {
 
@@ -51,13 +52,7 @@ public class ParkingService {
 		return markersList;
 	}
 
-	/*
-	 * 0 free 1 occupy
-	 **/
-	public int getSensorState(String sensorId) {
-		// TODO: Read data from database
-		return 0;
-	}
+	// Sensor's Services
 
 	public MarkerList readSensorData() throws Exception {
 
@@ -75,7 +70,7 @@ public class ParkingService {
 
 		return markersList;
 	}
-	
+
 	public void saveSensorData(Sensor sensor) {
 		try {
 			sensorsRepository.save(sensor);
@@ -83,6 +78,61 @@ public class ParkingService {
 			System.out.println(e);
 		}
 
+	}
+
+	public Sensor buildSensorFromMarker(Marker m) {
+		Sensor s = new Sensor();
+		List<ParkingArea> parkArea = new ArrayList<>();
+
+		if (m.getId() != null) {
+			s.setId(m.getId());
+		}
+
+		if (m.getName() != null) {
+			s.setName(m.getName());
+		}
+
+		if (m.getBattery() != null) {
+			s.setBattery(m.getBattery());
+		}
+
+//		Attributo Type mancante da file xml
+//		if(m.getType() != null) {}
+		s.setType("ParkingArea");
+
+		s.setActive(m.isActive());
+		
+		ParkingArea p = buildParkingAreaFromMarker(m);
+		parkArea.add(p);
+		
+		s.setParkingArea(parkArea);
+
+		return s;
+	}
+
+	public void writeSensorsData() {
+
+		try {
+			MarkerList sensors = readSensorData();
+
+			for (Marker m : sensors.getMarkers().getMarkers()) {
+				Sensor s = buildSensorFromMarker(m);
+				saveSensorData(s);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	// Sensor's Getters
+
+	/*
+	 * 0 free 1 occupy
+	 **/
+	public int getSensorState(String sensorId) {
+		// TODO: Read data from database
+		return 0;
 	}
 
 	public List<Sensor> getSensorsByName(String name) {
@@ -100,57 +150,115 @@ public class ParkingService {
 		return s;
 	}
 
-	public void writeSensorsData() {
-
-		try {
-			MarkerList sensors = readSensorData();
-
-			for (Marker m : sensors.getMarkers().getMarkers()) {
-				Sensor s = buildSensorFromMarker(m);
-				saveSensorData(s);
-			}
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// readSensorData(sensore);
-
-		// ciclo for sulla lista ottenuta da readSensorData()
-
-		// per ogni oggetto Sensor chiama saveSensorData()
-
-		// popolare parkingArea
-
-	}
-
-	// Fare metodo che converte Marker in Sensor
-
-	public Sensor buildSensorFromMarker(Marker m) {
-		Sensor s = new Sensor();
-
-		if (m.getBattery() != null) {
-			s.setBattery(m.getBattery());
-		}
-
-		// TOCOMPLETE
-
-		return s;
-	}
+	// Parking Service
 
 	public void saveParkingSensorData() {
 		try {
-			ParkingArea parkArea = new ParkingArea("latitude", "longitude", "address", "value");
-			parkingSensorsRepository.save(parkArea);
+			ParkingArea parkArea = new ParkingArea("latitude", "longitude", "address", true);
+			parkingAreaRepository.save(parkArea);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 	}
 
+	public MarkerList readParkingAreaData() throws Exception {
+
+		MarkerList markersList = null;
+
+		try {
+			OkHttpClient client = new OkHttpClient();
+			Request request = new Request.Builder().url(this.sensorDataUrl).build();
+			Response response = client.newCall(request).execute();
+			String xmlSensorData = response.body().string();
+			markersList = convertXMLtoJson(xmlSensorData);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return markersList;
+	}
+
+	public void saveParkingAreaData(ParkingArea parkArea) {
+		try {
+			parkingAreaRepository.save(parkArea);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+	}
+
 	public ParkingArea buildParkingAreaFromMarker(Marker m) {
-		// TODO
-		return null;
+		ParkingArea p = new ParkingArea();
+
+		if (m.getId() != null) {
+			p.setId(m.getId());
+		}
+
+		if (m.getLat() != null) {
+			p.setLatitude(m.getLat());
+		}
+
+		if (m.getLng() != null) {
+			p.setLongitude(m.getLng());
+		}
+
+		if (m.getAddress() != null) {
+			p.setAddress(m.getAddress());
+		}
+
+		p.setValue(m.isActive());
+
+		return p;
+	}
+
+	public List<ParkingArea> buildListOfParkingAreaFromMarker() {
+		List<ParkingArea> list = new ArrayList<>();
+
+		try {
+			MarkerList parkArea = readParkingAreaData();
+
+			for (Marker m : parkArea.getMarkers().getMarkers()) {
+				ParkingArea p = new ParkingArea();
+				if (m.getId() != null) {
+					p.setId(m.getId());
+				}
+
+				if (m.getLat() != null) {
+					p.setLatitude(m.getLat());
+				}
+
+				if (m.getLng() != null) {
+					p.setLongitude(m.getLng());
+				}
+
+				if (m.getAddress() != null) {
+					p.setAddress(m.getAddress());
+				}
+
+				list.add(p);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return list;
+
+	}
+
+	public void writeParkingAreaData() {
+
+		try {
+			MarkerList parkArea = readParkingAreaData();
+
+			for (Marker m : parkArea.getMarkers().getMarkers()) {
+				ParkingArea s = buildParkingAreaFromMarker(m);
+				saveParkingAreaData(s);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

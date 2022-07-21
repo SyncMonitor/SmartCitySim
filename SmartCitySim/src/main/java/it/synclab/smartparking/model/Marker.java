@@ -1,14 +1,14 @@
 package it.synclab.smartparking.model;
 
 public class Marker {
-	private int id;
+	private Long id;
 	private String name;
 	private String address;
-	private double lat;
-	private double lng;
-	private int state;
+	private String lat;
+	private String lng;
+	private boolean state;
 	private String battery;
-	private int active;
+	private boolean active;
 
 	@Override
 	public String toString() {
@@ -23,11 +23,11 @@ public class Marker {
 	+ "\n\t\t\t}";
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -47,27 +47,27 @@ public class Marker {
 		this.address = address;
 	}
 
-	public double getLat() {
+	public String getLat() {
 		return lat;
 	}
 
-	public void setLat(double lat) {
+	public void setLat(String lat) {
 		this.lat = lat;
 	}
 
-	public double getLng() {
+	public String getLng() {
 		return lng;
 	}
 
-	public void setLng(double lng) {
+	public void setLng(String lng) {
 		this.lng = lng;
 	}
 
-	public int getState() {
+	public boolean getState() {
 		return state;
 	}
 
-	public void setState(int state) {
+	public void setState(boolean state) {
 		this.state = state;
 	}
 
@@ -79,11 +79,11 @@ public class Marker {
 		this.battery = battery;
 	}
 
-	public int getActive() {
+	public boolean isActive() {
 		return active;
 	}
 
-	public void setActive(int active) {
+	public void setActive(boolean active) {
 		this.active = active;
 	}
 

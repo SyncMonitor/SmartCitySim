@@ -21,14 +21,14 @@ public class ParkingArea {
 	private String latitude;
 	private String longitude;
 	private String address;
-	private String value;
+	private boolean value;
 
 	
 
 	public ParkingArea() {
 	}
 
-	public ParkingArea(String latitude, String longitude, String address, String value) {
+	public ParkingArea(String latitude, String longitude, String address, boolean value) {
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.address = address;
@@ -75,11 +75,11 @@ public class ParkingArea {
 		this.address = address;
 	}
 
-	public String getValue() {
+	public boolean getValue() {
 		return value;
 	}
 
-	public void setValue(String value) {
+	public void setValue(boolean value) {
 		this.value = value;
 	}
 
