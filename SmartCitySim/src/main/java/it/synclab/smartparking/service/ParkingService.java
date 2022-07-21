@@ -101,10 +101,10 @@ public class ParkingService {
 		s.setType("ParkingArea");
 
 		s.setActive(marker.isActive());
-		
+
 		ParkingArea p = buildParkingAreaFromMarker(marker);
 		parkArea.add(p);
-		
+
 		s.setParkingArea(parkArea);
 
 		return s;
@@ -148,22 +148,56 @@ public class ParkingService {
 		Sensor s = sensorsRepository.getSensorById(sensorId);
 		return s;
 	}
+
+	public List<Sensor> getSensorByName(String name) {
+		List<Sensor> sensors = sensorsRepository.getSensorsByName(name);
+		return sensors;
+	}
+
+	public List<Sensor> getSensorByNameStartingWith(String str) {
+		List<Sensor> sensors = sensorsRepository.getSensorByNameStartingWith(str);
+		return sensors;
+	}
+
+	public List<Sensor> getSensorByNameEndingWith(String str) {
+		List<Sensor> sensors = sensorsRepository.getSensorByNameEndingWith(str);
+		return sensors;
+	}
 	
+	public List<Sensor> getSensorByNameContaining(String str) {
+		List<Sensor> sensors = sensorsRepository.getSensorByNameContaining(str);
+		return sensors;
+	}
+	
+	public List<Sensor> getSensorByIsActiveTrue() {
+		List<Sensor> sensors = sensorsRepository.getSensorByIsActiveTrue();
+		return sensors;
+	}
+	
+	public List<Sensor> getSensorByIsActiveFalse() {
+		List<Sensor> sensors = sensorsRepository.getSensorByIsActiveFalse();
+		return sensors;
+	}
+
 	public void updateSensorNameById(String name, Long sensorId) {
 		sensorsRepository.updateSensorName(name, sensorId);
 	}
 	
+	public void updateSensorTypeById(String type, Long sensorId) {
+		sensorsRepository.updateSensorTypeById(type, sensorId);
+	}
+
 	public void deleteSensorById(Long sensorId) {
 		sensorsRepository.deleteById(sensorId);
 	}
-	
+
 	public void deleteAlSensors() {
-		sensorsRepository.deleteAll();	
+		sensorsRepository.deleteAll();
 	}
 
 	// ParkingArea's Services
 
-	//Now this is useless cause we're writing ParkingArea using Sensor's db writer
+	// Now this is useless cause we're writing ParkingArea using Sensor's db writer
 	public void saveParkingSensorData() {
 		try {
 			ParkingArea parkArea = new ParkingArea("latitude", "longitude", "address", true);
@@ -258,7 +292,7 @@ public class ParkingService {
 
 	}
 
-	//This is never used
+	// This is never used
 	public void writeParkingAreaData() {
 
 		try {

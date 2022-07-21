@@ -22,7 +22,7 @@ public class Sensor {
 	String battery;
 	String type;
 	boolean isActive;
-	
+
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "fk_sensor_id", referencedColumnName = "id")
 	private List<ParkingArea> parkingArea;
@@ -37,11 +37,11 @@ public class Sensor {
 		this.isActive = isActive;
 		this.parkingArea = parkingArea;
 	}
-	
-	public List<ParkingArea> getParkingArea(){
+
+	public List<ParkingArea> getParkingArea() {
 		return parkingArea;
 	}
-	
+
 	public void setParkingArea(List<ParkingArea> parkingArea) {
 		this.parkingArea = parkingArea;
 	}
