@@ -130,9 +130,10 @@ public class ParkingService {
 	/*
 	 * 0 free 1 occupy
 	 **/
-	public int getSensorState(String sensorId) {
-		// TODO: Read data from database
-		return 0;
+	public boolean getSensorState(Long sensorId) {
+		boolean state = sensorsRepository.getSensorState(sensorId);
+		System.out.println(state);
+		return state;
 	}
 
 	public List<Sensor> getSensorsByName(String name) {
@@ -145,8 +146,8 @@ public class ParkingService {
 		return sensors;
 	}
 
-	public Sensor getSensorsById(int sensorId) {
-		Sensor s = sensorsRepository.getById(sensorId);
+	public Sensor getSensorsById(Long sensorId) {
+		Sensor s = sensorsRepository.getSensorById(sensorId);
 		return s;
 	}
 

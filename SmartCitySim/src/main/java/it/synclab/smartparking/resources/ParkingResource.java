@@ -1,8 +1,5 @@
 package it.synclab.smartparking.resources;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.synclab.smartparking.service.ParkingService;
 import it.synclab.smartparking.model.MarkerList;
-import it.synclab.smartparking.repository.model.ParkingArea;
 import it.synclab.smartparking.repository.model.Sensor;
 
 @RestController
@@ -33,24 +29,6 @@ public class ParkingResource {
 	@Autowired
 	private ParkingService parkingService;
 
-	
-
-	@GetMapping("/sensor/state/{sensorId}")
-	@ResponseBody
-	public ResponseEntity<Object> getSensorState(@PathVariable String sensorId) {
-		logger.info("ParkingResource - START getSensorState");
-		int sensorState = 0;
-		// Security user check
-		try {
-			sensorState = parkingService.getSensorState(sensorId);
-		} catch (Exception e) {
-			logger.error("ParkingResource -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		}
-		logger.info("ParkingResource - end getSensorState");
-		return ResponseEntity.status(HttpStatus.OK).body(sensorState);
-	}
-	
 	@GetMapping("/sensor/get-all-data")
 	@ResponseBody
 	public ResponseEntity<Object> getSensorsData() {
@@ -66,7 +44,7 @@ public class ParkingResource {
 		logger.info("ParkingResource - end getSensorData");
 		return ResponseEntity.status(HttpStatus.OK).body(list);
 	}
-	
+
 	@PostMapping("/sensor/save-data")
 	@ResponseBody
 	public ResponseEntity<Object> saveSensorData() {
@@ -81,8 +59,7 @@ public class ParkingResource {
 		logger.info("ParkingResource - end saveSensorData");
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
-	
-	
+
 	@PostMapping("/parking/save-data")
 	@ResponseBody
 	public ResponseEntity<Object> saveParkingSensorData() {
@@ -97,23 +74,37 @@ public class ParkingResource {
 		logger.info("ParkingResource - end saveParkingSensorData");
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
-	
-	//------------------Not Works 400 bad request.
-//	@GetMapping("/sensor/get-sensor-data")
-//	@ResponseBody
-//	public ResponseEntity<Object> getSensorData(@RequestParam int sensorId) {
-//		logger.info("ParkingResource - START getSensorData");
-//		Sensor s;
-//		// Security user check
-//		try {
-//			s = parkingService.getSensorsById(sensorId);
-//			System.out.println(s);
-//		} catch (Exception e) {
-//			logger.error("ParkingResource -  error", e);
-//			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//		}
-//		logger.info("ParkingResource - end getSensorData");
-//		return ResponseEntity.status(HttpStatus.OK).build();
-//	}
 
+	@GetMapping("/sensor/data/{sensorId}")
+	@ResponseBody
+	public ResponseEntity<Object> getSensorData(@PathVariable Long sensorId) {
+		logger.info("ParkingResource - START getSensorData");
+		Sensor s;
+		// Security user check
+		try {
+			s = parkingService.getSensorsById(sensorId);
+			System.out.println(s);
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - end getSensorData");
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+
+	@GetMapping("/sensor/state/{sensorId}")
+	@ResponseBody
+	public ResponseEntity<Object> getSensorState(@PathVariable Long sensorId) {
+		logger.info("ParkingResource - START getSensorState");
+		boolean sensorState = false;
+		// Security user check
+		try {
+			sensorState = parkingService.getSensorState(sensorId);
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - end getSensorState");
+		return ResponseEntity.status(HttpStatus.OK).body(sensorState);
+	}
 }
