@@ -34,10 +34,12 @@ public interface SensorsRepository extends CrudRepository<Sensor, Long> {
 	
 	public List<Sensor> getSensorsByName(String name);
 	
+	public List<Sensor> getSensorsByType(String type);
+	
 	public List<Sensor> getSensorByIsActiveTrue();
 	
 	public List<Sensor> getSensorByIsActiveFalse();
-	
+		
 	//Update
 
 	@Modifying
@@ -47,6 +49,10 @@ public interface SensorsRepository extends CrudRepository<Sensor, Long> {
 	@Modifying
 	@Query("update Sensor c set c.type = ?1 where id = ?2")
 	public void updateSensorTypeById(String type, Long sensorId);
+	
+	@Modifying
+	@Query("update Sensor c set c.isActive = ?1 where id = ?2")
+	public void updateStateById(boolean state, Long id);
 	
 	//Delete
 

@@ -125,9 +125,7 @@ public class ParkingService {
 		}
 	}
 
-	/*
-	 * state = 0 : free, 1 : occupy
-	 **/
+//	state = 0 : notWorking, 1 : working
 	public boolean getSensorState(Long sensorId) {
 		boolean state = sensorsRepository.getSensorState(sensorId);
 		System.out.println(state);
@@ -144,13 +142,18 @@ public class ParkingService {
 		return sensors;
 	}
 
-	public Sensor getSensorsById(Long sensorId) {
+	public Sensor getSensorById(Long sensorId) {
 		Sensor s = sensorsRepository.getSensorById(sensorId);
 		return s;
 	}
 
 	public List<Sensor> getSensorByName(String name) {
 		List<Sensor> sensors = sensorsRepository.getSensorsByName(name);
+		return sensors;
+	}
+
+	public List<Sensor> getSensorByType(String type) {
+		List<Sensor> sensors = sensorsRepository.getSensorsByType(type);
 		return sensors;
 	}
 
@@ -163,17 +166,17 @@ public class ParkingService {
 		List<Sensor> sensors = sensorsRepository.getSensorByNameEndingWith(str);
 		return sensors;
 	}
-	
+
 	public List<Sensor> getSensorByNameContaining(String str) {
 		List<Sensor> sensors = sensorsRepository.getSensorByNameContaining(str);
 		return sensors;
 	}
-	
+
 	public List<Sensor> getSensorByIsActiveTrue() {
 		List<Sensor> sensors = sensorsRepository.getSensorByIsActiveTrue();
 		return sensors;
 	}
-	
+
 	public List<Sensor> getSensorByIsActiveFalse() {
 		List<Sensor> sensors = sensorsRepository.getSensorByIsActiveFalse();
 		return sensors;
@@ -182,9 +185,13 @@ public class ParkingService {
 	public void updateSensorNameById(String name, Long sensorId) {
 		sensorsRepository.updateSensorName(name, sensorId);
 	}
-	
+
 	public void updateSensorTypeById(String type, Long sensorId) {
 		sensorsRepository.updateSensorTypeById(type, sensorId);
+	}
+	
+	public void updateSensorStateById(boolean state, Long id) {
+		sensorsRepository.updateStateById(state, id);
 	}
 
 	public void deleteSensorById(Long sensorId) {
@@ -306,5 +313,67 @@ public class ParkingService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public ParkingArea getParkingAreaByYd(Long id) {
+		ParkingArea p = parkingAreaRepository.getParkingAreaById(id);
+		return p;
+	}
+
+	public String getParkingAreaLatitudeById(Long id) {
+		String latitude = parkingAreaRepository.getLatitudeById(id);
+		return latitude;
+
+	}
+
+	public String getParkingAreaLongitudeById(Long id) {
+		String longitude = parkingAreaRepository.getLongitudeById(id);
+		return longitude;
+	}
+
+	public String getParkingAreaAddressById(Long id) {
+		String address = parkingAreaRepository.getAddressById(id);
+		return address;
+
+	}
+
+	public boolean getParkingAreaStateById(Long id) {
+		boolean state = parkingAreaRepository.getStateById(id);
+		return state;
+
+	}
+
+	public List<ParkingArea> getFreeParkingArea() {
+		List<ParkingArea> state = parkingAreaRepository.getParkingAreaByValueTrue();
+		return state;
+	}
+
+	public List<ParkingArea> getOccupyParkingArea() {
+		List<ParkingArea> state = parkingAreaRepository.getParkingAreaByValueFalse();
+		return state;
+	}
+
+//	it works but for now we have more sensor in data set with equals value for 
+//	both latitude and longitude so this returns a List of ParkingArea
+//	public ParkingArea getParkingAreaByLatitudeAndLongitude(String latitude, String longitude) {
+//		ParkingArea p = parkingAreaRepository.getParkingAreaByLatitudeAndLongitude(latitude, longitude);
+//		return p;
+//	}
+
+	public void updateParkingAreaLatitudeById(String latitude, Long id) {
+		parkingAreaRepository.updateLatitudeById(latitude, id);
+	}
+
+	public void updateParkingAreaLongitudeById(String longitude, Long id) {
+		parkingAreaRepository.updateLongitudeById(longitude, id);
+	}
+
+	public void updateParkingAreaAddressById(String address, Long id) {
+		parkingAreaRepository.updateAddressById(address, id);
+	}
+
+//	state = 0 : free, 1 : occupy
+	public void updateParkingAreaStateById(boolean state, Long id) {
+		parkingAreaRepository.setStateById(state, id);
 	}
 }
