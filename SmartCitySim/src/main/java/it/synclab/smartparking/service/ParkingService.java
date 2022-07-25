@@ -11,6 +11,7 @@ import java.util.List;
 import org.json.JSONObject;
 import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import it.synclab.smartparking.datasource.config.PostgreClient;
@@ -118,6 +119,35 @@ public class ParkingService {
 			for (Marker m : sensors.getMarkers().getMarkers()) {
 				Sensor s = buildSensorFromMarker(m);
 				saveSensorData(s);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	//Do this every 2 minutes
+	@Scheduled(cron = "*/15 * * * * *")
+	public void updateSensorsData() {
+
+		try {
+			MarkerList sensors = readSensorData();
+
+			for (Marker m : sensors.getMarkers().getMarkers()) {
+				Sensor s = buildSensorFromMarker(m);
+				
+				Sensor aux = sensorsRepository.getSensorById(s.getId());
+
+
+				if(!aux.getName().equals(s.getName())) {
+					updateSensorNameById(s.getName(), sensorsRepository.getSensorById(s.getId()).getId());
+					System.out.println("Name of sensor with id = " + s.getId() + " updated in " +  s.getName());
+				} else {
+					System.out.println("Name not updated");
+				}
+				
+				//TODO: continue with other controls
 			}
 
 		} catch (Exception e) {

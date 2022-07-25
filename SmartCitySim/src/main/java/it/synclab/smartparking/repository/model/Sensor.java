@@ -16,7 +16,7 @@ import javax.persistence.Table;
 public class Sensor {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+//	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	String name;
 	String battery;
@@ -30,7 +30,8 @@ public class Sensor {
 	public Sensor() {
 	};
 
-	public Sensor(String name, String battery, String type, boolean isActive, List<ParkingArea> parkingArea) {
+	public Sensor(Long id, String name, String battery, String type, boolean isActive, List<ParkingArea> parkingArea) {
+		this.id = id;
 		this.name = name;
 		this.battery = battery;
 		this.type = type;

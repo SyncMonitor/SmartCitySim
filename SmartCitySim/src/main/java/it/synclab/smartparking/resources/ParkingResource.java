@@ -95,6 +95,7 @@ public class ParkingResource {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 		logger.info("ParkingResource - END getSensorData");
+		System.out.println(s);
 		return ResponseEntity.status(HttpStatus.OK).body(s);
 	}
 
