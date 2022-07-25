@@ -232,6 +232,19 @@ public class ParkingResource {
 		logger.info("ParkingResource - END updateSensorNameById");
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
+	
+	@PutMapping("/sensor/update/battery/{sensorId}")
+	public ResponseEntity<Object> updateSensorBatteryById(@RequestBody String battery, @PathVariable Long sensorId) {
+		logger.info("ParkingResource - START updateSensorBatteryById");
+		try {
+			parkingService.updateSensorBatteryById(battery, sensorId);
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - END updateSensorBatteryById");
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
 
 	@PutMapping("/sensor/update/type/{sensorId}")
 	public ResponseEntity<Object> updateSensorTypeById(@RequestBody String type, @PathVariable Long sensorId) {
@@ -301,6 +314,22 @@ public class ParkingResource {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 		logger.info("ParkingResource - END getParkingAreaData");
+		return ResponseEntity.status(HttpStatus.OK).body(p);
+	}
+	
+	@GetMapping("/parking-area/data-from-sensor/{sensorId}")
+	@ResponseBody
+	public ResponseEntity<Object> getParkingAreaDataBySensorId(@PathVariable Long sensorId) {
+		logger.info("ParkingResource - START getParkingAreaDataBySensorId");
+		ParkingArea p;
+		// Security user check
+		try {
+			p = parkingService.getParkingAreaBySensorId(sensorId);
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - END getParkingAreaDataBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).body(p);
 	}
 	

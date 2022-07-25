@@ -42,6 +42,17 @@ public class Sensor {
 	public List<ParkingArea> getParkingArea() {
 		return parkingArea;
 	}
+	
+//	public ParkingArea getParkingAreaById(Long fkSensorId) {
+//		ParkingArea parkArea = new ParkingArea();
+//		for(ParkingArea p : this.parkingArea) {
+//			if(p.getSensorId() == fkSensorId) {
+//				parkArea = p;
+//				return parkArea;
+//			}
+//		}
+//		return parkArea;
+//	}
 
 	public void setParkingArea(List<ParkingArea> parkingArea) {
 		this.parkingArea = parkingArea;

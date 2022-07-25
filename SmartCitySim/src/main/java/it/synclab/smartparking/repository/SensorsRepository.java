@@ -47,6 +47,11 @@ public interface SensorsRepository extends CrudRepository<Sensor, Long> {
 	public void updateSensorName(String name, Long sensorId);
 	
 	@Modifying
+	@Query("update Sensor c set c.battery = ?1 where id = ?2")
+	public void updateSensorBattery(String battery, Long sensorId);
+	
+	
+	@Modifying
 	@Query("update Sensor c set c.type = ?1 where id = ?2")
 	public void updateSensorTypeById(String type, Long sensorId);
 	
@@ -59,5 +64,6 @@ public interface SensorsRepository extends CrudRepository<Sensor, Long> {
 	@Modifying
 	@Query("delete Sensor c where id = ?1")
 	public void deleteSensorById(Long sensorId);
+
 
 }

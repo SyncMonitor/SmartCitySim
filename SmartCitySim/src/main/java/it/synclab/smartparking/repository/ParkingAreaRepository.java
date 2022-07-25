@@ -14,6 +14,8 @@ import it.synclab.smartparking.repository.model.ParkingArea;
 public interface ParkingAreaRepository extends CrudRepository<ParkingArea, Long> {
 
 	public ParkingArea getParkingAreaById(Long id);
+	
+	public ParkingArea getParkingAreaByFkSensorId(Long sensorId);
 
 	@Query("select p.latitude from ParkingArea p where p.id = ?1")
 	public String getLatitudeById(Long id);

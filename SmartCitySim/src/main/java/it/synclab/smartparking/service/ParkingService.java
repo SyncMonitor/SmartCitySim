@@ -8,6 +8,8 @@ import com.squareup.okhttp.Response;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import it.synclab.smartparking.repository.ParkingAreaRepository;
 import it.synclab.smartparking.repository.SensorsRepository;
 import it.synclab.smartparking.repository.model.ParkingArea;
 import it.synclab.smartparking.repository.model.Sensor;
+import it.synclab.smartparking.resources.ParkingResource;
 
 @Component
 public class ParkingService {
@@ -35,6 +38,8 @@ public class ParkingService {
 
 	@Autowired
 	private ParkingAreaRepository parkingAreaRepository;
+
+	private Logger logger = LogManager.getLogger(ParkingResource.class);
 
 	public MarkerList convertXMLtoJson(String xml) {
 
@@ -125,34 +130,102 @@ public class ParkingService {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	//Do this every 2 minutes
-	@Scheduled(cron = "*/15 * * * * *")
+
+	// Do this every 2 minutes
+	@Scheduled(cron = "0 */2 * * * *")
 	public void updateSensorsData() {
+
+		logger.info("ParkingService START updateSensorsData");
+
+		boolean sensorUpdate = false;
+		boolean parkAreaUpdate = false;
 
 		try {
 			MarkerList sensors = readSensorData();
 
 			for (Marker m : sensors.getMarkers().getMarkers()) {
 				Sensor s = buildSensorFromMarker(m);
-				
+				ParkingArea p = buildParkingAreaFromMarker(m);
+
 				Sensor aux = sensorsRepository.getSensorById(s.getId());
+				ParkingArea tmp = parkingAreaRepository.getParkingAreaByFkSensorId(p.getSensorId());
 
-
-				if(!aux.getName().equals(s.getName())) {
-					updateSensorNameById(s.getName(), sensorsRepository.getSensorById(s.getId()).getId());
-					System.out.println("Name of sensor with id = " + s.getId() + " updated in " +  s.getName());
-				} else {
-					System.out.println("Name not updated");
+				if (!aux.getName().equals(s.getName())) {
+					updateSensorNameById(s.getName(), s.getId());
+					if (!sensorUpdate) {
+						sensorUpdate = true;
+					}
 				}
-				
-				//TODO: continue with other controls
+
+				if (!aux.getBattery().equals(s.getBattery())) {
+					updateSensorBatteryById(s.getBattery(), s.getId());
+					if (!sensorUpdate) {
+						sensorUpdate = true;
+					}
+				}
+
+				if (!aux.getType().equals(s.getType())) {
+					updateSensorTypeById(s.getType(), s.getId());
+					if (!sensorUpdate) {
+						sensorUpdate = true;
+					}
+				}
+
+				if (aux.isActive() != s.isActive()) {
+					updateSensorStateById(s.isActive(), s.getId());
+					if (!sensorUpdate) {
+						sensorUpdate = true;
+					}
+				}
+
+				if (!tmp.getLatitude().equals(p.getLatitude())) {
+					// tmp.getId() because when extract data from sensor you don't
+//					have p.Id because this is automatically assigned by DB
+					updateParkingAreaLatitudeById(p.getLatitude(), tmp.getId());
+					if (!parkAreaUpdate) {
+						parkAreaUpdate = true;
+					}
+				}
+
+				if (!tmp.getLongitude().equals(p.getLongitude())) {
+					updateParkingAreaLongitudeById(p.getLongitude(), tmp.getId());
+					if (!parkAreaUpdate) {
+						parkAreaUpdate = true;
+					}
+				}
+
+				if (!tmp.getAddress().equals(p.getAddress())) {
+					updateParkingAreaAddressById(p.getAddress(), tmp.getId());
+					if (!parkAreaUpdate) {
+						parkAreaUpdate = true;
+					}
+				}
+
+				if (tmp.getValue() != p.getValue()) {
+					updateParkingAreaStateById(p.getValue(), tmp.getId());
+					if (!parkAreaUpdate) {
+						parkAreaUpdate = true;
+					}
+				}
+			}
+
+			if (sensorUpdate) {
+				System.out.println("Sensors data updated");
+			} else {
+				System.out.println("No Sensors data to update");
+			}
+
+			if (parkAreaUpdate) {
+				System.out.println("ParkingArea data updated");
+			} else {
+				System.out.println("No ParkingArea data to update");
 			}
 
 		} catch (Exception e) {
+			logger.info("ParkingService ERROR updateSensorsData");
 			e.printStackTrace();
 		}
+		logger.info("ParkingService END updateSensorsData");
 	}
 
 //	state = 0 : notWorking, 1 : working
@@ -216,10 +289,14 @@ public class ParkingService {
 		sensorsRepository.updateSensorName(name, sensorId);
 	}
 
+	public void updateSensorBatteryById(String battery, Long sensorId) {
+		sensorsRepository.updateSensorBattery(battery, sensorId);
+	}
+
 	public void updateSensorTypeById(String type, Long sensorId) {
 		sensorsRepository.updateSensorTypeById(type, sensorId);
 	}
-	
+
 	public void updateSensorStateById(boolean state, Long id) {
 		sensorsRepository.updateStateById(state, id);
 	}
@@ -274,7 +351,7 @@ public class ParkingService {
 		ParkingArea parkArea = new ParkingArea();
 
 		if (marker.getId() != null) {
-			parkArea.setId(marker.getId());
+			parkArea.setSensorId(marker.getId());
 		}
 
 		if (marker.getLat() != null) {
@@ -347,6 +424,11 @@ public class ParkingService {
 
 	public ParkingArea getParkingAreaByYd(Long id) {
 		ParkingArea p = parkingAreaRepository.getParkingAreaById(id);
+		return p;
+	}
+
+	public ParkingArea getParkingAreaBySensorId(Long id) {
+		ParkingArea p = parkingAreaRepository.getParkingAreaByFkSensorId(id);
 		return p;
 	}
 
