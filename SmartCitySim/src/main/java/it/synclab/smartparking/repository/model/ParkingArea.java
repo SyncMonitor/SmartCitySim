@@ -1,15 +1,16 @@
 package it.synclab.smartparking.repository.model;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "parking_area")
+@Table(name = "parking_area", uniqueConstraints = {
+		@UniqueConstraint(name = "UniqueLatitudeAndLongitude", columnNames = { "latitude", "longitude" }) })
 public class ParkingArea {
 
 	@Id
@@ -22,8 +23,6 @@ public class ParkingArea {
 	private String longitude;
 	private String address;
 	private boolean value;
-
-	
 
 	public ParkingArea() {
 	}

@@ -34,10 +34,8 @@ public interface ParkingAreaRepository extends CrudRepository<ParkingArea, Long>
 	
 	@Query("select p from ParkingArea p where p.value = false")
 	public List<ParkingArea> getParkingAreaByValueFalse();
-
-//	it works but for now we have more sensor in data set with equals value for 
-//	both latitude and longitude so this returns a List of ParkingArea 	
-//	public ParkingArea getParkingAreaByLatitudeAndLongitude(String latitude, String longitude);
+	
+	public ParkingArea getParkingAreaByLatitudeAndLongitude(String latitude, String longitude);
 
 	@Modifying
 	@Query("update ParkingArea p set p.latitude = ?1 where id = ?2")
@@ -54,6 +52,7 @@ public interface ParkingAreaRepository extends CrudRepository<ParkingArea, Long>
 	@Modifying
 	@Query("update ParkingArea p set p.value = ?1 where id = ?2")
 	public void setStateById(boolean state, Long id);
+
 	
 
 }

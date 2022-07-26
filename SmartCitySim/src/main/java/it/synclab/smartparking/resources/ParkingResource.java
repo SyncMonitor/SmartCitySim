@@ -66,21 +66,21 @@ public class ParkingResource {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
-	// Now this is useless cause we're writing ParkingArea using Sensor's db writer
-	@PostMapping("/parking/save-data")
-	@ResponseBody
-	public ResponseEntity<Object> saveParkingSensorData() {
-		logger.info("ParkingResource - START saveParkingSensorData");
-		// Security user check
-		try {
-			parkingService.saveParkingSensorData();
-		} catch (Exception e) {
-			logger.error("ParkingResource -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		}
-		logger.info("ParkingResource - END saveParkingSensorData");
-		return ResponseEntity.status(HttpStatus.OK).build();
-	}
+//	Now this is useless cause we're writing ParkingArea using Sensor's db writer
+//	@PostMapping("/parking/save-data")
+//	@ResponseBody
+//	public ResponseEntity<Object> saveParkingSensorData() {
+//		logger.info("ParkingResource - START saveParkingSensorData");
+//		// Security user check
+//		try {
+//			parkingService.saveParkingSensorData();
+//		} catch (Exception e) {
+//			logger.error("ParkingResource -  error", e);
+//			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+//		}
+//		logger.info("ParkingResource - END saveParkingSensorData");
+//		return ResponseEntity.status(HttpStatus.OK).build();
+//	}
 
 	@GetMapping("/sensor/data/{sensorId}")
 	@ResponseBody
@@ -99,6 +99,7 @@ public class ParkingResource {
 		return ResponseEntity.status(HttpStatus.OK).body(s);
 	}
 
+	
 	@GetMapping("/sensor/state/{sensorId}")
 	@ResponseBody
 	public ResponseEntity<Object> getSensorState(@PathVariable Long sensorId) {
@@ -397,10 +398,10 @@ public class ParkingResource {
 		return ResponseEntity.status(HttpStatus.OK).body(state);
 	}
 	
-	@GetMapping("/parking-area/occupy")
+	@GetMapping("/parking-area/free")
 	@ResponseBody
-	public ResponseEntity<Object> getOccupyParkingArea() {
-		logger.info("ParkingResource - START getOccupyParkingArea");
+	public ResponseEntity<Object> getFreeParkingArea() {
+		logger.info("ParkingResource - START getFreeParkingArea");
 		List<ParkingArea> state;
 		// Security user check
 		try {
@@ -409,14 +410,14 @@ public class ParkingResource {
 			logger.error("ParkingResource -  error", e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
-		logger.info("ParkingResource - END getOccupyParkingArea");
+		logger.info("ParkingResource - END getFreeParkingArea");
 		return ResponseEntity.status(HttpStatus.OK).body(state);
 	}
 	
-	@GetMapping("/parking-area/free")
+	@GetMapping("/parking-area/occupy")
 	@ResponseBody
-	public ResponseEntity<Object> getFreeParkingArea() {
-		logger.info("ParkingResource - START getFreeParkingArea");
+	public ResponseEntity<Object> getOccupyParkingArea() {
+		logger.info("ParkingResource - START getOccupyParkingArea");
 		List<ParkingArea> state;
 		// Security user check
 		try {
@@ -425,28 +426,25 @@ public class ParkingResource {
 			logger.error("ParkingResource -  error", e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
-		logger.info("ParkingResource - END getFreeParkingArea");
+		logger.info("ParkingResource - END getOccupyParkingArea");
 		return ResponseEntity.status(HttpStatus.OK).body(state);
 	}
 
-
-//	it works but for now we have more sensor in data set with equals value for 
-//	both latitude and longitude so this returns a List of ParkingArea
-//	@GetMapping("/parking-area/{latitude}/{longitude}")
-//	@ResponseBody
-//	public ResponseEntity<Object> getParkingAreaByLatitudeAndLongitude(@PathVariable String latitude, @PathVariable String longitude) {
-//		logger.info("ParkingResource - START getParkingAreaByLatitudeAndLongitude");
-//		ParkingArea parkArea;
-//		// Security user check
-//		try {
-//			parkArea = parkingService.getParkingAreaByLatitudeAndLongitude(latitude,longitude);
-//		} catch (Exception e) {
-//			logger.error("ParkingResource -  error", e);
-//			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//		}
-//		logger.info("ParkingResource - END getParkingAreaByLatitudeAndLongitude");
-//		return ResponseEntity.status(HttpStatus.OK).body(parkArea);
-//	}
+	@GetMapping("/parking-area/{latitude}/{longitude}")
+	@ResponseBody
+	public ResponseEntity<Object> getParkingAreaByLatitudeAndLongitude(@PathVariable String latitude, @PathVariable String longitude) {
+		logger.info("ParkingResource - START getParkingAreaByLatitudeAndLongitude");
+		ParkingArea parkArea;
+		// Security user check
+		try {
+			parkArea = parkingService.getParkingAreaByLatitudeAndLongitude(latitude,longitude);
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - END getParkingAreaByLatitudeAndLongitude");
+		return ResponseEntity.status(HttpStatus.OK).body(parkArea);
+	}
 	
 	@PutMapping("/parking-area/update/latitude/{id}")
 	@ResponseBody

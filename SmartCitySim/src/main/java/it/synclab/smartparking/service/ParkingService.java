@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +29,8 @@ import it.synclab.smartparking.resources.ParkingResource;
 @Component
 public class ParkingService {
 
-	private final String sensorDataUrl = "https://syncmonitor.altervista.org/smartparking/test1.xml";
+	@Value("${sensor.parking.url}")
+	private String sensorDataUrl;
 
 	@Autowired
 	PostgreClient databaseClient;
@@ -66,7 +68,7 @@ public class ParkingService {
 
 		try {
 			OkHttpClient client = new OkHttpClient();
-			Request request = new Request.Builder().url(this.sensorDataUrl).build();
+			Request request = new Request.Builder().url(sensorDataUrl).build();
 			Response response = client.newCall(request).execute();
 			String xmlSensorData = response.body().string();
 			markersList = convertXMLtoJson(xmlSensorData);
@@ -132,7 +134,7 @@ public class ParkingService {
 	}
 
 	// Do this every 2 minutes
-	@Scheduled(cron = "0 */2 * * * *")
+	@Scheduled(cron = "${polling.timer}")
 	public void updateSensorsData() {
 
 		logger.info("ParkingService START updateSensorsData");
@@ -311,16 +313,6 @@ public class ParkingService {
 
 	// ParkingArea's Services
 
-	// Now this is useless cause we're writing ParkingArea using Sensor's db writer
-	public void saveParkingSensorData() {
-		try {
-			ParkingArea parkArea = new ParkingArea("latitude", "longitude", "address", true);
-			parkingAreaRepository.save(parkArea);
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-	}
-
 	public MarkerList readParkingAreaData() throws Exception {
 
 		MarkerList markersList = null;
@@ -338,14 +330,13 @@ public class ParkingService {
 		return markersList;
 	}
 
-	public void saveParkingAreaData(ParkingArea parkArea) {
-		try {
-			parkingAreaRepository.save(parkArea);
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-
-	}
+//	public void saveParkingAreaData(ParkingArea parkArea) {
+//		try {
+//			parkingAreaRepository.save(parkArea);
+//		} catch (Exception e) {
+//			System.out.println(e);
+//		}
+//	}
 
 	public ParkingArea buildParkingAreaFromMarker(Marker marker) {
 		ParkingArea parkArea = new ParkingArea();
@@ -371,56 +362,57 @@ public class ParkingService {
 		return parkArea;
 	}
 
-	public List<ParkingArea> buildListOfParkingAreaFromMarker() {
-		List<ParkingArea> list = new ArrayList<>();
+//	public List<ParkingArea> buildListOfParkingAreaFromMarker() {
+//		List<ParkingArea> list = new ArrayList<>();
+//
+//		try {
+//			MarkerList parkArea = readParkingAreaData();
+//
+//			for (Marker m : parkArea.getMarkers().getMarkers()) {
+//				ParkingArea p = new ParkingArea();
+//				if (m.getId() != null) {
+//					p.setId(m.getId());
+//				}
+//
+//				if (m.getLat() != null) {
+//					p.setLatitude(m.getLat());
+//				}
+//
+//				if (m.getLng() != null) {
+//					p.setLongitude(m.getLng());
+//				}
+//
+//				if (m.getAddress() != null) {
+//					p.setAddress(m.getAddress());
+//				}
+//
+//				list.add(p);
+//			}
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//		return list;
+//
+//	}
 
-		try {
-			MarkerList parkArea = readParkingAreaData();
-
-			for (Marker m : parkArea.getMarkers().getMarkers()) {
-				ParkingArea p = new ParkingArea();
-				if (m.getId() != null) {
-					p.setId(m.getId());
-				}
-
-				if (m.getLat() != null) {
-					p.setLatitude(m.getLat());
-				}
-
-				if (m.getLng() != null) {
-					p.setLongitude(m.getLng());
-				}
-
-				if (m.getAddress() != null) {
-					p.setAddress(m.getAddress());
-				}
-
-				list.add(p);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return list;
-
-	}
-
-	// This is never used
-	public void writeParkingAreaData() {
-
-		try {
-			MarkerList parkArea = readParkingAreaData();
-
-			for (Marker m : parkArea.getMarkers().getMarkers()) {
-				ParkingArea s = buildParkingAreaFromMarker(m);
-				saveParkingAreaData(s);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	// -------This is never used
+//	public void writeParkingAreaData() {
+//
+//		try {
+//			MarkerList parkArea = readParkingAreaData();
+//
+//			for (Marker m : parkArea.getMarkers().getMarkers()) {
+//				ParkingArea s = buildParkingAreaFromMarker(m);
+//				saveParkingAreaData(s);
+//			}
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
+//	-------------------------------
 
 	public ParkingArea getParkingAreaByYd(Long id) {
 		ParkingArea p = parkingAreaRepository.getParkingAreaById(id);
@@ -465,12 +457,10 @@ public class ParkingService {
 		return state;
 	}
 
-//	it works but for now we have more sensor in data set with equals value for 
-//	both latitude and longitude so this returns a List of ParkingArea
-//	public ParkingArea getParkingAreaByLatitudeAndLongitude(String latitude, String longitude) {
-//		ParkingArea p = parkingAreaRepository.getParkingAreaByLatitudeAndLongitude(latitude, longitude);
-//		return p;
-//	}
+	public ParkingArea getParkingAreaByLatitudeAndLongitude(String latitude, String longitude) {
+		ParkingArea p = parkingAreaRepository.getParkingAreaByLatitudeAndLongitude(latitude, longitude);
+		return p;
+	}
 
 	public void updateParkingAreaLatitudeById(String latitude, Long id) {
 		parkingAreaRepository.updateLatitudeById(latitude, id);
