@@ -4,15 +4,19 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class PostgreClient {
 
-	//To Externalize
-	private String jdbcURL = "jdbc:postgresql://localhost:5432/SmartCitySimulator";
-	private String username = "postgres";
+public class MySqlClient {
+
+	//To externzalize
+	private String jdbcURL = "mysql://localhost:3306/smartcity";
+	
+	private String username = "lubu";
+	
 	private String password = "password";
+	
 	private Connection conn = null;
 
-	public PostgreClient(){
+	public MySqlClient(){
 		try {
 			conn = DriverManager.getConnection(jdbcURL, username, password);
 		} catch (SQLException e) {

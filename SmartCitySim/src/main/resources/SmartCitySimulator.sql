@@ -1,87 +1,86 @@
-drop table if exists Float;
-drop table if exists Humidity;
-drop table if exists Particular_matter;
-drop table if exists Temperature;
-drop table if exists Parking_area;
-drop table if exists Sensors;
+drop table if exists float_sensors;
+drop table if exists humidity;
+drop table if exists particular_matter;
+drop table if exists temperature;
+drop table if exists parking_area;
+drop table if exists sensors;
 
 
-create table Sensors (
-	id int,
+create table sensors (
+	id int not null,
 	name varchar(255),
-	battery varchar(255) not null,
-	type varchar(255) not null,
-	is_active boolean not null,
+	battery varchar(255),
+	type varchar(255),
+	is_active boolean,
 	primary key (id)
 );
 
-create table Parking_area (
+create table parking_area (
 	fk_sensor_id int,
+	id int,
 	latitude varchar(255),
 	longitude varchar(255),
-	address varchar(255) not null,
-	value varchar(255) not null,
-	primary key (latitude, longitude)
+	address varchar(255),
+	value boolean,
+	primary key (id),
+	unique (latitude,longitude)
 );
 
-create table Temperature (
+create table temperature (
 	fk_sensor_id int,
+	id int,
 	latitude varchar(255),
 	longitude varchar(255),
-	address varchar(255) not null,
-	value varchar(255) not null,
-	primary key (latitude, longitude)
+	address varchar(255),
+	value varchar(255),
+	primary key (id),
+	unique (latitude,longitude)
 );
 
-create table Particular_matter (
+create table particular_matter (
 	fk_sensor_id int,
+	id int,
 	latitude varchar(255),
 	longitude varchar(255),
-	address varchar(255) not null,
-	value varchar(255) not null,
-	primary key (latitude, longitude)
+	address varchar(255),
+	value varchar(255),
+	primary key (id),
+	unique (latitude,longitude)
 );
 
-create table Humidity (
+create table humidity (
 	fk_sensor_id int,
+	id int,
 	latitude varchar(255),
 	longitude varchar(255),
-	address varchar(255) not null,
-	value varchar(255) not null,
-	primary key (latitude, longitude)
+	address varchar(255) ,
+	value varchar(255),
+	primary key (id),
+	unique (latitude,longitude)
 );
 
-create table Float (
+create table float_sensors (
 	fk_sensor_id int,
+	id int,
 	latitude varchar(255),
 	longitude varchar(255),
-	address varchar(255) not null,
-	value varchar(255) not null,
-	primary key (latitude, longitude)
+	address varchar(255),
+	value varchar(255),
+	primary key (id),
+	unique (latitude,longitude)
 );
 
-ALTER TABLE Parking_area
-ADD FOREIGN KEY (fk_sensor_id)
-REFERENCES Sensors(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE parking_area
+ADD FOREIGN KEY (fk_sensor_id) REFERENCES sensors(id) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE Temperature
-ADD FOREIGN KEY (fk_sensor_id)
-REFERENCES Sensors(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE temperature
+ADD FOREIGN KEY (fk_sensor_id) REFERENCES sensors(id) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE Particular_matter
-ADD FOREIGN KEY (fk_sensor_id)
-REFERENCES Sensors(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE particular_matter
+ADD FOREIGN KEY (fk_sensor_id) REFERENCES sensors(id) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Humidity
-ADD FOREIGN KEY (fk_sensor_id)
-REFERENCES Sensors(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD FOREIGN KEY (fk_sensor_id) REFERENCES sensors(id) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE Float
-ADD FOREIGN KEY (fk_sensor_id)
-REFERENCES Sensors(id) ON DELETE CASCADE ON UPDATE CASCADE;
-
-
-insert into Sensors Values 
-	(1,'Name1','3.7V','Type1',true),
-	(2,'Name2','3.8V','Type2',false),
-	(3,'Name3','3.9V','Type3',true);
+ALTER TABLE float_sensors
+ADD FOREIGN KEY (fk_sensor_id) REFERENCES sensors(id) ON DELETE CASCADE ON UPDATE CASCADE;

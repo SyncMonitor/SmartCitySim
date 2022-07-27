@@ -13,9 +13,7 @@ import it.synclab.smartparking.repository.model.Sensor;
 @Transactional
 @Repository
 public interface SensorsRepository extends CrudRepository<Sensor, Long> {
-
-	public List<Sensor> findByName(String name);
-
+	
 	// JPQL query based on Java class, not on DB tables.
 	@Query("select s from Sensor s where s.id = ?1")
 	Sensor getSensorById(Long sensorId);
@@ -31,6 +29,10 @@ public interface SensorsRepository extends CrudRepository<Sensor, Long> {
 	
 	@Query("select s from Sensor s where s.name like %?1%")
 	public List<Sensor> getSensorByNameContaining(String str);
+	
+	@Query("select s from Sensor s")
+	public List<Sensor> getAllSensors();
+	
 	
 	public List<Sensor> getSensorsByName(String name);
 	

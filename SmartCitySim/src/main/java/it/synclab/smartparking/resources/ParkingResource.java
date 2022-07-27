@@ -30,7 +30,7 @@ import it.synclab.smartparking.repository.model.Sensor;
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 public class ParkingResource {
 
-	private Logger logger = LogManager.getLogger(ParkingResource.class);
+	private static final Logger logger = LogManager.getLogger(ParkingResource.class);
 
 	@Autowired
 	private ParkingService parkingService;
@@ -95,7 +95,6 @@ public class ParkingResource {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 		logger.info("ParkingResource - END getSensorData");
-		System.out.println(s);
 		return ResponseEntity.status(HttpStatus.OK).body(s);
 	}
 
@@ -137,7 +136,7 @@ public class ParkingResource {
 		List<Sensor> l = new ArrayList<>();
 		logger.info("ParkingResource - START getSensorsByType");
 		try {
-			l = parkingService.getSensorByType(type);
+			l = parkingService.getSensorsByType(type);
 		} catch (Exception e) {
 			logger.error("ParkingResource -  error", e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -309,7 +308,7 @@ public class ParkingResource {
 		ParkingArea p;
 		// Security user check
 		try {
-			p = parkingService.getParkingAreaByYd(id);
+			p = parkingService.getParkingAreaById(id);
 		} catch (Exception e) {
 			logger.error("ParkingResource -  error", e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
