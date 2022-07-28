@@ -20,9 +20,9 @@ public class SmartCitySim {
 	public static void main(String[] args) {
 		SpringApplication.run(SmartCitySim.class, args);
 		
-		LOGGER.info("info logger");
-		LOGGER.debug("debug logger");
-		LOGGER.error("error logger");
+//		LOGGER.info("tryin' info logger");
+//		LOGGER.debug("tryin'debug logger");
+//		LOGGER.error("tryin' error logger");
 		
 	}
 }
