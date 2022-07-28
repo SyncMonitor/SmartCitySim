@@ -250,15 +250,15 @@ public class ParkingService {
 			}
 
 			if (sensorUpdate) {
-				System.out.println("Sensors data updated");
+				logger.info("Sensor data updated");
 			} else {
-				System.out.println("No Sensors data to update");
+				logger.info("No Sensors data to update");
 			}
 
 			if (parkAreaUpdate) {
-				System.out.println("ParkingArea data updated");
+				logger.info("ParkingArea data updated");
 			} else {
-				System.out.println("No ParkingArea data to update");
+				logger.info("No ParkingArea data to update");
 			}
 
 		} catch (Exception e) {

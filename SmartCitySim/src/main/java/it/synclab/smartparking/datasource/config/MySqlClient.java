@@ -4,15 +4,19 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.springframework.beans.factory.annotation.Value;
+
 
 public class MySqlClient {
 
-	//To externzalize
-	private String jdbcURL = "mysql://localhost:3306/smartcity";
+	@Value("${mysql.jdbc.url}")
+	private String jdbcURL;
 	
-	private String username = "lubu";
+	@Value("${mysql.username}")
+	private String username;
 	
-	private String password = "password";
+	@Value("${mysql.password}")
+	private String password;
 	
 	private Connection conn = null;
 

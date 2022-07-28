@@ -24,6 +24,8 @@ CREATE TABLE `parking_area` (
   `value` bit(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FKco1484bbwa2jmrrccirtcb3eb` (`fk_sensor_id`)
+  --,
+  --CONSTRAINT UniqueLatitudeAndLongitude UNIQUE (latitude(125),longitude(125))
 ) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `temperature` (
@@ -35,6 +37,8 @@ CREATE TABLE `temperature` (
   `value` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FKco1484bbwa2jmrrccirtcb3eb` (`fk_sensor_id`)
+  --,
+  --CONSTRAINT UniqueLatitudeAndLongitude UNIQUE (latitude(125),longitude(125))
 ) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `particular_matter` (
@@ -46,6 +50,8 @@ CREATE TABLE `particular_matter` (
   `value` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FKco1484bbwa2jmrrccirtcb3eb` (`fk_sensor_id`)
+  --,
+  --CONSTRAINT UniqueLatitudeAndLongitude UNIQUE (latitude(125),longitude(125))
 ) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `humidity` (
@@ -57,6 +63,8 @@ CREATE TABLE `humidity` (
   `value` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FKco1484bbwa2jmrrccirtcb3eb` (`fk_sensor_id`)
+  --,
+  --CONSTRAINT UniqueLatitudeAndLongitude UNIQUE (latitude(125),longitude(125))
 ) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `float_sensors` (
@@ -68,6 +76,8 @@ CREATE TABLE `float_sensors` (
   `value` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FKco1484bbwa2jmrrccirtcb3eb` (`fk_sensor_id`)
+  --,
+  --CONSTRAINT UniqueLatitudeAndLongitude UNIQUE (latitude(125),longitude(125))
 ) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 

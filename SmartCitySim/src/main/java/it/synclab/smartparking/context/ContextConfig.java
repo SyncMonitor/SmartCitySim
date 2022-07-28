@@ -21,7 +21,7 @@ public class ContextConfig {
 
 	@Bean
 	public PostgreClient createPostgresClient() {
-		return new PostgreClient();
+ 		return new PostgreClient();
 	}
 	
 //	@Bean
