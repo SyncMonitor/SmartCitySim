@@ -36,11 +36,10 @@ public class ParkingService {
 
 	@Autowired
 	PostgreClient databaseClient;
-	
+
 //	@Autowired
 //	DataSource databaseClient;
-	
-	
+
 	private boolean sentMail = false;
 
 	@Autowired
@@ -48,6 +47,8 @@ public class ParkingService {
 
 	@Autowired
 	private ParkingAreaRepository parkingAreaRepository;
+
+	private MailService mailService;
 
 	private static final Logger logger = LogManager.getLogger(ParkingService.class);
 
@@ -162,8 +163,6 @@ public class ParkingService {
 	// Do this every 2 minutes
 	@Scheduled(cron = "${polling.timer}")
 	public void updateSensorsData() {
-		
-		
 
 		logger.debug("ParkingService START updateSensorsData");
 
@@ -172,28 +171,28 @@ public class ParkingService {
 
 		try {
 			MarkerList sensors = readSensorData();
-			
-			//checkSensorsStatus
-			
-			List<Sensor> corrSensors = getCorruptedSensors(sensors);
-			
-			if(corrSensors.size() > 0 && !sentMail) {
+
+			// checkSensorsStatus
+
+			List<Sensor> lowBatterySensors = getLowBatterySensors(sensors);
+			List<Sensor> corruptedSensors = getCorruptedSensors(sensors);
+
+			if ((lowBatterySensors.size() > 0 || corruptedSensors.size() > 0) && !sentMail) {
+				mailService.sendEmail();
 				sentMail = true;
-				//TODO Send mail with id corrupted
 			}
-			
+
 			int markerListSize = sensors.getMarkers().markers.size();
 			int sensorListFromDB = sensorsRepository.getAllSensors().size();
-			
+
 			logger.debug("Number of sensors from file:{}", markerListSize);
-		
+
 			logger.debug("Number of sensors from Data Base:{}", sensorListFromDB);
-			
-			if(markerListSize != sensorListFromDB) {
+
+			if (markerListSize != sensorListFromDB) {
 				logger.debug("Sensor DB is empty or there is a new sensor.");
 				writeSensorsData();
 			}
-
 
 			for (Marker m : sensors.getMarkers().getMarkers()) {
 				Sensor s = buildSensorFromMarker(m);
@@ -278,7 +277,6 @@ public class ParkingService {
 		}
 		logger.debug("ParkingService END updateSensorsData");
 	}
-	
 
 //	state = 0 : notWorking, 1 : working
 	public boolean getSensorState(Long sensorId) {
@@ -348,14 +346,26 @@ public class ParkingService {
 		logger.debug("ParkingService END getSensorByIsActiveFalse - sensorsListSize:{}", sensors.size());
 		return sensors;
 	}
-	
+
+	public List<Sensor> getLowBatterySensors(MarkerList sensors) {
+		List<Sensor> lowBatterySensors = new ArrayList<>();
+
+		for (Marker m : sensors.getMarkers().getMarkers()) {
+			String battery = m.getBattery().substring(0, 3).replace(',', '.');
+			Float b = Float.parseFloat(battery);
+			if (b < 3) {
+				Sensor corruptedSensor = buildSensorFromMarker(m);
+				lowBatterySensors.add(corruptedSensor);
+			}
+		}
+		return lowBatterySensors;
+	}
+
 	public List<Sensor> getCorruptedSensors(MarkerList sensors) {
 		List<Sensor> corruptedSensors = new ArrayList<>();
-		
-		for(Marker m: sensors.getMarkers().getMarkers()) {
-			String battery = m.getBattery().substring(0,3).replace(',', '.');
-			Float b = Float.parseFloat(battery);
-			if(b < 3) {
+
+		for (Marker m : sensors.getMarkers().getMarkers()) {
+			if (!m.getState()) {
 				Sensor corruptedSensor = buildSensorFromMarker(m);
 				corruptedSensors.add(corruptedSensor);
 			}
@@ -532,7 +542,8 @@ public class ParkingService {
 	}
 
 	public void updateParkingAreaLongitudeById(String longitude, Long id) {
-		logger.debug("ParkingService START updateParkingAreaLongitudeById - parkAreaId{} - longitude:{}", id, longitude);
+		logger.debug("ParkingService START updateParkingAreaLongitudeById - parkAreaId{} - longitude:{}", id,
+				longitude);
 		parkingAreaRepository.updateLongitudeById(longitude, id);
 		logger.debug("ParkingService END updateParkingAreaLongitudeById - parkAreaId{} - longitude:{}", id, longitude);
 	}
