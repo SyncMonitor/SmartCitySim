@@ -1,14 +1,15 @@
 package it.synclab.smartparking.context;
 
-import javax.sql.DataSource;
 
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import it.synclab.smartparking.datasource.config.MySqlClient;
 import it.synclab.smartparking.datasource.config.PostgreClient;
 import it.synclab.smartparking.service.ParkingService;
+
+import org.springframework.boot.jdbc.DataSourceBuilder;
+import javax.sql.DataSource;
+import it.synclab.smartparking.datasource.config.MySqlClient;
 
 @Configuration
 public class ContextConfig {
@@ -18,12 +19,13 @@ public class ContextConfig {
 		return new ParkingService();
 	}
 
-
+//  Uncomment this if you want to use PostgerSQL DB
 	@Bean
 	public PostgreClient createPostgresClient() {
  		return new PostgreClient();
 	}
 	
+//	Uncomment this if you want to use MySQL DB
 //	@Bean
 //    public DataSource datasource() {
 //        return DataSourceBuilder.create()
@@ -33,4 +35,6 @@ public class ContextConfig {
 //          .password("password")
 //          .build();	
 //    }
+	
+	
 }
