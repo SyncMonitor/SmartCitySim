@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import it.synclab.smartparking.service.MailService;
 import it.synclab.smartparking.service.ParkingService;
 import it.synclab.smartparking.model.MarkerList;
 import it.synclab.smartparking.repository.model.ParkingArea;
@@ -37,6 +38,9 @@ public class ParkingResource {
 
 	@Autowired
 	private ParkingService parkingService;
+	
+	@Autowired
+	private MailService mailService;
 
 	@GetMapping("/sensor/get-all-data")
 	@ResponseBody
@@ -504,4 +508,21 @@ public class ParkingResource {
 		logger.info("ParkingResource - END updateParkingAreaStateById");
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
+	
+	@PostMapping("/sensor/send-mail")
+	@ResponseBody
+	public ResponseEntity<Object> sendMail() {
+		logger.info("ParkingResource - START sendMail");
+		try {
+			mailService.sendEmail();
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error - sendMail", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - END sendMail");
+		return ResponseEntity.status(HttpStatus.OK).build();
+	
+	}
+	
+	
 }

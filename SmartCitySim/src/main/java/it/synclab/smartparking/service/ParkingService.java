@@ -39,6 +39,9 @@ public class ParkingService {
 	
 //	@Autowired
 //	DataSource databaseClient;
+	
+	
+	private boolean sentMail = false;
 
 	@Autowired
 	private SensorsRepository sensorsRepository;
@@ -170,6 +173,15 @@ public class ParkingService {
 		try {
 			MarkerList sensors = readSensorData();
 			
+			//checkSensorsStatus
+			
+			List<Sensor> corrSensors = getCorruptedSensors(sensors);
+			
+			if(corrSensors.size() > 0 && !sentMail) {
+				sentMail = true;
+				//TODO Send mail with id corrupted
+			}
+			
 			int markerListSize = sensors.getMarkers().markers.size();
 			int sensorListFromDB = sensorsRepository.getAllSensors().size();
 			
@@ -266,6 +278,7 @@ public class ParkingService {
 		}
 		logger.debug("ParkingService END updateSensorsData");
 	}
+	
 
 //	state = 0 : notWorking, 1 : working
 	public boolean getSensorState(Long sensorId) {
@@ -334,6 +347,20 @@ public class ParkingService {
 		List<Sensor> sensors = sensorsRepository.getSensorByIsActiveFalse();
 		logger.debug("ParkingService END getSensorByIsActiveFalse - sensorsListSize:{}", sensors.size());
 		return sensors;
+	}
+	
+	public List<Sensor> getCorruptedSensors(MarkerList sensors) {
+		List<Sensor> corruptedSensors = new ArrayList<>();
+		
+		for(Marker m: sensors.getMarkers().getMarkers()) {
+			String battery = m.getBattery().substring(0,3).replace(',', '.');
+			Float b = Float.parseFloat(battery);
+			if(b < 3) {
+				Sensor corruptedSensor = buildSensorFromMarker(m);
+				corruptedSensors.add(corruptedSensor);
+			}
+		}
+		return corruptedSensors;
 	}
 
 	public void updateSensorNameById(String name, Long sensorId) {

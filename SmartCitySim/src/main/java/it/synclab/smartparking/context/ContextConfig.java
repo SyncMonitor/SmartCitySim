@@ -3,17 +3,20 @@ package it.synclab.smartparking.context;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import it.synclab.smartparking.datasource.config.PostgreClient;
 import it.synclab.smartparking.service.ParkingService;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import javax.sql.DataSource;
 import it.synclab.smartparking.datasource.config.MySqlClient;
 
 @Configuration
 public class ContextConfig {
-
+	
 	//@Bean
 	public ParkingService createParkingService() {
 		return new ParkingService();
@@ -35,6 +38,5 @@ public class ContextConfig {
 //          .password("password")
 //          .build();	
 //    }
-	
 	
 }
