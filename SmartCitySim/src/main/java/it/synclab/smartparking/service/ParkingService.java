@@ -21,12 +21,15 @@ import org.springframework.stereotype.Component;
 
 import it.synclab.smartparking.datasource.config.MySqlClient;
 import it.synclab.smartparking.datasource.config.PostgreClient;
+import it.synclab.smartparking.model.Maintainer;
 import it.synclab.smartparking.model.Marker;
 import it.synclab.smartparking.model.MarkerList;
 import it.synclab.smartparking.repository.ParkingAreaRepository;
+import it.synclab.smartparking.repository.SensorsMaintainerRepository;
 import it.synclab.smartparking.repository.SensorsRepository;
 import it.synclab.smartparking.repository.model.ParkingArea;
 import it.synclab.smartparking.repository.model.Sensor;
+import it.synclab.smartparking.repository.model.SensorsMaintainer;
 
 @Component
 public class ParkingService {
@@ -34,13 +37,29 @@ public class ParkingService {
 	@Value("${sensor.parking.url}")
 	private String sensorDataUrl;
 
+	@Value("${mail.reciver.new}")
+	private String mailReciver;
+
+	@Value("${mail.message.low.battery}")
+	private String lowBatteryMessage;
+
+	@Value("${mail.message.sensor.off}")
+	private String sensorOffMessage;
+
+	@Value("${mail.subject.battery.low}")
+	private String lowBatterySubject;
+
+	@Value("${mail.subject.sensor.off}")
+	private String sensorOffSubject;
+
 	@Autowired
 	PostgreClient databaseClient;
 
 //	@Autowired
 //	DataSource databaseClient;
 
-	private boolean sentMail = false;
+	private boolean sentMailLB = false;
+	private boolean sentMailSO = false;
 
 	@Autowired
 	private SensorsRepository sensorsRepository;
@@ -48,6 +67,10 @@ public class ParkingService {
 	@Autowired
 	private ParkingAreaRepository parkingAreaRepository;
 
+	@Autowired
+	private SensorsMaintainerRepository sensorsMaintainerRepository;
+
+	@Autowired
 	private MailService mailService;
 
 	private static final Logger logger = LogManager.getLogger(ParkingService.class);
@@ -177,9 +200,14 @@ public class ParkingService {
 			List<Sensor> lowBatterySensors = getLowBatterySensors(sensors);
 			List<Sensor> corruptedSensors = getCorruptedSensors(sensors);
 
-			if ((lowBatterySensors.size() > 0 || corruptedSensors.size() > 0) && !sentMail) {
-				mailService.sendEmail();
-				sentMail = true;
+			if (!lowBatterySensors.isEmpty() && !sentMailLB) {
+				mailService.sendEmail(mailReciver, lowBatterySubject, lowBatteryMessage);
+				sentMailLB = true;
+			}
+
+			if (!corruptedSensors.isEmpty() && !sentMailSO) {
+				mailService.sendEmail(mailReciver, sensorOffSubject, sensorOffMessage);
+				sentMailSO = true;
 			}
 
 			int markerListSize = sensors.getMarkers().markers.size();
@@ -192,11 +220,13 @@ public class ParkingService {
 			if (markerListSize != sensorListFromDB) {
 				logger.debug("Sensor DB is empty or there is a new sensor.");
 				writeSensorsData();
+				writeSensorsMaintainerData();
 			}
 
 			for (Marker m : sensors.getMarkers().getMarkers()) {
 				Sensor s = buildSensorFromMarker(m);
 				ParkingArea p = buildParkingAreaFromMarker(m);
+				SensorsMaintainer mant = buildSensorsMaintainerFromMarker(m);
 
 				Sensor aux = sensorsRepository.getSensorById(s.getId());
 				ParkingArea tmp = parkingAreaRepository.getParkingAreaByFkSensorId(p.getSensorId());
@@ -282,9 +312,7 @@ public class ParkingService {
 	public boolean getSensorState(Long sensorId) {
 		logger.debug("ParkingService START getSensorState - sensorId{}", sensorId);
 		boolean state = sensorsRepository.getSensorState(sensorId);
-		System.out.println(state);
 		logger.debug("ParkingService END getSensorState - sensorState:{} - sensorId:{}", state, sensorId);
-
 		return state;
 	}
 
@@ -365,7 +393,7 @@ public class ParkingService {
 		List<Sensor> corruptedSensors = new ArrayList<>();
 
 		for (Marker m : sensors.getMarkers().getMarkers()) {
-			if (!m.getState()) {
+			if (!m.isActive()) {
 				Sensor corruptedSensor = buildSensorFromMarker(m);
 				corruptedSensors.add(corruptedSensor);
 			}
@@ -559,5 +587,125 @@ public class ParkingService {
 		logger.debug("ParkingService START updateParkingAreaStateById - parkAreaId{} - state:{}", id, state);
 		parkingAreaRepository.setStateById(state, id);
 		logger.debug("ParkingService END updateParkingAreaStateById - parkAreaId{} - state:{}", id, state);
+	}
+
+//	SensorsMainteiner's Services
+
+	public SensorsMaintainer buildSensorsMaintainerFromMarker(Marker marker) {
+		logger.debug("ParkingService START buildSensorsMaintainerFromMarker");
+		SensorsMaintainer sensorsMaintainer = new SensorsMaintainer();
+
+		if (marker.getId() != null) {
+			sensorsMaintainer.setFkSensorId(marker.getId());
+		}
+		logger.debug("ParkingService END buildSensorsMaintainerFromMarker");
+		return sensorsMaintainer;
+	}
+
+	public void saveSensorsMaintainerData(SensorsMaintainer sensorsMaintainer) {
+
+		logger.debug("ParkingService START saveSensorsMaintainerData");
+
+		try {
+			sensorsMaintainerRepository.save(sensorsMaintainer);
+		} catch (Exception e) {
+			logger.error("ParkingService - Error", e);
+		}
+
+		logger.debug("ParkingService END saveSensorsMaintainerData");
+	}
+
+	public void writeSensorsMaintainerData() {
+
+		logger.debug("ParkingService START writeSensorsMaintainerData");
+
+		try {
+			MarkerList sensors = readSensorData();
+
+			for (Marker m : sensors.getMarkers().getMarkers()) {
+				SensorsMaintainer s = buildSensorsMaintainerFromMarker(m);
+				saveSensorsMaintainerData(s);
+			}
+
+		} catch (Exception e) {
+			logger.error("parkingService - Error", e);
+		}
+
+		logger.debug("ParkingService END writeSensorsMaintainerData");
+
+	}
+
+	public List<SensorsMaintainer> getSensorsMaintainerDataBySensorId(Long sensorId) {
+		logger.debug("ParkingService START getSensorsMaintainerDataBySensorId");
+		List<SensorsMaintainer> l = sensorsMaintainerRepository.getSensorsMaintainersByFkSensorId(sensorId);
+		logger.debug("ParkingService END getSensorsMaintainerDataBySensorId");
+		return l;
+	}
+	
+	public SensorsMaintainer getSensorsMaintainerDataById(Long id) {
+		logger.debug("ParkingService START getSensorsMaintainerDataById");
+		SensorsMaintainer l = sensorsMaintainerRepository.getSensorsMaintainerById(id);
+		logger.debug("ParkingService END getSensorsMaintainerDataById");
+		return l;
+	}
+
+	public void updateSensorMaintainerToBeRepairedById(boolean toBeRepaired, Long id) {
+		logger.debug("ParkingService START updateSensorMaintainerToBeRepaired");
+		sensorsMaintainerRepository.updateToBeRepairedById(toBeRepaired, id);
+		logger.debug("ParkingService END updateSensorMaintainerToBeRepaired");
+	}
+
+	public void updateSensorsMaintainerData(Maintainer maintainer, Long sensorId) {
+		logger.debug("ParkingService START updateSensorsMaintainerData");
+		List<SensorsMaintainer> l = getSensorsMaintainerDataBySensorId(sensorId);
+
+		for (SensorsMaintainer m : l) {
+			if (maintainer.getName() != null) {
+				sensorsMaintainerRepository.updateNameById(maintainer.getName(), m.getId());
+			}
+
+			if (maintainer.getSurname() != null) {
+				sensorsMaintainerRepository.updateSurnameById(maintainer.getSurname(), m.getId());
+			}
+
+			if (maintainer.getCompany() != null) {
+				sensorsMaintainerRepository.updateCompanyById(maintainer.getCompany(), m.getId());
+			}
+
+			if (maintainer.getPhoneNumber() != null) {
+				sensorsMaintainerRepository.updatePhoneNumberById(maintainer.getPhoneNumber(), m.getId());
+			}
+
+			if (maintainer.getMail() != null) {
+				sensorsMaintainerRepository.updateMailById(maintainer.getMail(), m.getId());
+			}
+		}
+		logger.debug("ParkingService END updateSensorsMaintainerData");
+	}
+
+	public void updateSensorsMaintainerDataById(Maintainer maintainer, Long id) {
+		logger.debug("ParkingService START updateSensorsMaintainerDataById");
+
+		if (maintainer.getName() != null) {
+			sensorsMaintainerRepository.updateNameById(maintainer.getName(), id);
+		}
+
+		if (maintainer.getSurname() != null) {
+			sensorsMaintainerRepository.updateSurnameById(maintainer.getSurname(), id);
+		}
+
+		if (maintainer.getCompany() != null) {
+			sensorsMaintainerRepository.updateCompanyById(maintainer.getCompany(), id);
+		}
+
+		if (maintainer.getPhoneNumber() != null) {
+			sensorsMaintainerRepository.updatePhoneNumberById(maintainer.getPhoneNumber(), id);
+		}
+
+		if (maintainer.getMail() != null) {
+			sensorsMaintainerRepository.updateMailById(maintainer.getMail(), id);
+		}
+		
+		logger.debug("ParkingService END updateSensorsMaintainerDataById");
 	}
 }

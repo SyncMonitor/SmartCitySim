@@ -14,29 +14,20 @@ public class MailService {
 	@Autowired
 	JavaMailSender javaMailSender;
 	
-	@Value("$mail.reciver")
-	String mailReciver;
-	
-	@Value("$mail.reciver2")
-	String mailReciver2;
-	
-	@Value("$mail.message.low.battery")
-	String messageLowBattery;
-	
-	@Value("$mail.message.sensor.off")
-	String messageSensorOff;
+	@Value("${mail.sender}")
+	private String mailSender;
 	
 	
 
 	private static final Logger logger = LogManager.getLogger(MailService.class);
 
-	public void sendEmail() {
+	public void sendEmail(String email, String subject, String text) {
 
         SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setTo(mailReciver2);
-        msg.setSubject("Sensore Scarico");
-        msg.setText("La batteria del sensore è scarica");
-        msg.setFrom("smartcitysimulator@gmail.com");
+        msg.setTo(email);
+        msg.setSubject(subject);
+        msg.setText(text);
+        msg.setFrom(mailSender);
         logger.info("Mail sent");
         
 

@@ -4,11 +4,10 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -26,9 +25,13 @@ public class Sensor {
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "fk_sensor_id", referencedColumnName = "id")
 	private List<ParkingArea> parkingArea;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "fk_sensor_id", referencedColumnName = "id")
+	private List<SensorsMaintainer> maintainer;
 
 	public Sensor() {
-	};
+	}
 
 	public Sensor(Long id, String name, String battery, String type, boolean isActive, List<ParkingArea> parkingArea) {
 		this.id = id;
@@ -42,17 +45,14 @@ public class Sensor {
 	public List<ParkingArea> getParkingArea() {
 		return parkingArea;
 	}
+
+	public void setMaintainers(List<SensorsMaintainer> maintainers) {
+		this.maintainer = maintainers;
+	}
 	
-//	public ParkingArea getParkingAreaById(Long fkSensorId) {
-//		ParkingArea parkArea = new ParkingArea();
-//		for(ParkingArea p : this.parkingArea) {
-//			if(p.getSensorId() == fkSensorId) {
-//				parkArea = p;
-//				return parkArea;
-//			}
-//		}
-//		return parkArea;
-//	}
+	public List<SensorsMaintainer> getMaintainer() {
+		return this.maintainer;
+	}
 
 	public void setParkingArea(List<ParkingArea> parkingArea) {
 		this.parkingArea = parkingArea;

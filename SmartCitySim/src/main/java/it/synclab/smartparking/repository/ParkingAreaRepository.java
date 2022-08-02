@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.synclab.smartparking.repository.model.ParkingArea;
+
 @Transactional
 @Repository
 public interface ParkingAreaRepository extends CrudRepository<ParkingArea, Long> {

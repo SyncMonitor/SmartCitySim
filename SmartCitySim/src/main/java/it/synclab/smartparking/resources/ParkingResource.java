@@ -20,14 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import it.synclab.smartparking.service.MailService;
-import it.synclab.smartparking.service.ParkingService;
+import it.synclab.smartparking.model.Maintainer;
 import it.synclab.smartparking.model.MarkerList;
 import it.synclab.smartparking.repository.model.ParkingArea;
 import it.synclab.smartparking.repository.model.Sensor;
+import it.synclab.smartparking.repository.model.SensorsMaintainer;
+import it.synclab.smartparking.service.ParkingService;
 
 @RestController
 @RequestMapping("/scs")
@@ -39,8 +37,8 @@ public class ParkingResource {
 	@Autowired
 	private ParkingService parkingService;
 	
-	@Autowired
-	private MailService mailService;
+//	@Autowired
+//	private MailService mailService;
 
 	@GetMapping("/sensor/get-all-data")
 	@ResponseBody
@@ -509,17 +507,96 @@ public class ParkingResource {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 	
-	@PostMapping("/sensor/send-mail")
+//	SensorsMaintainer's Service
+	
+	@GetMapping("/maintainer/sensor/{sensorId}")
 	@ResponseBody
-	public ResponseEntity<Object> sendMail() {
-		logger.info("ParkingResource - START sendMail");
+	public ResponseEntity<Object> getSensorsMaintainersBySensorId(@PathVariable Long sensorId) {
+		logger.info("ParkingResource - START getSensorsMaintainersBySensorId");
+		List<SensorsMaintainer> mainteiners = null;
 		try {
-			mailService.sendEmail();
+			mainteiners = parkingService.getSensorsMaintainerDataBySensorId(sensorId);
 		} catch (Exception e) {
 			logger.error("ParkingResource -  error - sendMail", e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
-		logger.info("ParkingResource - END sendMail");
+		logger.info("ParkingResource - END getSensorsMaintainersBySensorId");
+		return ResponseEntity.status(HttpStatus.OK).body(mainteiners);
+	
+	}
+	
+	@GetMapping("/maintainer/{id}")
+	@ResponseBody
+	public ResponseEntity<Object> getSensorsMaintainersById(@PathVariable Long id) {
+		logger.info("ParkingResource - START getSensorsMaintainersBySensorId");
+		SensorsMaintainer mainteiner = null;
+		try {
+			mainteiner = parkingService.getSensorsMaintainerDataById(id);
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error - sendMail", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - END getSensorsMaintainersBySensorId");
+		return ResponseEntity.status(HttpStatus.OK).body(mainteiner);
+	
+	}
+	
+	@PutMapping("/update/maintainer/sensor/{sensorId}")
+	@ResponseBody
+	public ResponseEntity<Object> updateMaintainerBySensorId(@PathVariable Long sensorId, @RequestBody Maintainer maintainer) {
+		logger.info("ParkingResource - START updateMaintainerBySensorId");
+		try {
+			parkingService.updateSensorsMaintainerData(maintainer, sensorId);
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error - updateMaintainerById", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - END updateMaintainerBySensorId");
+		return ResponseEntity.status(HttpStatus.OK).build();
+	
+	}
+	
+	@PutMapping("/update/maintainer/{id}")
+	@ResponseBody
+	public ResponseEntity<Object> updateMaintainerById(@PathVariable Long id, @RequestBody Maintainer maintainer) {
+		logger.info("ParkingResource - START updateMaintainerById");
+		try {
+			parkingService.updateSensorsMaintainerDataById(maintainer, id);
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error - updateMaintainerById", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - END updateMaintainerById");
+		return ResponseEntity.status(HttpStatus.OK).build();
+	
+	}
+	
+	@PutMapping("/update/maintainer/to-be-repaired/true/{sensorId}")
+	@ResponseBody
+	public ResponseEntity<Object> updateSensorMaintainerToBeRepairedTrueById(@PathVariable Long sensorId) {
+		logger.info("ParkingResource - START updateSensorMaintainerToBeRepairedTrueById");
+		try {
+			parkingService.updateSensorMaintainerToBeRepairedById(true, sensorId);
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error - updateMaintainerById", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - END updateSensorMaintainerToBeRepairedTrueById");
+		return ResponseEntity.status(HttpStatus.OK).build();
+	
+	}
+	
+	@PutMapping("/update/maintainer/to-be-repaired/false/{sensorId}")
+	@ResponseBody
+	public ResponseEntity<Object> updateSensorMaintainerToBeRepairedFalseById (@PathVariable Long sensorId) {
+		logger.info("ParkingResource - START updateSensorMaintainerToBeRepairedFalseById");
+		try {
+			parkingService.updateSensorMaintainerToBeRepairedById(false, sensorId);
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error - updateMaintainerById", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - END updateSensorMaintainerToBeRepairedFalseById");
 		return ResponseEntity.status(HttpStatus.OK).build();
 	
 	}
