@@ -202,24 +202,8 @@ public class ParkingService {
 			boolean sensorUpdate = false;
 			boolean parkAreaUpdate = false;
 
-			// checkSensorsStatus
+//			Check Sensors Status, eventually add new sensors
 			
-			List<Sensor> lowBatterySensors = getLowBatterySensors(sensors);
-			List<Sensor> corruptedSensors = getCorruptedSensors(sensors);
-			
-			String lowBatteryMessage = lowBatteryStartMessage + "\n\n \"Sensors\" : " + lowBatterySensors + "\n\n" + lowBatteryEndMessage;
-			String sensorOffMessage = sensorOffStartMessage + "\n\n\"Sensors\" : " + corruptedSensors + "\n\n" + sensorOffEndMessage;
-
-			if (!lowBatterySensors.isEmpty() && !sentMailLB) {
-				mailService.sendEmail(mailReciver, lowBatterySubject, lowBatteryMessage);
-				sentMailLB = true;
-			}
-
-			if (!corruptedSensors.isEmpty() && !sentMailSO) {
-				mailService.sendEmail(mailReciver, sensorOffSubject, sensorOffMessage);
-				sentMailSO = true;
-			}
-
 			int markerListSize = sensors.getMarkers().markers.size();
 			int sensorListFromDB = sensorsRepository.getAllSensors().size();
 
@@ -229,9 +213,12 @@ public class ParkingService {
 
 			if (markerListSize != sensorListFromDB) {
 				logger.debug("Sensor DB is empty or there is a new sensor.");
+				//TODO credo che questo sia sbagliato perché riscrivo 
+				//tutti i dati senza prima cancellarli.. dovrei fare un update
 				writeSensorsData();
 				writeSensorsMaintainerData();
 			}
+			//update DB data
 
 			for (Marker m : sensors.getMarkers().getMarkers()) {
 				Sensor sensor = buildSensorFromMarker(m);
@@ -313,6 +300,24 @@ public class ParkingService {
 			} else {
 				logger.info("No ParkingArea data to update");
 			}
+			
+			List<Sensor> lowBatterySensors = getLowBatterySensors(sensors);
+			List<Sensor> corruptedSensors = getCorruptedSensors(sensors);
+			
+			String lowBatteryMessage = lowBatteryStartMessage + "\n\n \"Sensors\" : " + lowBatterySensors + "\n\n" + lowBatteryEndMessage;
+			String sensorOffMessage = sensorOffStartMessage + "\n\n\"Sensors\" : " + corruptedSensors + "\n\n" + sensorOffEndMessage;
+
+			if (!lowBatterySensors.isEmpty() && !sentMailLB) {
+				mailService.sendEmail(mailReciver, lowBatterySubject, lowBatteryMessage);
+				sentMailLB = true;
+			}
+
+			if (!corruptedSensors.isEmpty() && !sentMailSO) {
+				mailService.sendEmail(mailReciver, sensorOffSubject, sensorOffMessage);
+				sentMailSO = true;
+			}
+			
+			//TODO read data from db and see if there is some sensor repaired
 
 		} catch (Exception e) {
 			logger.error("ParkingService ERROR updateSensorsData", e);
@@ -565,14 +570,14 @@ public class ParkingService {
 
 	public List<ParkingArea> getFreeParkingArea() {
 		logger.debug("ParkingService START getFreeParkingArea");
-		List<ParkingArea> parkArea = parkingAreaRepository.getParkingAreaByValueTrue();
+		List<ParkingArea> parkArea = parkingAreaRepository.getParkingAreaByValueFalse();
 		logger.debug("ParkingService END getFreeParkingArea");
 		return parkArea;
 	}
 
 	public List<ParkingArea> getOccupyParkingArea() {
 		logger.debug("ParkingService START getOccupyParkingArea");
-		List<ParkingArea> parkArea = parkingAreaRepository.getParkingAreaByValueFalse();
+		List<ParkingArea> parkArea = parkingAreaRepository.getParkingAreaByValueTrue();
 		logger.debug("ParkingService START getOccupyParkingArea");
 		return parkArea;
 	}
@@ -585,6 +590,13 @@ public class ParkingService {
 				"ParkingService END getParkingAreaByLatitudeAndLongitude - parkingAreaId:{} - latitude:{} - longitude{}",
 				p.getId(), latitude, longitude);
 		return p;
+	}
+	
+	public LocalDateTime getParkingAreaLastUpdateDateBySensorId(Long sensorId) {
+		logger.debug("ParkingService START getParkingAreaLastUpdateDateBySensorId - sensorId:{}", sensorId);
+		LocalDateTime date = parkingAreaRepository.getLastUpdateBySensoId(sensorId);
+		logger.debug("ParkingService END getParkingAreaLastUpdateDateBySensorId - sensorId:{} - date:{}", sensorId, date);
+		return date;
 	}
 
 	public void updateParkingAreaLatitudeById(String latitude, Long id) {
@@ -732,4 +744,5 @@ public class ParkingService {
 		
 		logger.debug("ParkingService END updateSensorsMaintainerDataById");
 	}
+
 }

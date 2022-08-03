@@ -1,5 +1,6 @@
 package it.synclab.smartparking.resources;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -448,6 +449,22 @@ public class ParkingResource {
 		}
 		logger.info("ParkingResource - END getParkingAreaByLatitudeAndLongitude");
 		return ResponseEntity.status(HttpStatus.OK).body(parkArea);
+	}
+	
+	@GetMapping("/parking-area/last-update-date/{sensorId}")
+	@ResponseBody
+	public ResponseEntity<Object> getParkingAreaLastUpdateDateBySensorId(@PathVariable Long sensorId) {
+		logger.info("ParkingResource - START getParkingAreaLastUpdateDateBySensorId");
+		LocalDateTime date;
+		// Security user check
+		try {
+			date = parkingService.getParkingAreaLastUpdateDateBySensorId(sensorId);
+		} catch (Exception e) {
+			logger.error("ParkingResource -  ERROR - getParkingAreaLastUpdateDateBySensorId", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - END getParkingAreaLastUpdateDateBySensorId");
+		return ResponseEntity.status(HttpStatus.OK).body(date);
 	}
 	
 	@PutMapping("/parking-area/update/latitude/{id}")

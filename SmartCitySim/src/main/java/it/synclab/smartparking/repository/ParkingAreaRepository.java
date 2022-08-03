@@ -39,6 +39,9 @@ public interface ParkingAreaRepository extends CrudRepository<ParkingArea, Long>
 	
 	public ParkingArea getParkingAreaByLatitudeAndLongitude(String latitude, String longitude);
 
+	@Query("select p.lastUpdate from ParkingArea p where p.fkSensorId = ?1")
+	public LocalDateTime getLastUpdateBySensoId(Long sensorId);
+	
 	@Modifying
 	@Query("update ParkingArea p set p.latitude = ?1 where id = ?2")
 	public void updateLatitudeById(String latitude, Long id);
@@ -58,6 +61,7 @@ public interface ParkingAreaRepository extends CrudRepository<ParkingArea, Long>
 	@Modifying
 	@Query("update ParkingArea p set p.lastUpdate = ?1 where fkSensorId = ?2")
 	public void updateSensorDateBySensorId(LocalDateTime data, Long sensorId);
+
 
 	
 
