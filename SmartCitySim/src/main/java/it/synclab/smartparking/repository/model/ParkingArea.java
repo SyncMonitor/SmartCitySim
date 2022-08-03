@@ -1,5 +1,7 @@
 package it.synclab.smartparking.repository.model;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,6 +25,9 @@ public class ParkingArea {
 	private String longitude;
 	private String address;
 	private boolean value;
+	
+	@Column(name = "last_update")
+	LocalDateTime lastUpdate;
 
 	public ParkingArea() {
 	}
@@ -32,6 +37,7 @@ public class ParkingArea {
 		this.longitude = longitude;
 		this.address = address;
 		this.value = value;
+		this.lastUpdate = LocalDateTime.now();
 	}
 
 	public Long getId() {
@@ -42,7 +48,7 @@ public class ParkingArea {
 		this.id = id;
 	}
 
-	public Long getSensorId() {
+	public Long getFkSensorId() {
 		return fkSensorId;
 	}
 
@@ -82,9 +88,25 @@ public class ParkingArea {
 		this.value = value;
 	}
 
+	public LocalDateTime getLastUpdate() {
+		return lastUpdate;
+	}
+
+	public void setLastUpdate(LocalDateTime date) {
+		this.lastUpdate = date;
+	}
+
 	@Override
 	public String toString() {
-		return "ParkingArea [Id = " + id + "sensorId = " + fkSensorId + ", latitude = " + latitude + ", longitude = "
-				+ longitude + ", address = " + address + ", value = " + value + "]";
+		return "\n\t\t{\n"
+//				+ "\t\t\"id\" : " + id + ",\n" 
+//				+ "\t\t\"sensorId\" : " + fkSensorId + ",\n" 
+				+ "\t\t\"latitude\" : \"" + latitude + "\",\n"
+				+ "\t\t\"longitude\" : \"" + longitude + "\",\n"
+				+ "\t\t\"address\":\"" + address + "\",\n"
+				+ "\t\t\"value\" : " + value + "\n\t\t}\n\t";
 	}
+	
 }
+
+

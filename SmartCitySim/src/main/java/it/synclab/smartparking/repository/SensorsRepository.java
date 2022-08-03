@@ -67,5 +67,4 @@ public interface SensorsRepository extends CrudRepository<Sensor, Long> {
 	@Query("delete Sensor c where id = ?1")
 	public void deleteSensorById(Long sensorId);
 
-
 }

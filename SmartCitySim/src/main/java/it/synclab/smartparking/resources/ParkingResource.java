@@ -498,7 +498,7 @@ public class ParkingResource {
 	public ResponseEntity<Object> updateParkingAreaStateById(@PathVariable boolean state ,@PathVariable Long id) {
 		logger.info("ParkingResource - START updateParkingAreaStateById");
 		try {
-			parkingService.updateParkingAreaStateById(state, id);
+			parkingService.updateParkingAreaValueById(state, id);
 		} catch (Exception e) {
 			logger.error("ParkingResource -  error", e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

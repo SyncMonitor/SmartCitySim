@@ -25,7 +25,7 @@ public class Sensor {
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "fk_sensor_id", referencedColumnName = "id")
 	private List<ParkingArea> parkingArea;
-	
+
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "fk_sensor_id", referencedColumnName = "id")
 	private List<SensorsMaintainer> maintainer;
@@ -49,7 +49,7 @@ public class Sensor {
 	public void setMaintainers(List<SensorsMaintainer> maintainers) {
 		this.maintainer = maintainers;
 	}
-	
+
 	public List<SensorsMaintainer> getMaintainer() {
 		return this.maintainer;
 	}
@@ -98,10 +98,21 @@ public class Sensor {
 		this.isActive = isActive;
 	}
 
+//	@Override
+//	public String toString() {
+//		return "\n{\n\t\"id\" : " + id + ",\n" + "\t\"name\" : \"" + name + "\",\n" + "\t\"battery\" : \"" + battery
+//				+ "\",\n" + "\t\"type\" : \"" + type + "\",\n" + "\t\"isActive\" : " + isActive + ",\n"
+//				+ "\t\"ParkingArea\":" + parkingArea.toString() + "\n}";
+//	}
+	
 	@Override
 	public String toString() {
-		return "Sensors [id=" + id + ", name=" + name + ", battery=" + battery + ", type=" + type + ", isActive="
-				+ isActive + parkingArea.toString() + "]";
+		return "\n{\n"
+				+ "\t\"id\" : " + id + ",\n" 
+				+ "\t\"name\" : " + name + ",\n" 
+				+ "\t\"battery\" : \"" + battery + "\",\n"
+				+ "\t\"type\" : \"" + type + "\",\n"
+				+ "\t\"isActive\":\"" + isActive + "\",\n"
+				+ "\t\"ParkingArea\":" + parkingArea.toString() + "\n}";
 	}
-
 }
