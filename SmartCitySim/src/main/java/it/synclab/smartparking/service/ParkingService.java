@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
+import it.synclab.smartparking.datasource.config.MySqlClient;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +21,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import it.synclab.smartparking.datasource.config.MySqlClient;
 import it.synclab.smartparking.datasource.config.PostgreClient;
 import it.synclab.smartparking.model.Maintainer;
 import it.synclab.smartparking.model.Marker;
@@ -210,12 +210,11 @@ public class ParkingService {
 			logger.debug("Number of sensors from file:{}", markerListSize);
 
 			logger.debug("Number of sensors from Data Base:{}", sensorListFromDB);
-
+			
 			if (markerListSize != sensorListFromDB) {
 				logger.debug("Sensor DB is empty or there is a new sensor.");
-				//TODO credo che questo sia sbagliato perché riscrivo 
-				//tutti i dati senza prima cancellarli.. dovrei fare un update
 				writeSensorsData();
+				//TODO update this method.
 				writeSensorsMaintainerData();
 			}
 			//update DB data
@@ -223,7 +222,7 @@ public class ParkingService {
 			for (Marker m : sensors.getMarkers().getMarkers()) {
 				Sensor sensor = buildSensorFromMarker(m);
 				ParkingArea parkArea = buildParkingAreaFromMarker(m);
-				SensorsMaintainer maintainer = buildSensorsMaintainerFromMarker(m);
+//				SensorsMaintainer maintainer = buildSensorsMaintainerFromMarker(m);
 
 				Sensor sensorFromDB = sensorsRepository.getSensorById(sensor.getId());
 				ParkingArea parkingAreaFromDB = parkingAreaRepository.getParkingAreaByFkSensorId(parkArea.getFkSensorId());
@@ -237,6 +236,9 @@ public class ParkingService {
 
 				if (!sensorFromDB.getBattery().equals(sensor.getBattery())) {
 					updateSensorBatteryById(sensor.getBattery(), sensor.getId());
+//					if(Float.parseFloat(sensor.getBattery()) < 3) {
+//						updateSensorMaintainerToBeRepairedById(true, sensor.getId());
+//					}
 					if (!sensorUpdate) {
 						sensorUpdate = true;
 					}
@@ -251,6 +253,7 @@ public class ParkingService {
 
 				if (sensorFromDB.isActive() != sensor.isActive()) {
 					updateSensorStateById(sensor.isActive(), sensor.getId());
+//					updateSensorMaintainerToBeRepairedById(true, sensor.getId());
 					if (!sensorUpdate) {
 						sensorUpdate = true;
 					}
@@ -304,8 +307,18 @@ public class ParkingService {
 			List<Sensor> lowBatterySensors = getLowBatterySensors(sensors);
 			List<Sensor> corruptedSensors = getCorruptedSensors(sensors);
 			
-			String lowBatteryMessage = lowBatteryStartMessage + "\n\n \"Sensors\" : " + lowBatterySensors + "\n\n" + lowBatteryEndMessage;
-			String sensorOffMessage = sensorOffStartMessage + "\n\n\"Sensors\" : " + corruptedSensors + "\n\n" + sensorOffEndMessage;
+			String lowBattery = "";
+			for(int i = 0; i < lowBatterySensors.size(); i++) {
+				lowBattery += lowBatterySensors.get(i).printMail() + "\n\n";
+			}
+			
+			String sensorOff = "";
+			for(int i = 0; i < corruptedSensors.size(); i++) {
+				sensorOff += corruptedSensors.get(i).printMail() + "\n\n";
+			}
+			
+			String lowBatteryMessage = lowBatteryStartMessage + lowBattery + "\n\n" + lowBatteryEndMessage;
+			String sensorOffMessage = sensorOffStartMessage + sensorOff + "\n\n" + sensorOffEndMessage;
 
 			if (!lowBatterySensors.isEmpty() && !sentMailLB) {
 				mailService.sendEmail(mailReciver, lowBatterySubject, lowBatteryMessage);
@@ -317,7 +330,7 @@ public class ParkingService {
 				sentMailSO = true;
 			}
 			
-			//TODO read data from db and see if there is some sensor repaired
+			
 
 		} catch (Exception e) {
 			logger.error("ParkingService ERROR updateSensorsData", e);
@@ -685,12 +698,6 @@ public class ParkingService {
 		return l;
 	}
 
-	public void updateSensorMaintainerToBeRepairedById(boolean toBeRepaired, Long id) {
-		logger.debug("ParkingService START updateSensorMaintainerToBeRepaired");
-		sensorsMaintainerRepository.updateToBeRepairedById(toBeRepaired, id);
-		logger.debug("ParkingService END updateSensorMaintainerToBeRepaired");
-	}
-
 	public void updateSensorsMaintainerData(Maintainer maintainer, Long sensorId) {
 		logger.debug("ParkingService START updateSensorsMaintainerData");
 		List<SensorsMaintainer> l = getSensorsMaintainerDataBySensorId(sensorId);
@@ -743,6 +750,12 @@ public class ParkingService {
 		}
 		
 		logger.debug("ParkingService END updateSensorsMaintainerDataById");
+	}
+	
+	public void updateSensorMaintainerToBeRepairedById(boolean toBeRepaired, Long id) {
+		logger.debug("ParkingService START updateSensorMaintainerToBeRepaired");
+		sensorsMaintainerRepository.updateToBeRepairedById(toBeRepaired, id);
+		logger.debug("ParkingService END updateSensorMaintainerToBeRepaired");
 	}
 
 }

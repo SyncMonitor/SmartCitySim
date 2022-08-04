@@ -97,13 +97,6 @@ public class Sensor {
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
-
-//	@Override
-//	public String toString() {
-//		return "\n{\n\t\"id\" : " + id + ",\n" + "\t\"name\" : \"" + name + "\",\n" + "\t\"battery\" : \"" + battery
-//				+ "\",\n" + "\t\"type\" : \"" + type + "\",\n" + "\t\"isActive\" : " + isActive + ",\n"
-//				+ "\t\"ParkingArea\":" + parkingArea.toString() + "\n}";
-//	}
 	
 	@Override
 	public String toString() {
@@ -114,5 +107,14 @@ public class Sensor {
 				+ "\t\"type\" : \"" + type + "\",\n"
 				+ "\t\"isActive\":\"" + isActive + "\",\n"
 				+ "\t\"ParkingArea\":" + parkingArea.toString() + "\n}";
+	}
+	
+	public String printMail() {
+		String text =  "Id = " + id + ", Name = " + name + ", ";
+		
+		for(int i=0; i < parkingArea.size(); i++){
+		    text += "Address = " +  parkingArea.get(i).getAddress() + ", Latitude = " + parkingArea.get(i).getLatitude() + ", Longitude = " + parkingArea.get(i).getLongitude();
+		}
+		return text;
 	}
 }

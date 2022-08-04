@@ -12,7 +12,7 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "parking_area", uniqueConstraints = {
-		@UniqueConstraint(name = "UniqueLatitudeAndLongitude", columnNames = { "latitude", "longitude" }) })
+		@UniqueConstraint(name = "UniqueFkSensorId", columnNames = { "fk_sensor_id" }) })
 public class ParkingArea {
 
 	@Id
@@ -96,6 +96,7 @@ public class ParkingArea {
 		this.lastUpdate = date;
 	}
 
+	
 	@Override
 	public String toString() {
 		return "\n\t\t{\n"
@@ -108,5 +109,3 @@ public class ParkingArea {
 	}
 	
 }
-
-

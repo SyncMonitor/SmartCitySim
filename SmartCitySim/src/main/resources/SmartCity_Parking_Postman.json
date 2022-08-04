@@ -973,6 +973,42 @@
 			"response": []
 		},
 		{
+			"name": "getParkingAreaLastUpdateDate",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/parking-area/last-update-date/6",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"parking-area",
+						"last-update-date",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "updateSensorsMaintainerBySensorId",
 			"request": {
 				"auth": {
