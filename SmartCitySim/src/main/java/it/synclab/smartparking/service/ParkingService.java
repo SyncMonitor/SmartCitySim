@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import it.synclab.smartparking.datasource.config.PostgreClient;
 import it.synclab.smartparking.model.Maintainer;
@@ -33,6 +34,7 @@ import it.synclab.smartparking.repository.model.Sensor;
 import it.synclab.smartparking.repository.model.SensorsMaintainer;
 
 @Component
+@Transactional
 public class ParkingService {
 
 	@Value("${sensor.parking.url}")
@@ -46,7 +48,7 @@ public class ParkingService {
 	private String lowBatteryStartMessage;
 	@Value("${mail.message.sensor.off.start}")
 	private String sensorOffStartMessage;
-	
+
 	@Value("${mail.message.low.battery.end}")
 	private String lowBatteryEndMessage;
 
@@ -64,9 +66,6 @@ public class ParkingService {
 
 //	@Autowired
 //	DataSource databaseClient;
-
-	private boolean sentMailLB = false;
-	private boolean sentMailSO = false;
 
 	@Autowired
 	private SensorsRepository sensorsRepository;
@@ -190,7 +189,7 @@ public class ParkingService {
 
 	}
 
-	// Do this every 2 minutes
+	// Do this every 2 minutes (Polling Function)
 	@Scheduled(cron = "${polling.timer}")
 	public void updateSensorsData() {
 
@@ -198,144 +197,174 @@ public class ParkingService {
 
 		try {
 			MarkerList sensors = readSensorData();
-			
-			boolean sensorUpdate = false;
-			boolean parkAreaUpdate = false;
 
-//			Check Sensors Status, eventually add new sensors
-			
-			int markerListSize = sensors.getMarkers().markers.size();
-			int sensorListFromDB = sensorsRepository.getAllSensors().size();
+			writeSensorsIfAdded(sensors);
 
-			logger.debug("Number of sensors from file:{}", markerListSize);
+			updateDBData(sensors);
 
-			logger.debug("Number of sensors from Data Base:{}", sensorListFromDB);
-			
-			if (markerListSize != sensorListFromDB) {
-				logger.debug("Sensor DB is empty or there is a new sensor.");
-				writeSensorsData();
-				//TODO update this method.
-				writeSensorsMaintainerData();
-			}
-			//update DB data
-
-			for (Marker m : sensors.getMarkers().getMarkers()) {
-				Sensor sensor = buildSensorFromMarker(m);
-				ParkingArea parkArea = buildParkingAreaFromMarker(m);
-//				SensorsMaintainer maintainer = buildSensorsMaintainerFromMarker(m);
-
-				Sensor sensorFromDB = sensorsRepository.getSensorById(sensor.getId());
-				ParkingArea parkingAreaFromDB = parkingAreaRepository.getParkingAreaByFkSensorId(parkArea.getFkSensorId());
-
-				if (!sensorFromDB.getName().equals(sensor.getName())) {
-					updateSensorNameById(sensor.getName(), sensor.getId());
-					if (!sensorUpdate) {
-						sensorUpdate = true;
-					}
-				}
-
-				if (!sensorFromDB.getBattery().equals(sensor.getBattery())) {
-					updateSensorBatteryById(sensor.getBattery(), sensor.getId());
-//					if(Float.parseFloat(sensor.getBattery()) < 3) {
-//						updateSensorMaintainerToBeRepairedById(true, sensor.getId());
-//					}
-					if (!sensorUpdate) {
-						sensorUpdate = true;
-					}
-				}
-
-				if (!sensorFromDB.getType().equals(sensor.getType())) {
-					updateSensorTypeById(sensor.getType(), sensor.getId());
-					if (!sensorUpdate) {
-						sensorUpdate = true;
-					}
-				}
-
-				if (sensorFromDB.isActive() != sensor.isActive()) {
-					updateSensorStateById(sensor.isActive(), sensor.getId());
-//					updateSensorMaintainerToBeRepairedById(true, sensor.getId());
-					if (!sensorUpdate) {
-						sensorUpdate = true;
-					}
-				}
-
-				if (!parkingAreaFromDB.getLatitude().equals(parkArea.getLatitude())) {
-					// tmp.getId() because when extract data from sensor you don't
-//					have p.Id because this is automatically assigned by DB
-					updateParkingAreaLatitudeById(parkArea.getLatitude(), parkingAreaFromDB.getId());
-					if (!parkAreaUpdate) {
-						parkAreaUpdate = true;
-					}
-				}
-
-				if (!parkingAreaFromDB.getLongitude().equals(parkArea.getLongitude())) {
-					updateParkingAreaLongitudeById(parkArea.getLongitude(), parkingAreaFromDB.getId());
-					if (!parkAreaUpdate) {
-						parkAreaUpdate = true;
-					}
-				}
-
-				if (!parkingAreaFromDB.getAddress().equals(parkArea.getAddress())) {
-					updateParkingAreaAddressById(parkArea.getAddress(), parkingAreaFromDB.getId());
-					if (!parkAreaUpdate) {
-						parkAreaUpdate = true;
-					}
-				}
-				
-				//value = state
-				if (parkingAreaFromDB.getValue() != parkArea.getValue()) {
-					updateParkingAreaValueById(parkArea.getValue(), parkingAreaFromDB.getId());
-					updateSensorDateBySensorId(LocalDateTime.now(), sensor.getId());
-					if (!parkAreaUpdate) {
-						parkAreaUpdate = true;
-					}
-				}
-			}
-
-			if (sensorUpdate) {
-				logger.info("Sensor data updated");
-			} else {
-				logger.info("No Sensors data to update");
-			}
-
-			if (parkAreaUpdate) {
-				logger.info("ParkingArea data updated");
-			} else {
-				logger.info("No ParkingArea data to update");
-			}
-			
-			List<Sensor> lowBatterySensors = getLowBatterySensors(sensors);
-			List<Sensor> corruptedSensors = getCorruptedSensors(sensors);
-			
-			String lowBattery = "";
-			for(int i = 0; i < lowBatterySensors.size(); i++) {
-				lowBattery += lowBatterySensors.get(i).printMail() + "\n\n";
-			}
-			
-			String sensorOff = "";
-			for(int i = 0; i < corruptedSensors.size(); i++) {
-				sensorOff += corruptedSensors.get(i).printMail() + "\n\n";
-			}
-			
-			String lowBatteryMessage = lowBatteryStartMessage + lowBattery + "\n\n" + lowBatteryEndMessage;
-			String sensorOffMessage = sensorOffStartMessage + sensorOff + "\n\n" + sensorOffEndMessage;
-
-			if (!lowBatterySensors.isEmpty() && !sentMailLB) {
-				mailService.sendEmail(mailReciver, lowBatterySubject, lowBatteryMessage);
-				sentMailLB = true;
-			}
-
-			if (!corruptedSensors.isEmpty() && !sentMailSO) {
-				mailService.sendEmail(mailReciver, sensorOffSubject, sensorOffMessage);
-				sentMailSO = true;
-			}
-			
-			
+			sendLowBatterySensorsMail();
+			sendCorruptedSensorsMail();
 
 		} catch (Exception e) {
 			logger.error("ParkingService ERROR updateSensorsData", e);
 		}
 		logger.debug("ParkingService END updateSensorsData");
+	}
+
+	public void updateDBData(MarkerList sensors) {
+
+		boolean sensorUpdate = false;
+		boolean parkAreaUpdate = false;
+
+		for (Marker m : sensors.getMarkers().getMarkers()) {
+			Sensor sensor = buildSensorFromMarker(m);
+			ParkingArea parkArea = buildParkingAreaFromMarker(m);
+
+			Sensor sensorFromDB = sensorsRepository.getSensorById(sensor.getId());
+			ParkingArea parkingAreaFromDB = parkingAreaRepository.getParkingAreaByFkSensorId(parkArea.getFkSensorId());
+
+			if (!sensorFromDB.getName().equals(sensor.getName())) {
+				updateSensorNameById(sensor.getName(), sensor.getId());
+				if (!sensorUpdate) {
+					sensorUpdate = true;
+				}
+			}
+
+			if (!sensorFromDB.getBattery().equals(sensor.getBattery())) {
+				updateSensorBatteryById(sensor.getBattery(), sensor.getId());
+				if (Float.parseFloat(sensor.getBattery().replace(",", ".").replace("V", "")) == 2.0 
+				 || Float.parseFloat(sensor.getBattery().replace(",", ".").replace("V", "")) == 1.0) {
+					updateSensorMaintainerToBeChargedBySensorId(true, sensor.getId());
+				}
+				if (!sensorUpdate) {
+					sensorUpdate = true;
+				}
+			}
+
+			if (!sensorFromDB.getType().equals(sensor.getType())) {
+				updateSensorTypeById(sensor.getType(), sensor.getId());
+				if (!sensorUpdate) {
+					sensorUpdate = true;
+				}
+			}
+
+			if (sensorFromDB.isActive() != sensor.isActive()) {
+				updateSensorStateById(sensor.isActive(), sensor.getId());
+				
+				if(!sensor.isActive()) {
+					updateSensorMaintainerToBeRepairedBySensorId(true, sensor.getId());					
+				}
+				if (!sensorUpdate) {
+					sensorUpdate = true;
+				}
+			}
+
+			if (!parkingAreaFromDB.getLatitude().equals(parkArea.getLatitude())) {
+				// tmp.getId() because when extract data from sensor you don't
+//					have p.Id because this is automatically assigned by DB
+				updateParkingAreaLatitudeById(parkArea.getLatitude(), parkingAreaFromDB.getId());
+				if (!parkAreaUpdate) {
+					parkAreaUpdate = true;
+				}
+			}
+
+			if (!parkingAreaFromDB.getLongitude().equals(parkArea.getLongitude())) {
+				updateParkingAreaLongitudeById(parkArea.getLongitude(), parkingAreaFromDB.getId());
+				if (!parkAreaUpdate) {
+					parkAreaUpdate = true;
+				}
+			}
+
+			if (!parkingAreaFromDB.getAddress().equals(parkArea.getAddress())) {
+				updateParkingAreaAddressById(parkArea.getAddress(), parkingAreaFromDB.getId());
+				if (!parkAreaUpdate) {
+					parkAreaUpdate = true;
+				}
+			}
+
+			// value = state
+			if (parkingAreaFromDB.getValue() != parkArea.getValue()) {
+				updateParkingAreaValueById(parkArea.getValue(), parkingAreaFromDB.getId());
+				updateSensorDateById(LocalDateTime.now(), sensor.getId());
+				if (!parkAreaUpdate) {
+					parkAreaUpdate = true;
+				}
+			}
+		}
+
+		if (sensorUpdate) {
+			logger.info("Sensor data updated");
+		} else {
+			logger.info("No Sensors data to update");
+		}
+
+		if (parkAreaUpdate) {
+			logger.info("ParkingArea data updated");
+		} else {
+			logger.info("No ParkingArea data to update");
+		}
+	}
+
+	public void sendCorruptedSensorsMail() {
+		List<SensorsMaintainer> maintainers;
+
+		maintainers = getAllSensorsMaintainerData();
+
+		for (SensorsMaintainer m : maintainers) {
+			if (m.isToBeRepaired()) {
+				{
+					logger.debug("mail: " + m.getMail());					
+					String sensorOff = "";
+					sensorOff += printMail(getSensorById(m.getFkSensorId()),getSensorById(m.getFkSensorId()).getParkingArea()) + "\n\n";
+					String sensorOffMessage = sensorOffStartMessage + sensorOff + sensorOffEndMessage;
+					mailService.sendEmail(m.getMail(), sensorOffSubject + " " +  getSensorById(m.getFkSensorId()).getName(), sensorOffMessage);
+					m.setToBeRepaired(false);
+				}
+			}
+		}
+	}
+	
+	public void sendLowBatterySensorsMail() {
+		List<SensorsMaintainer> maintainers;
+
+		maintainers = getAllSensorsMaintainerData();
+
+		for (SensorsMaintainer m : maintainers) {
+			if (m.isToBeCharged()) {
+				{
+					logger.debug("mail: " + m.getMail());					
+					String lowBattery = "";
+					lowBattery += printMail(getSensorById(m.getFkSensorId()),getSensorById(m.getFkSensorId()).getParkingArea()) + "\n\n";
+					String lowBatterySensorMessage = lowBatteryStartMessage + lowBattery + lowBatteryEndMessage;
+					mailService.sendEmail(m.getMail(), lowBatterySubject + " " +  getSensorById(m.getFkSensorId()).getName(), lowBatterySensorMessage);
+					m.setToBeCharged(false);
+				}
+			}
+		}
+	}
+
+	public String printMail(Sensor s, List<ParkingArea> parkingArea) {
+		String text = "Id = " + s.getId() + ", Name = " + s.getName() + ", ";
+		for (int i = 0; i < parkingArea.size(); i++) {
+			text += "Address = " + parkingArea.get(i).getAddress() + ", Latitude = " + parkingArea.get(i).getLatitude()
+					+ ", Longitude = " + parkingArea.get(i).getLongitude();
+		}
+		return text;
+	}
+
+	public void writeSensorsIfAdded(MarkerList sensors) {
+		int markerListSize = sensors.getMarkers().markers.size();
+		int sensorListFromDB = sensorsRepository.getAllSensors().size();
+
+		logger.debug("Number of sensors from file:{}", markerListSize);
+
+		logger.debug("Number of sensors from Data Base:{}", sensorListFromDB);
+
+		if (markerListSize != sensorListFromDB) {
+			logger.debug("Sensor DB is empty or there is a new sensor.");
+			writeSensorsData();
+			writeSensorsMaintainerData();
+		}
 	}
 
 //	state = 0 : notWorking, 1 : working
@@ -456,14 +485,12 @@ public class ParkingService {
 		sensorsRepository.updateStateById(state, id);
 		logger.debug("ParkingService END updateSensorStateById - sensorState:{} - sensorId:{}", state, id);
 	}
-	
-	public void updateSensorDateBySensorId(LocalDateTime data, Long sensorId) {
-		logger.debug("ParkingService START updateSensorDateBySensorId - sensorId:{}", sensorId);
-		parkingAreaRepository.updateSensorDateBySensorId(data, sensorId);
-		logger.debug("ParkingService END updateParkingAreaDateById - sensorId:{}", sensorId);
+
+	public void updateSensorDateById(LocalDateTime data, Long id) {
+		logger.debug("ParkingService START updateSensorDateById - id:{}", id);
+		parkingAreaRepository.updateSensorDateBySensorId(data, id);
+		logger.debug("ParkingService END updateSensorDateById - id:{}", id);
 	}
-	
-	
 
 	public void deleteSensorById(Long sensorId) {
 		logger.debug("ParkingService START deleteSensorById - sensorId:{}", sensorId);
@@ -498,14 +525,6 @@ public class ParkingService {
 		return markersList;
 	}
 
-//	public void saveParkingAreaData(ParkingArea parkArea) {
-//		try {
-//			parkingAreaRepository.save(parkArea);
-//		} catch (Exception e) {
-//			System.out.println(e);
-//		}
-//	}
-
 	public ParkingArea buildParkingAreaFromMarker(Marker marker) {
 		logger.debug("ParkingService START buildParkingAreaFromMarker");
 		ParkingArea parkArea = new ParkingArea();
@@ -527,10 +546,8 @@ public class ParkingService {
 		}
 
 		parkArea.setValue(marker.getState());
-		
-		parkArea.setLastUpdate(LocalDateTime.now());
 
-		
+		parkArea.setLastUpdate(LocalDateTime.now());
 
 		logger.debug("ParkingService END buildParkingAreaFromMarker");
 
@@ -604,11 +621,12 @@ public class ParkingService {
 				p.getId(), latitude, longitude);
 		return p;
 	}
-	
+
 	public LocalDateTime getParkingAreaLastUpdateDateBySensorId(Long sensorId) {
 		logger.debug("ParkingService START getParkingAreaLastUpdateDateBySensorId - sensorId:{}", sensorId);
 		LocalDateTime date = parkingAreaRepository.getLastUpdateBySensoId(sensorId);
-		logger.debug("ParkingService END getParkingAreaLastUpdateDateBySensorId - sensorId:{} - date:{}", sensorId, date);
+		logger.debug("ParkingService END getParkingAreaLastUpdateDateBySensorId - sensorId:{} - date:{}", sensorId,
+				date);
 		return date;
 	}
 
@@ -647,7 +665,13 @@ public class ParkingService {
 		if (marker.getId() != null) {
 			sensorsMaintainer.setFkSensorId(marker.getId());
 		}
+
+//		Type attribute missing in XML file
+//		if(m.getType() != null) {}
+		sensorsMaintainer.setType("ParkingArea");
+
 		logger.debug("ParkingService END buildSensorsMaintainerFromMarker");
+
 		return sensorsMaintainer;
 	}
 
@@ -672,8 +696,8 @@ public class ParkingService {
 			MarkerList sensors = readSensorData();
 
 			for (Marker m : sensors.getMarkers().getMarkers()) {
-				SensorsMaintainer s = buildSensorsMaintainerFromMarker(m);
-				saveSensorsMaintainerData(s);
+				SensorsMaintainer maintainer = buildSensorsMaintainerFromMarker(m);
+				saveSensorsMaintainerData(maintainer);
 			}
 
 		} catch (Exception e) {
@@ -684,25 +708,32 @@ public class ParkingService {
 
 	}
 
+	public List<SensorsMaintainer> getAllSensorsMaintainerData() {
+		logger.debug("ParkingService START getAllSensorsMaintainerData");
+		List<SensorsMaintainer> maintainers = sensorsMaintainerRepository.getAllSensorsMaintainerData();
+		logger.debug("ParkingService END getAllSensorsMaintainerData");
+		return maintainers;
+	}
+
 	public List<SensorsMaintainer> getSensorsMaintainerDataBySensorId(Long sensorId) {
 		logger.debug("ParkingService START getSensorsMaintainerDataBySensorId");
-		List<SensorsMaintainer> l = sensorsMaintainerRepository.getSensorsMaintainersByFkSensorId(sensorId);
+		List<SensorsMaintainer> maintainers = sensorsMaintainerRepository.getSensorsMaintainersByFkSensorId(sensorId);
 		logger.debug("ParkingService END getSensorsMaintainerDataBySensorId");
-		return l;
+		return maintainers;
 	}
-	
+
 	public SensorsMaintainer getSensorsMaintainerDataById(Long id) {
 		logger.debug("ParkingService START getSensorsMaintainerDataById");
-		SensorsMaintainer l = sensorsMaintainerRepository.getSensorsMaintainerById(id);
+		SensorsMaintainer maintainers = sensorsMaintainerRepository.getSensorsMaintainerById(id);
 		logger.debug("ParkingService END getSensorsMaintainerDataById");
-		return l;
+		return maintainers;
 	}
 
-	public void updateSensorsMaintainerData(Maintainer maintainer, Long sensorId) {
-		logger.debug("ParkingService START updateSensorsMaintainerData");
-		List<SensorsMaintainer> l = getSensorsMaintainerDataBySensorId(sensorId);
+	public void updateSensorsMaintainerDataBySensorId(Maintainer maintainer, Long sensorId) {
+		logger.debug("ParkingService START updateSensorsMaintainerDataBySensorId");
+		List<SensorsMaintainer> maintainers = getSensorsMaintainerDataBySensorId(sensorId);
 
-		for (SensorsMaintainer m : l) {
+		for (SensorsMaintainer m : maintainers) {
 			if (maintainer.getName() != null) {
 				sensorsMaintainerRepository.updateNameById(maintainer.getName(), m.getId());
 			}
@@ -723,7 +754,7 @@ public class ParkingService {
 				sensorsMaintainerRepository.updateMailById(maintainer.getMail(), m.getId());
 			}
 		}
-		logger.debug("ParkingService END updateSensorsMaintainerData");
+		logger.debug("ParkingService END updateSensorsMaintainerDataBySensorId");
 	}
 
 	public void updateSensorsMaintainerDataById(Maintainer maintainer, Long id) {
@@ -748,14 +779,20 @@ public class ParkingService {
 		if (maintainer.getMail() != null) {
 			sensorsMaintainerRepository.updateMailById(maintainer.getMail(), id);
 		}
-		
+
 		logger.debug("ParkingService END updateSensorsMaintainerDataById");
 	}
-	
-	public void updateSensorMaintainerToBeRepairedById(boolean toBeRepaired, Long id) {
-		logger.debug("ParkingService START updateSensorMaintainerToBeRepaired");
-		sensorsMaintainerRepository.updateToBeRepairedById(toBeRepaired, id);
-		logger.debug("ParkingService END updateSensorMaintainerToBeRepaired");
+
+	public void updateSensorMaintainerToBeRepairedBySensorId(boolean toBeRepaired, Long sensorId) {
+		logger.debug("ParkingService START updateSensorMaintainerToBeRepairedBySensorId");
+		sensorsMaintainerRepository.updateToBeRepairedBySensorId(toBeRepaired, sensorId);
+		logger.debug("ParkingService END updateSensorMaintainerToBeRepairedBySensorId");
+	}
+
+	public void updateSensorMaintainerToBeChargedBySensorId(boolean toBeCharged, Long sensorId) {
+		logger.debug("ParkingService START updateSensorMaintainerToBeChargeddBySensorId");
+		sensorsMaintainerRepository.updateToBeChargedBySensorId(toBeCharged, sensorId);
+		logger.debug("ParkingService END updateSensorMaintainerToBeChargeddBySensorId");
 	}
 
 }

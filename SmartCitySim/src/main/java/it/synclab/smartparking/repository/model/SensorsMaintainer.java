@@ -6,9 +6,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "sensors_maintainer")
+@Table(name = "sensors_maintainer", uniqueConstraints = { @UniqueConstraint(columnNames = { "fk_sensor_id", "type" }) })
 public class SensorsMaintainer {
 	
 	@Id
@@ -31,20 +32,27 @@ public class SensorsMaintainer {
 	
 	private String mail;
 	
+	private String type;
+	
 	@Column(name = "to_be_repaired")
 	private boolean toBeRepaired;
+	
+	@Column(name = "to_be_charged")
+	private boolean toBeCharged;
 
 	public SensorsMaintainer() {
 		
 	}
 
-	public SensorsMaintainer(String ownerName, String ownerSurame, String company, String phoneNumber, String mail, boolean toBeRepaired) {
+	public SensorsMaintainer(String ownerName, String ownerSurame, String company, String phoneNumber, String mail, String type, boolean toBeRepaired, boolean toBeCharged) {
 		this.ownerName = ownerName;
 		this.ownerSurname = ownerSurame;
 		this.company = company;
 		this.phoneNumber = phoneNumber;
 		this.mail = mail;
+		this.type = type;
 		this.toBeRepaired = toBeRepaired;
+		this.toBeCharged = toBeCharged;
 	}
 
 	public Long getId() {
@@ -102,6 +110,14 @@ public class SensorsMaintainer {
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
+	
+	public String getType() {
+		return type;
+	}
+	
+	public void setType(String type) {
+		this.type = type;
+	}
 
 	public boolean isToBeRepaired() {
 		return toBeRepaired;
@@ -111,10 +127,18 @@ public class SensorsMaintainer {
 		this.toBeRepaired = toBeRepaired;
 	}
 
+	public boolean isToBeCharged() {
+		return toBeCharged;
+	}
+
+	public void setToBeCharged(boolean toBeCharged) {
+		this.toBeCharged = toBeCharged;
+	}
+
 	@Override
 	public String toString() {
-		return "SensorsManteiner [id=" + id + ", fkSensorId=" + fkSensorId + ", ownerName=" + ownerName
-				+ ", ownerSurame=" + ownerSurname + ", company=" + company + ", phoneNumber=" + phoneNumber + ", mail="
-				+ mail + ", toBeRepaired=" + toBeRepaired + "]";
+		return "SensorsMaintainer [id=" + id + ", fkSensorId=" + fkSensorId + ", ownerName=" + ownerName
+				+ ", ownerSurname=" + ownerSurname + ", company=" + company + ", phoneNumber=" + phoneNumber + ", mail="
+				+ mail + ", type=" + type + ", toBeRepaired=" + toBeRepaired + ", toBeCharged=" + toBeCharged + "]";
 	}
 }

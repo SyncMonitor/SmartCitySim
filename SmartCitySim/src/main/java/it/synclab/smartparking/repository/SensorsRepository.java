@@ -16,7 +16,10 @@ public interface SensorsRepository extends CrudRepository<Sensor, Long> {
 	
 	// JPQL query based on Java class, not on DB tables.
 	@Query("select s from Sensor s where s.id = ?1")
-	Sensor getSensorById(Long sensorId);
+	public Sensor getSensorById(Long sensorId);
+	
+	@Query("select s from Sensor s")
+	public List<Sensor> getAllSensorFromDB();
 
 	@Query("select s.isActive from Sensor s where s.id = ?1")
 	public boolean getSensorState(Long sensorId);

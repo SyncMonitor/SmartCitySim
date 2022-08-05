@@ -534,7 +534,7 @@ public class ParkingResource {
 		try {
 			mainteiners = parkingService.getSensorsMaintainerDataBySensorId(sensorId);
 		} catch (Exception e) {
-			logger.error("ParkingResource -  error - sendMail", e);
+			logger.error("ParkingResource -  error - getSensorsMaintainersBySensorId", e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 		logger.info("ParkingResource - END getSensorsMaintainersBySensorId");
@@ -550,11 +550,27 @@ public class ParkingResource {
 		try {
 			mainteiner = parkingService.getSensorsMaintainerDataById(id);
 		} catch (Exception e) {
-			logger.error("ParkingResource -  error - sendMail", e);
+			logger.error("ParkingResource -  error - getSensorsMaintainersById", e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 		logger.info("ParkingResource - END getSensorsMaintainersBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).body(mainteiner);
+	
+	}
+	
+	@GetMapping("/maintainers/all")
+	@ResponseBody
+	public ResponseEntity<Object> getAllSensorsMaintainersData() {
+		logger.info("ParkingResource - START getAllSensorsMaintainersData");
+		List<SensorsMaintainer> mainteiners = new ArrayList<>();
+		try {
+			mainteiners = parkingService.getAllSensorsMaintainerData();
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error - getAllSensorsMaintainersData", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - END getAllSensorsMaintainersData");
+		return ResponseEntity.status(HttpStatus.OK).body(mainteiners);
 	
 	}
 	
@@ -563,7 +579,7 @@ public class ParkingResource {
 	public ResponseEntity<Object> updateMaintainerBySensorId(@PathVariable Long sensorId, @RequestBody Maintainer maintainer) {
 		logger.info("ParkingResource - START updateMaintainerBySensorId");
 		try {
-			parkingService.updateSensorsMaintainerData(maintainer, sensorId);
+			parkingService.updateSensorsMaintainerDataBySensorId(maintainer, sensorId);
 		} catch (Exception e) {
 			logger.error("ParkingResource -  error - updateMaintainerById", e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -590,30 +606,60 @@ public class ParkingResource {
 	
 	@PutMapping("/update/maintainer/to-be-repaired/true/{sensorId}")
 	@ResponseBody
-	public ResponseEntity<Object> updateSensorMaintainerToBeRepairedTrueById(@PathVariable Long sensorId) {
-		logger.info("ParkingResource - START updateSensorMaintainerToBeRepairedTrueById");
+	public ResponseEntity<Object> updateSensorMaintainerToBeRepairedTrueBySensorId(@PathVariable Long sensorId) {
+		logger.info("ParkingResource - START updateSensorMaintainerToBeRepairedTrueBySensorId");
 		try {
-			parkingService.updateSensorMaintainerToBeRepairedById(true, sensorId);
+			parkingService.updateSensorMaintainerToBeRepairedBySensorId(true, sensorId);
 		} catch (Exception e) {
-			logger.error("ParkingResource -  error - updateMaintainerById", e);
+			logger.error("ParkingResource -  error - updateSensorMaintainerToBeRepairedTrueBySensorId", e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
-		logger.info("ParkingResource - END updateSensorMaintainerToBeRepairedTrueById");
+		logger.info("ParkingResource - END updateSensorMaintainerToBeRepairedTrueBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).build();
 	
 	}
 	
 	@PutMapping("/update/maintainer/to-be-repaired/false/{sensorId}")
 	@ResponseBody
-	public ResponseEntity<Object> updateSensorMaintainerToBeRepairedFalseById (@PathVariable Long sensorId) {
-		logger.info("ParkingResource - START updateSensorMaintainerToBeRepairedFalseById");
+	public ResponseEntity<Object> updateSensorMaintainerToBeRepairedFalseBySensorId (@PathVariable Long sensorId) {
+		logger.info("ParkingResource - START updateSensorMaintainerToBeRepairedFalseBySensorId");
 		try {
-			parkingService.updateSensorMaintainerToBeRepairedById(false, sensorId);
+			parkingService.updateSensorMaintainerToBeRepairedBySensorId(false, sensorId);
 		} catch (Exception e) {
-			logger.error("ParkingResource -  error - updateMaintainerById", e);
+			logger.error("ParkingResource -  error - updateSensorMaintainerToBeRepairedFalseBySensorId", e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
-		logger.info("ParkingResource - END updateSensorMaintainerToBeRepairedFalseById");
+		logger.info("ParkingResource - END updateSensorMaintainerToBeRepairedFalseBySensorId");
+		return ResponseEntity.status(HttpStatus.OK).build();
+	
+	}
+	
+	@PutMapping("/update/maintainer/to-be-charged/true/{sensorId}")
+	@ResponseBody
+	public ResponseEntity<Object> updateSensorMaintainerToBeRChargedTrueBySensorId(@PathVariable Long sensorId) {
+		logger.info("ParkingResource - START updateSensorMaintainerToBeRChargedTrueBySensorId");
+		try {
+			parkingService.updateSensorMaintainerToBeChargedBySensorId(true, sensorId);
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error - updateSensorMaintainerToBeRChargedTrueBySensorId", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - END updateSensorMaintainerToBeRChargedTrueBySensorId");
+		return ResponseEntity.status(HttpStatus.OK).build();
+	
+	}
+	
+	@PutMapping("/update/maintainer/to-be-charged/false/{sensorId}")
+	@ResponseBody
+	public ResponseEntity<Object> updateSensorMaintainerToBeChargedFalseBySensorId (@PathVariable Long sensorId) {
+		logger.info("ParkingResource - START updateSensorMaintainerToBeChargedFalseBySensorId");
+		try {
+			parkingService.updateSensorMaintainerToBeChargedBySensorId(false, sensorId);
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error - updateSensorMaintainerToBeChargedFalseBySensorId", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - END updateSensorMaintainerToBeChargedFalseBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).build();
 	
 	}

@@ -4,11 +4,15 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 @Table(name = "sensors")
@@ -46,6 +50,10 @@ public class Sensor {
 		return parkingArea;
 	}
 
+	public void setParkingArea(List<ParkingArea> parkingArea) {
+		this.parkingArea = parkingArea;
+	}
+	
 	public void setMaintainers(List<SensorsMaintainer> maintainers) {
 		this.maintainer = maintainers;
 	}
@@ -54,9 +62,6 @@ public class Sensor {
 		return this.maintainer;
 	}
 
-	public void setParkingArea(List<ParkingArea> parkingArea) {
-		this.parkingArea = parkingArea;
-	}
 
 	public Long getId() {
 		return id;
@@ -109,12 +114,5 @@ public class Sensor {
 				+ "\t\"ParkingArea\":" + parkingArea.toString() + "\n}";
 	}
 	
-	public String printMail() {
-		String text =  "Id = " + id + ", Name = " + name + ", ";
-		
-		for(int i=0; i < parkingArea.size(); i++){
-		    text += "Address = " +  parkingArea.get(i).getAddress() + ", Latitude = " + parkingArea.get(i).getLatitude() + ", Longitude = " + parkingArea.get(i).getLongitude();
-		}
-		return text;
-	}
+
 }
