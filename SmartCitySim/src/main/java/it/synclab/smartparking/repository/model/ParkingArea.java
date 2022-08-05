@@ -16,7 +16,7 @@ import javax.persistence.UniqueConstraint;
 public class ParkingArea {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(name = "fk_sensor_id")

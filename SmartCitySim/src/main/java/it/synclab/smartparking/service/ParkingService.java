@@ -44,8 +44,8 @@ public class ParkingService {
 	private String mailReciver;
 
 	@Value("${mail.message.low.battery.start}")
-
 	private String lowBatteryStartMessage;
+	
 	@Value("${mail.message.sensor.off.start}")
 	private String sensorOffStartMessage;
 
@@ -232,8 +232,8 @@ public class ParkingService {
 
 			if (!sensorFromDB.getBattery().equals(sensor.getBattery())) {
 				updateSensorBatteryById(sensor.getBattery(), sensor.getId());
-				if (Float.parseFloat(sensor.getBattery().replace(",", ".").replace("V", "")) == 2.0 
-				 || Float.parseFloat(sensor.getBattery().replace(",", ".").replace("V", "")) == 1.0) {
+				if (Float.parseFloat(sensor.getBattery().replace(",", ".").replace("V", "")) == 2.0
+						|| Float.parseFloat(sensor.getBattery().replace(",", ".").replace("V", "")) == 1.0) {
 					updateSensorMaintainerToBeChargedBySensorId(true, sensor.getId());
 				}
 				if (!sensorUpdate) {
@@ -250,9 +250,9 @@ public class ParkingService {
 
 			if (sensorFromDB.isActive() != sensor.isActive()) {
 				updateSensorStateById(sensor.isActive(), sensor.getId());
-				
-				if(!sensor.isActive()) {
-					updateSensorMaintainerToBeRepairedBySensorId(true, sensor.getId());					
+
+				if (!sensor.isActive()) {
+					updateSensorMaintainerToBeRepairedBySensorId(true, sensor.getId());
 				}
 				if (!sensorUpdate) {
 					sensorUpdate = true;
@@ -313,17 +313,19 @@ public class ParkingService {
 		for (SensorsMaintainer m : maintainers) {
 			if (m.isToBeRepaired()) {
 				{
-					logger.debug("mail: " + m.getMail());					
+					logger.debug("mail: " + m.getMail());
 					String sensorOff = "";
-					sensorOff += printMail(getSensorById(m.getFkSensorId()),getSensorById(m.getFkSensorId()).getParkingArea()) + "\n\n";
+					sensorOff += printMail(getSensorById(m.getFkSensorId()),
+							getSensorById(m.getFkSensorId()).getParkingArea()) + "\n\n";
 					String sensorOffMessage = sensorOffStartMessage + sensorOff + sensorOffEndMessage;
-					mailService.sendEmail(m.getMail(), sensorOffSubject + " " +  getSensorById(m.getFkSensorId()).getName(), sensorOffMessage);
+					mailService.sendEmail(m.getMail(),
+							sensorOffSubject + " " + getSensorById(m.getFkSensorId()).getName(), sensorOffMessage);
 					m.setToBeRepaired(false);
 				}
 			}
 		}
 	}
-	
+
 	public void sendLowBatterySensorsMail() {
 		List<SensorsMaintainer> maintainers;
 
@@ -332,11 +334,14 @@ public class ParkingService {
 		for (SensorsMaintainer m : maintainers) {
 			if (m.isToBeCharged()) {
 				{
-					logger.debug("mail: " + m.getMail());					
+					logger.debug("mail: " + m.getMail());
 					String lowBattery = "";
-					lowBattery += printMail(getSensorById(m.getFkSensorId()),getSensorById(m.getFkSensorId()).getParkingArea()) + "\n\n";
+					lowBattery += printMail(getSensorById(m.getFkSensorId()),
+							getSensorById(m.getFkSensorId()).getParkingArea()) + "\n\n";
 					String lowBatterySensorMessage = lowBatteryStartMessage + lowBattery + lowBatteryEndMessage;
-					mailService.sendEmail(m.getMail(), lowBatterySubject + " " +  getSensorById(m.getFkSensorId()).getName(), lowBatterySensorMessage);
+					mailService.sendEmail(m.getMail(),
+							lowBatterySubject + " " + getSensorById(m.getFkSensorId()).getName(),
+							lowBatterySensorMessage);
 					m.setToBeCharged(false);
 				}
 			}
@@ -353,21 +358,29 @@ public class ParkingService {
 	}
 
 	public void writeSensorsIfAdded(MarkerList sensors) {
-		int markerListSize = sensors.getMarkers().markers.size();
-		int sensorListFromDB = sensorsRepository.getAllSensors().size();
+		int markerListSize = (sensors.getMarkers().markers.size());
+		int sensorListFromDB = (sensorsRepository.getAllSensors().size());
 
 		logger.debug("Number of sensors from file:{}", markerListSize);
 
 		logger.debug("Number of sensors from Data Base:{}", sensorListFromDB);
-
-		if (markerListSize != sensorListFromDB) {
-			logger.debug("Sensor DB is empty or there is a new sensor.");
+		if (sensorListFromDB == 0) {
+			logger.debug("DB is empty.");
 			writeSensorsData();
 			writeSensorsMaintainerData();
 		}
+		
+		else if (markerListSize != sensorListFromDB) {
+			logger.debug("there is a new sensor.");
+			for (int i = sensorListFromDB; i < markerListSize; i++) {
+				Marker marker = sensors.getMarkers().getMarkers().get(i);
+				saveSensorData(buildSensorFromMarker(marker));
+				saveSensorsMaintainerData(buildSensorsMaintainerFromMarker(marker));
+			}
+		}
 	}
 
-//	state = 0 : notWorking, 1 : working
+	// state = 0 : notWorking, 1 : working
 	public boolean getSensorState(Long sensorId) {
 		logger.debug("ParkingService START getSensorState - sensorId{}", sensorId);
 		boolean state = sensorsRepository.getSensorState(sensorId);
@@ -382,9 +395,9 @@ public class ParkingService {
 		return sensors;
 	}
 
-	public Sensor getSensorById(Long sensorId) {
-		logger.debug("ParkingService START getSensorById - sensorId:{}", sensorId);
-		Sensor s = sensorsRepository.getSensorById(sensorId);
+	public Sensor getSensorById(Long i) {
+		logger.debug("ParkingService START getSensorById - sensorId:{}", i);
+		Sensor s = sensorsRepository.getSensorById(i);
 		logger.debug("ParkingService END getSensorById - sensorName:{} - sensorId:{}", s.getName(), s.getId());
 		return s;
 	}
