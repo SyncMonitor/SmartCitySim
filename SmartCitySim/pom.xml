@@ -114,24 +114,6 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-<<<<<<< HEAD
-		<dependency>
-			<groupId>org.junit.vintage</groupId>
-			<artifactId>junit-vintage-engine</artifactId>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.hamcrest</groupId>
-					<artifactId>hamcrest-core</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.squareup.okhttp</groupId>
-			<artifactId>okhttp</artifactId>
-			<version>2.7.5</version>
-		</dependency>
-=======
 
 		<dependency>
 			<groupId>org.junit.vintage</groupId>
@@ -172,9 +154,7 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
->>>>>>> refs/heads/feature/LB-Develop
 	</dependencies>
-
 
 	<build>
 		<plugins>
@@ -186,12 +166,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-<<<<<<< HEAD
-					<source>1.8</source>
-					<target>1.8</target>
-=======
 					<release>11</release>
->>>>>>> refs/heads/feature/LB-Develop
 				</configuration>
 			</plugin>
 		</plugins>
