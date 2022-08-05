@@ -1,12 +1,17 @@
 package it.synclab.smartparking.repository.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -27,17 +32,22 @@ public class ParkingArea {
 	private boolean value;
 	
 	@Column(name = "last_update")
-	LocalDateTime lastUpdate;
+	private LocalDateTime lastUpdate;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "fk_sensor_id", referencedColumnName = "id")	//references ParkingArea id
+	private List<ParkingAreaStats> stats;
 
 	public ParkingArea() {
 	}
 
-	public ParkingArea(String latitude, String longitude, String address, boolean value) {
+	public ParkingArea(String latitude, String longitude, String address, boolean value, List<ParkingAreaStats> stats) {
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.address = address;
 		this.value = value;
 		this.lastUpdate = LocalDateTime.now();
+		this.stats = stats;
 	}
 
 	public Long getId() {
@@ -95,8 +105,15 @@ public class ParkingArea {
 	public void setLastUpdate(LocalDateTime date) {
 		this.lastUpdate = date;
 	}
-
 	
+	public List<ParkingAreaStats> getStats() {
+		return stats;
+	}
+
+	public void setStats(List<ParkingAreaStats> stats) {
+		this.stats = stats;
+	}
+
 	@Override
 	public String toString() {
 		return "\n\t\t{\n"

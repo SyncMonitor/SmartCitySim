@@ -27,9 +27,11 @@ import it.synclab.smartparking.model.Maintainer;
 import it.synclab.smartparking.model.Marker;
 import it.synclab.smartparking.model.MarkerList;
 import it.synclab.smartparking.repository.ParkingAreaRepository;
+import it.synclab.smartparking.repository.ParkingAreaStatsRepository;
 import it.synclab.smartparking.repository.SensorsMaintainerRepository;
 import it.synclab.smartparking.repository.SensorsRepository;
 import it.synclab.smartparking.repository.model.ParkingArea;
+import it.synclab.smartparking.repository.model.ParkingAreaStats;
 import it.synclab.smartparking.repository.model.Sensor;
 import it.synclab.smartparking.repository.model.SensorsMaintainer;
 
@@ -75,6 +77,9 @@ public class ParkingService {
 
 	@Autowired
 	private SensorsMaintainerRepository sensorsMaintainerRepository;
+	
+	@Autowired
+	private ParkingAreaStatsRepository parkingAreaStatsRepository;
 
 	@Autowired
 	private MailService mailService;
@@ -198,7 +203,7 @@ public class ParkingService {
 		try {
 			MarkerList sensors = readSensorData();
 
-			writeSensorsIfAdded(sensors);
+			writeSensorsIfAddes(sensors);
 
 			updateDBData(sensors);
 
@@ -286,6 +291,10 @@ public class ParkingService {
 			if (parkingAreaFromDB.getValue() != parkArea.getValue()) {
 				updateParkingAreaValueById(parkArea.getValue(), parkingAreaFromDB.getId());
 				updateSensorDateById(LocalDateTime.now(), sensor.getId());
+				
+				ParkingAreaStats stats = buildParkingAreaStatsFromParkingArea(parkArea);
+				saveParkingAreaStats(stats);
+				
 				if (!parkAreaUpdate) {
 					parkAreaUpdate = true;
 				}
@@ -357,7 +366,7 @@ public class ParkingService {
 		return text;
 	}
 
-	public void writeSensorsIfAdded(MarkerList sensors) {
+	public void writeSensorsIfAddes(MarkerList sensors) {
 		int markerListSize = (sensors.getMarkers().markers.size());
 		int sensorListFromDB = (sensorsRepository.getAllSensors().size());
 
@@ -806,6 +815,40 @@ public class ParkingService {
 		logger.debug("ParkingService START updateSensorMaintainerToBeChargeddBySensorId");
 		sensorsMaintainerRepository.updateToBeChargedBySensorId(toBeCharged, sensorId);
 		logger.debug("ParkingService END updateSensorMaintainerToBeChargeddBySensorId");
+	}
+	
+//	ParkingAreaStats
+	
+	public ParkingAreaStats buildParkingAreaStatsFromParkingArea(ParkingArea parkArea) {
+		logger.debug("ParkingService START buildParkingAreaStatsFromParkingArea");
+		ParkingAreaStats stats = new ParkingAreaStats();
+
+		if (parkArea.getFkSensorId() != null) {
+			stats.setFkSensorId(parkArea.getFkSensorId());
+		}
+		
+		if(parkArea.getLastUpdate() != null) {
+			stats.setLastUpdate(parkArea.getLastUpdate());
+		}
+
+		logger.debug("ParkingService END buildParkingAreaStatsFromParkingArea");
+		
+		stats.setValue(parkArea.getValue());
+
+		return stats;
+	}
+	
+	public void saveParkingAreaStats(ParkingAreaStats stats) {
+
+		logger.debug("ParkingService START saveParkingAreaStats");
+
+		try {
+			parkingAreaStatsRepository.save(stats);
+		} catch (Exception e) {
+			logger.error("ParkingService - Error", e);
+		}
+
+		logger.debug("ParkingService END saveParkingAreaStats");
 	}
 
 }
