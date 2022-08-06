@@ -13,26 +13,26 @@ public class MailService {
 
 	@Autowired
 	JavaMailSender javaMailSender;
-	
+
 	@Value("${mail.sender}")
 	private String mailSender;
-	
-	
 
 	private static final Logger logger = LogManager.getLogger(MailService.class);
 
 	public void sendEmail(String email, String subject, String text) {
+		try {
+	        SimpleMailMessage msg = new SimpleMailMessage();
+	        msg.setTo(email);
+	        msg.setSubject(subject);
+	        msg.setText(text);
+	        msg.setFrom(mailSender);
+	        logger.info("Mail sent");
+	        javaMailSender.send(msg);
+	    }
+		catch(Exception e) {
+			logger.warn("Problem in send mail: " + e);
+		}
 
-        SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setTo(email);
-        msg.setSubject(subject);
-        msg.setText(text);
-        msg.setFrom(mailSender);
-        logger.info("Mail sent");
-        
+    }
 
-        javaMailSender.send(msg);
-
-    }	
-	
 }

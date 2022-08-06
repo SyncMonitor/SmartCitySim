@@ -61,11 +61,11 @@ public class ParkingService {
 	@Value("${mail.subject.sensor.off}")
 	private String sensorOffSubject;
 
-	@Autowired
-	PostgreClient databaseClient;
+	//@Autowired
+	//PostgreClient databaseClient;
 
-//	@Autowired
-//	DataSource databaseClient;
+	@Autowired
+	DataSource databaseClient;
 
 	@Autowired
 	private SensorsRepository sensorsRepository;
@@ -189,26 +189,21 @@ public class ParkingService {
 
 	}
 
-	// Do this every 2 minutes (Polling Function)
+	// Do this every 1 minutes (Polling Function)
 	@Scheduled(cron = "${polling.timer}")
 	public void updateSensorsData() {
-
-		logger.debug("ParkingService START updateSensorsData");
-
+		logger.info("ParkingService START updateSensorsData - read from source file");
 		try {
 			MarkerList sensors = readSensorData();
-
 			writeSensorsIfAdded(sensors);
-
 			updateDBData(sensors);
-
-			sendLowBatterySensorsMail();
-			sendCorruptedSensorsMail();
-
+			//sendLowBatterySensorsMail();
+			//sendCorruptedSensorsMail();
+			sendCorruptedSensorsMailOptimized();
 		} catch (Exception e) {
 			logger.error("ParkingService ERROR updateSensorsData", e);
 		}
-		logger.debug("ParkingService END updateSensorsData");
+		logger.info("ParkingService END updateSensorsData");
 	}
 
 	public void updateDBData(MarkerList sensors) {
@@ -307,9 +302,7 @@ public class ParkingService {
 
 	public void sendCorruptedSensorsMail() {
 		List<SensorsMaintainer> maintainers;
-
 		maintainers = getAllSensorsMaintainerData();
-
 		for (SensorsMaintainer m : maintainers) {
 			if (m.isToBeRepaired()) {
 				{
@@ -326,6 +319,27 @@ public class ParkingService {
 		}
 	}
 
+	
+	public void sendCorruptedSensorsMailOptimized() {
+		List<SensorsMaintainer> maintainers;
+		maintainers = getAllSensorsMaintainerData();
+		for (SensorsMaintainer m : maintainers) {
+			if (m.isToBeRepaired()) {
+				{
+					Sensor s = getSensorById(m.getFkSensorId());
+					logger.info("mail: " + m.getMail());
+					String sensorOff = "";
+					sensorOff += printMail(s,s.getParkingArea()) + "\n\n";
+					String sensorOffMessage = sensorOffStartMessage + sensorOff + sensorOffEndMessage;
+					mailService.sendEmail(m.getMail(),
+							sensorOffSubject + " " + s.getName(), sensorOffMessage);
+					m.setToBeRepaired(false);
+				}
+			}
+		}
+	}
+	
+	
 	public void sendLowBatterySensorsMail() {
 		List<SensorsMaintainer> maintainers;
 

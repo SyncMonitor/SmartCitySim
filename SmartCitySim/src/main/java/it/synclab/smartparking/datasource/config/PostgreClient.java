@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 public class PostgreClient {
 
+	/*
 	Properties props = new Properties();
 //	The url cannot be null (?) don't know why but it works..
 //	@Value("${postgres.jdbc.url}")
@@ -40,5 +41,6 @@ public class PostgreClient {
 		}
 		logger.info("PostgreClient END - connection to PosgresDB Success");
 	}
+	*/
 
 }
