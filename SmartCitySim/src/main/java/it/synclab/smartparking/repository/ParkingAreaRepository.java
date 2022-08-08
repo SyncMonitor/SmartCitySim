@@ -63,6 +63,12 @@ public interface ParkingAreaRepository extends CrudRepository<ParkingArea, Long>
 	public void updateSensorDateBySensorId(LocalDateTime data, Long sensorId);
 
 
+	@Modifying
+	@Query("delete ParkingArea p where p.id = ?1")
+	public void deleteParkingAreaById(Long id);
 	
+	@Modifying
+	@Query("delete ParkingArea p where p.fkSensorId = ?1")
+	public void deleteParkingAreaBySensorId(Long sensorId);
 
 }

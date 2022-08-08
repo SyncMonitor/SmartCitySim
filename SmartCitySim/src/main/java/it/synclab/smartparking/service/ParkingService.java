@@ -47,7 +47,7 @@ public class ParkingService {
 
 	@Value("${mail.message.low.battery.start}")
 	private String lowBatteryStartMessage;
-	
+
 	@Value("${mail.message.sensor.off.start}")
 	private String sensorOffStartMessage;
 
@@ -77,7 +77,7 @@ public class ParkingService {
 
 	@Autowired
 	private SensorsMaintainerRepository sensorsMaintainerRepository;
-	
+
 	@Autowired
 	private ParkingAreaStatsRepository parkingAreaStatsRepository;
 
@@ -156,6 +156,10 @@ public class ParkingService {
 
 		if (marker.getBattery() != null) {
 			s.setBattery(marker.getBattery());
+		}
+
+		if (marker.getBattery() != null) {
+			s.setCharge(marker.getBattery().substring(0, 1));
 		}
 
 //		Type attribute missing in XML file
@@ -237,8 +241,13 @@ public class ParkingService {
 
 			if (!sensorFromDB.getBattery().equals(sensor.getBattery())) {
 				updateSensorBatteryById(sensor.getBattery(), sensor.getId());
-				if (Float.parseFloat(sensor.getBattery().replace(",", ".").replace("V", "")) == 2.0
-						|| Float.parseFloat(sensor.getBattery().replace(",", ".").replace("V", "")) == 1.0) {
+				if (!sensorUpdate) {
+					sensorUpdate = true;
+				}
+			}
+			if (!sensorFromDB.getCharge().equals(sensor.getCharge())) {
+				updateSensorChargeById(sensor.getCharge(), sensor.getId());
+				if (sensor.getCharge().equals("2") || sensor.getCharge().equals("1")) {
 					updateSensorMaintainerToBeChargedBySensorId(true, sensor.getId());
 				}
 				if (!sensorUpdate) {
@@ -291,10 +300,10 @@ public class ParkingService {
 			if (parkingAreaFromDB.getValue() != parkArea.getValue()) {
 				updateParkingAreaValueById(parkArea.getValue(), parkingAreaFromDB.getId());
 				updateSensorDateById(LocalDateTime.now(), sensor.getId());
-				
+
 				ParkingAreaStats stats = buildParkingAreaStatsFromParkingArea(parkArea);
 				saveParkingAreaStats(stats);
-				
+
 				if (!parkAreaUpdate) {
 					parkAreaUpdate = true;
 				}
@@ -316,19 +325,16 @@ public class ParkingService {
 
 	public void sendCorruptedSensorsMail() {
 		List<SensorsMaintainer> maintainers;
-
 		maintainers = getAllSensorsMaintainerData();
-
 		for (SensorsMaintainer m : maintainers) {
 			if (m.isToBeRepaired()) {
 				{
+					Sensor s = getSensorById(m.getFkSensorId());
 					logger.debug("mail: " + m.getMail());
 					String sensorOff = "";
-					sensorOff += printMail(getSensorById(m.getFkSensorId()),
-							getSensorById(m.getFkSensorId()).getParkingArea()) + "\n\n";
+					sensorOff += printMail(s, s.getParkingArea()) + "\n\n";
 					String sensorOffMessage = sensorOffStartMessage + sensorOff + sensorOffEndMessage;
-					mailService.sendEmail(m.getMail(),
-							sensorOffSubject + " " + getSensorById(m.getFkSensorId()).getName(), sensorOffMessage);
+					mailService.sendEmail(m.getMail(), sensorOffSubject + " " + s.getName(), sensorOffMessage);
 					m.setToBeRepaired(false);
 				}
 			}
@@ -337,20 +343,16 @@ public class ParkingService {
 
 	public void sendLowBatterySensorsMail() {
 		List<SensorsMaintainer> maintainers;
-
 		maintainers = getAllSensorsMaintainerData();
-
 		for (SensorsMaintainer m : maintainers) {
 			if (m.isToBeCharged()) {
 				{
+					Sensor s = getSensorById(m.getFkSensorId());
 					logger.debug("mail: " + m.getMail());
 					String lowBattery = "";
-					lowBattery += printMail(getSensorById(m.getFkSensorId()),
-							getSensorById(m.getFkSensorId()).getParkingArea()) + "\n\n";
+					lowBattery += printMail(s, s.getParkingArea()) + "\n\n";
 					String lowBatterySensorMessage = lowBatteryStartMessage + lowBattery + lowBatteryEndMessage;
-					mailService.sendEmail(m.getMail(),
-							lowBatterySubject + " " + getSensorById(m.getFkSensorId()).getName(),
-							lowBatterySensorMessage);
+					mailService.sendEmail(m.getMail(), lowBatterySubject + " " + s.getName(), lowBatterySensorMessage);
 					m.setToBeCharged(false);
 				}
 			}
@@ -378,7 +380,7 @@ public class ParkingService {
 			writeSensorsData();
 			writeSensorsMaintainerData();
 		}
-		
+
 		else if (markerListSize != sensorListFromDB) {
 			logger.debug("there is a new sensor.");
 			for (int i = sensorListFromDB; i < markerListSize; i++) {
@@ -387,6 +389,13 @@ public class ParkingService {
 				saveSensorsMaintainerData(buildSensorsMaintainerFromMarker(marker));
 			}
 		}
+	}
+	
+	public List<Sensor> getAllSensorsFromDB(){
+		logger.debug("ParkingService START getAllSensorsFromDB");
+		List<Sensor> sensors = sensorsRepository.getAllSensorFromDB();
+		logger.debug("ParkingService END getAllSensorsFromDB");
+		return sensors;
 	}
 
 	// state = 0 : notWorking, 1 : working
@@ -496,6 +505,12 @@ public class ParkingService {
 		logger.debug("ParkingService END updateSensorBatteryById - sensorBattery:{} - sensorId:{}", battery, sensorId);
 	}
 
+	public void updateSensorChargeById(String charge, Long sensorId) {
+		logger.debug("ParkingService START updateSensorChargeById - charge:{} - sensorId:{}", charge, sensorId);
+		sensorsRepository.updateSensorChargeById(charge, sensorId);
+		logger.debug("ParkingService END updateSensorChargeById - charge:{} - sensorId:{}", charge, sensorId);
+	}
+
 	public void updateSensorTypeById(String type, Long sensorId) {
 		logger.debug("ParkingService START updateSensorTypeById - sensorType:{} - sensorId:{}", type, sensorId);
 		sensorsRepository.updateSensorTypeById(type, sensorId);
@@ -521,7 +536,7 @@ public class ParkingService {
 
 	}
 
-	public void deleteAlSensors() {
+	public void deleteAllSensors() {
 		logger.debug("ParkingService START deleteAlSensors ");
 		sensorsRepository.deleteAll();
 		logger.debug("ParkingService END deleteAlSensors ");
@@ -677,6 +692,24 @@ public class ParkingService {
 		parkingAreaRepository.updateValueById(state, id);
 		logger.debug("ParkingService END updateParkingAreaValueById - parkAreaId{} - state:{}", id, state);
 	}
+	
+	public void deleteParkingAreaBySensorId(Long sensorId) {
+		logger.debug("ParkingService START deleteParkingAreaBySensorId");
+		parkingAreaRepository.deleteParkingAreaBySensorId(sensorId);
+		logger.debug("ParkingService END deleteParkingAreaBySensorId");
+	}
+
+	public void deleteParkingAreaById(Long id) {
+		logger.debug("ParkingService START deleteParkingAreaById");
+		parkingAreaRepository.deleteParkingAreaById(id);
+		logger.debug("ParkingService END deleteParkingAreaById");
+	}
+	
+	public void deleteAllParkingArea() {
+		logger.debug("ParkingService START deleteAlSensors ");
+		parkingAreaRepository.deleteAll();
+		logger.debug("ParkingService END deleteAlSensors ");
+	}
 
 //	SensorsMainteiner's Services
 
@@ -817,8 +850,26 @@ public class ParkingService {
 		logger.debug("ParkingService END updateSensorMaintainerToBeChargeddBySensorId");
 	}
 	
-//	ParkingAreaStats
+	public void deleteSensorMaintainersBySensorId(Long sensorId) {
+		logger.debug("ParkingService deleteSensorMaintainersBySensorId deleteAlSensors ");
+		sensorsMaintainerRepository.deleteSensorMaintainersBySensorId(sensorId);
+		logger.debug("ParkingService END deleteSensorMaintainersBySensorId ");		
+	}
 	
+	public void deleteSensorMaintainersById(Long id) {
+		logger.debug("ParkingService START deleteSensorMaintainersById ");
+		sensorsMaintainerRepository.deleteSensorMaintainersById(id);
+		logger.debug("ParkingService END deleteSensorMaintainersById ");		
+	}
+	
+	public void deleteAllSensorMaintainers() {
+		logger.debug("ParkingService START deleteAlSensors ");
+		sensorsMaintainerRepository.deleteAll();
+		logger.debug("ParkingService END deleteAlSensors ");
+	}
+
+//	ParkingAreaStats
+
 	public ParkingAreaStats buildParkingAreaStatsFromParkingArea(ParkingArea parkArea) {
 		logger.debug("ParkingService START buildParkingAreaStatsFromParkingArea");
 		ParkingAreaStats stats = new ParkingAreaStats();
@@ -826,18 +877,18 @@ public class ParkingService {
 		if (parkArea.getFkSensorId() != null) {
 			stats.setFkSensorId(parkArea.getFkSensorId());
 		}
-		
-		if(parkArea.getLastUpdate() != null) {
+
+		if (parkArea.getLastUpdate() != null) {
 			stats.setLastUpdate(parkArea.getLastUpdate());
 		}
 
 		logger.debug("ParkingService END buildParkingAreaStatsFromParkingArea");
-		
+
 		stats.setValue(parkArea.getValue());
 
 		return stats;
 	}
-	
+
 	public void saveParkingAreaStats(ParkingAreaStats stats) {
 
 		logger.debug("ParkingService START saveParkingAreaStats");
@@ -850,5 +901,79 @@ public class ParkingService {
 
 		logger.debug("ParkingService END saveParkingAreaStats");
 	}
+	
+	public List<ParkingAreaStats> getParkingAreaStats() {
+		logger.debug("ParkingService START getParkingAreaStats");
+		List<ParkingAreaStats> stats = parkingAreaStatsRepository.getParkingAreaStats();
+		logger.debug("ParkingService END getParkingAreaStats");
+		return stats;
+	}
 
+	public ParkingAreaStats getParkingAreaStatsById(Long id) {
+		logger.debug("ParkingService START getParkingAreaStatsBySensorId");
+		ParkingAreaStats stat = parkingAreaStatsRepository.getParkingAreaStatsById(id);
+		logger.debug("ParkingService END getParkingAreaStatsBySensorId");
+		return stat;
+	}
+
+	public List<ParkingAreaStats> getParkingAreaStatsBySensorId(Long sensorId) {
+		logger.debug("ParkingService START getParkingAreaStatsBySensorId");
+		List<ParkingAreaStats> stats = parkingAreaStatsRepository.getParkingAreaStatsBySensorId(sensorId);
+		logger.debug("ParkingService END getParkingAreaStatsBySensorId");
+		return stats;
+	}
+
+	public List<ParkingAreaStats> getParkingAreaStatsFromData(LocalDateTime data) {
+		logger.debug("ParkingService START getParkingAreaStatsFromData");
+		List<ParkingAreaStats> stats = parkingAreaStatsRepository.getParkingAreaStatsFromData(data);
+		logger.debug("ParkingService END getParkingAreaStatsFromData");
+		return stats;
+	}
+
+//	public List<ParkingAreaStats> getParkingAreaStatsFromDataToData(LocalDateTime startData, LocalDateTime endData) {
+//		logger.debug("ParkingService START getParkingAreaStatsFromDataToData");
+//		List<ParkingAreaStats> stats = parkingAreaStatsRepository.getParkingAreaStatsFromDataToData(startData, endData);
+//		logger.debug("ParkingService END getParkingAreaStatsFromDataToData");
+//		return stats;
+//	}
+
+//	public List<ParkingAreaStats> getParkingAreaStatsBySensorIdFromData(Long id, LocalDateTime data) {
+//		logger.debug("ParkingService START getParkingAreaStatsBySensorIdFromData");
+//		List<ParkingAreaStats> stats = parkingAreaStatsRepository.getParkingAreaStatsBySensorIdFromData(id, data);
+//		logger.debug("ParkingService END getParkingAreaStatsBySensorIdFromData");
+//		return stats;
+//	}
+
+//	public List<ParkingAreaStats> getParkingAreaStatsBySensorIdFromDataToData(Long id, LocalDateTime startData,
+//			LocalDateTime endData) {
+//		logger.debug("ParkingService START getParkingAreaStatsBySensorIdFromDataToData");
+//		List<ParkingAreaStats> stats = parkingAreaStatsRepository.getParkingAreaStatsBySensorIdFromDataToData(id,
+//				startData, endData);
+//		logger.debug("ParkingService END getParkingAreaStatsBySensorIdFromDataToData");
+//		return stats;
+//	}
+	
+//	public void deleteParkingAreaStatsBeforeDate(LocalDateTime data) {
+//		logger.debug("ParkingService START deleteParkingAreaStatsBeforeDate");
+//		parkingAreaStatsRepository.deleteParkingAreaStatsBeforeDate(data);
+//		logger.debug("ParkingService END deleteParkingAreaStatsBeforeDate");
+//	}
+
+	public void deleteParkingAreaStatsById(Long id) {
+		logger.debug("ParkingService START deleteParkingAreaStatsById");
+		parkingAreaStatsRepository.deleteParkingAreaStatsById(id);
+		logger.debug("ParkingService END deleteParkingAreaStatsById");
+	}
+	
+	public void deleteParkingAreaStatsBySensorId(Long sensorId) {
+		logger.debug("ParkingService START deleteParkingAreaStatsBySensorId");
+		parkingAreaStatsRepository.deleteParkingAreaStatsBySensorId(sensorId);
+		logger.debug("ParkingService END deleteParkingAreaStatsBySensorId");
+	}
+	
+	public void deleteAllParkingStats() {
+		logger.debug("ParkingService START deleteAlSensors ");
+		parkingAreaStatsRepository.deleteAll();
+		logger.debug("ParkingService END deleteAlSensors ");
+	}
 }

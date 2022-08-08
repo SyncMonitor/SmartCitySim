@@ -15,10 +15,10 @@ import it.synclab.smartparking.repository.model.Sensor;
 public interface SensorsRepository extends CrudRepository<Sensor, Long> {
 	
 	// JPQL query based on Java class, not on DB tables.
-	@Query("select s from Sensor s where s.id = ?1")
+	@Query("select s from Sensor s where s.id = ?1 order by id")
 	public Sensor getSensorById(Long sensorId);
 	
-	@Query("select s from Sensor s")
+	@Query("select s from Sensor s order by id")
 	public List<Sensor> getAllSensorFromDB();
 
 	@Query("select s.isActive from Sensor s where s.id = ?1")
@@ -64,10 +64,15 @@ public interface SensorsRepository extends CrudRepository<Sensor, Long> {
 	@Query("update Sensor c set c.isActive = ?1 where id = ?2")
 	public void updateStateById(boolean state, Long id);
 	
+	@Modifying
+	@Query("update Sensor c set c.charge = ?1 where id = ?2")
+	public void updateSensorChargeById(String charge, Long sensorId);
+	
 	//Delete
 
 	@Modifying
 	@Query("delete Sensor c where id = ?1")
 	public void deleteSensorById(Long sensorId);
+
 
 }

@@ -50,7 +50,6 @@ public interface SensorsMaintainerRepository extends CrudRepository<SensorsMaint
 	@Query("update SensorsMaintainer s set s.toBeCharged = ?1 where fkSensorId = ?2")
 	public void updateToBeChargedBySensorId(boolean toBeRepaired, Long sensorId);
 
-
 //	@Modifying
 //	@Query("update SensorsMaintainer s set s.ownerName = ?1 where fkSensorId = ?2")
 //	void updateNameBySensorId(String name, Long sensorId);
@@ -71,5 +70,12 @@ public interface SensorsMaintainerRepository extends CrudRepository<SensorsMaint
 //	@Query("update SensorsMaintainer s set s.mail = ?1 where fkSensorId = ?2")
 //	void updateMailBySensorId(String mail, Long sensorId);
 	
+	@Modifying
+	@Query("delete SensorsMaintainer s where fkSensorId = ?1")
+	public void deleteSensorMaintainersBySensorId(Long sensorId);
+	
+	@Modifying
+	@Query("delete SensorsMaintainer s where id = ?1")
+	public void deleteSensorMaintainersById(Long id);
 	
 }
