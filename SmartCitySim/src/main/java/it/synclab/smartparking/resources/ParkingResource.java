@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -57,7 +58,7 @@ public class ParkingResource {
 		logger.info("ParkingResource - END getSensorData");
 		return ResponseEntity.status(HttpStatus.OK).body(list);
 	}
-	
+
 	@GetMapping("/sensor/get-data-from-XML")
 	@ResponseBody
 	public ResponseEntity<Object> getSensorsDataFromSource() {
@@ -523,7 +524,7 @@ public class ParkingResource {
 		logger.info("ParkingResource - END updateParkingAreaStateById");
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
-	
+
 	@DeleteMapping("sensor/parking-area/delete/{sensorId}")
 	public ResponseEntity<Object> deleteParkingAreaBySensorId(@PathVariable Long sensorId) {
 		logger.info("ParkingResource - START deleteParkingAreaBySensorId");
@@ -536,7 +537,7 @@ public class ParkingResource {
 		logger.info("ParkingResource - END deleteParkingAreaBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
-	
+
 	@DeleteMapping("/parking-area/delete/{id}")
 	public ResponseEntity<Object> deleteParkingAreaById(@PathVariable Long id) {
 		logger.info("ParkingResource - START deleteParkingAreaById");
@@ -549,7 +550,7 @@ public class ParkingResource {
 		logger.info("ParkingResource - END deleteAllParkingArea");
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
-	
+
 	@DeleteMapping("/parking-area/delete/all")
 	public ResponseEntity<Object> deleteAllParkingArea() {
 		logger.info("ParkingResource - START deleteAllParkingArea");
@@ -701,7 +702,7 @@ public class ParkingResource {
 		logger.info("ParkingResource - END updateSensorMaintainerToBeChargedFalseBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
-	
+
 	@DeleteMapping("sensor/maintainers/delete/{sensorId}")
 	public ResponseEntity<Object> deleteSensorMaintainersBySensorId(@PathVariable Long sensorId) {
 		logger.info("ParkingResource - START deleteSensorMaintainersBySensorId");
@@ -714,7 +715,7 @@ public class ParkingResource {
 		logger.info("ParkingResource - END deleteSensorMaintainersBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
-	
+
 	@DeleteMapping("/maintainers/delete/{id}")
 	public ResponseEntity<Object> deleteSensorMaintainersById(@PathVariable Long id) {
 		logger.info("ParkingResource - START deleteSensorMaintainersById");
@@ -727,7 +728,7 @@ public class ParkingResource {
 		logger.info("ParkingResource - END deleteSensorMaintainersById");
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
-	
+
 	@DeleteMapping("/maintainers/delete/all")
 	public ResponseEntity<Object> deleteAllSensorMaintainers() {
 		logger.info("ParkingResource - START deleteAllSensorMaintainers");
@@ -742,7 +743,7 @@ public class ParkingResource {
 	}
 
 //	ParkingAreaStarts Service
-	
+
 	@GetMapping("/parking-stats/")
 	@ResponseBody
 	public ResponseEntity<Object> getParkingAreaStats() {
@@ -757,7 +758,7 @@ public class ParkingResource {
 		logger.info("ParkingResource - END getParkingAreaStats");
 		return ResponseEntity.status(HttpStatus.OK).body(stats);
 	}
-	
+
 	@GetMapping("/parking-stats/{id}")
 	@ResponseBody
 	public ResponseEntity<Object> getParkingAreaStatsById(@PathVariable Long id) {
@@ -772,7 +773,7 @@ public class ParkingResource {
 		logger.info("ParkingResource - END getParkingAreaStatsById");
 		return ResponseEntity.status(HttpStatus.OK).body(stat);
 	}
-	
+
 	@GetMapping("/sensor/parking-stats/{sensorId}")
 	@ResponseBody
 	public ResponseEntity<Object> getParkingAreaStatsBySensorId(@PathVariable Long sensorId) {
@@ -787,80 +788,87 @@ public class ParkingResource {
 		logger.info("ParkingResource - END getParkingAreaStatsBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).body(stats);
 	}
-	
-//	@GetMapping("/parking-stats/from")
-//	@ResponseBody
-//	public ResponseEntity<Object> getParkingAreaStatsFromData(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date) {
-//		logger.info("ParkingResource - START getParkingAreaStatsFromData");
-//		List<ParkingAreaStats> stats;
-//		try {
-//			stats = parkingService.getParkingAreaStatsFromData(date);
-//		} catch (Exception e) {
-//			logger.error("ParkingResource -  error - getParkingAreaStatsFromData", e);
-//			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//		}
-//		logger.info("ParkingResource - END getParkingAreaStatsFromData");
-//		return ResponseEntity.status(HttpStatus.OK).body(stats);
-//	}
-	
-//	@GetMapping("/parking-stats/{startData}/{endData}")
-//	@ResponseBody
-//	public ResponseEntity<Object> getParkingAreaStatsFromDataToData(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startData, @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endData) {
-//		logger.info("ParkingResource - START getParkingAreaStatsFromDataToData");
-//		List<ParkingAreaStats> stats;
-//		try {
-//			stats = parkingService.getParkingAreaStatsFromDataToData(startData, endData);
-//		} catch (Exception e) {
-//			logger.error("ParkingResource -  error - getParkingAreaStatsFromDataToData", e);
-//			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//		}
-//		logger.info("ParkingResource - END getParkingAreaStatsFromDataToData");
-//		return ResponseEntity.status(HttpStatus.OK).body(stats);
-//	}
-	
-//	@GetMapping("/parking/stats/{id}/{data}")
-//	@ResponseBody
-//	public ResponseEntity<Object> getParkingAreaStatsBySensorIdFromData(@PathVariable Long id, @PathVariable LocalDateTime data) {
-//		logger.info("ParkingResource - START getParkingAreaStatsBySensorIdFromData");
-//		List<ParkingAreaStats> stats;
-//		try {
-//			stats = parkingService.getParkingAreaStatsBySensorIdFromData(id, data);
-//		} catch (Exception e) {
-//			logger.error("ParkingResource -  error - getParkingAreaStatsBySensorIdFromData", e);
-//			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//		}
-//		logger.info("ParkingResource - END getParkingAreaStatsBySensorIdFromData");
-//		return ResponseEntity.status(HttpStatus.OK).body(stats);
-//	}
-	
-//	@GetMapping("/parking/stats/{id}/{startData}/{endData}")
-//	@ResponseBody
-//	public ResponseEntity<Object> getParkingAreaStatsBySensorIdFromDataToData(@PathVariable Long id, @PathVariable LocalDateTime startData, @PathVariable LocalDateTime endData) {
-//		logger.info("ParkingResource - START getParkingAreaStatsBySensorIdFromDataToData");
-//		List<ParkingAreaStats> stats;
-//		try {
-//			stats = parkingService.getParkingAreaStatsBySensorIdFromDataToData(id, startData, endData);
-//		} catch (Exception e) {
-//			logger.error("ParkingResource -  error - getParkingAreaStatsBySensorIdFromDataToData", e);
-//			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//		}
-//		logger.info("ParkingResource - END getParkingAreaStatsBySensorIdFromDataToData");
-//		return ResponseEntity.status(HttpStatus.OK).body(stats);
-//	}
-	
-//	@DeleteMapping("/parking/stats/delete/before/{data}")
-//	public ResponseEntity<Object> deleteParkingAreaStatsBeforeDate(@PathVariable LocalDateTime data) {
-//		logger.info("ParkingResource - START deleteParkingAreaStatsBeforeDate");
-//		try {
-//			parkingService.deleteParkingAreaStatsBeforeDate(data);
-//		} catch (Exception e) {
-//			logger.error("ParkingResource -  error - deleteParkingAreaStatsBeforeDate", e);
-//			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//		}
-//		logger.info("ParkingResource - END deleteAllParkingAreaStats");
-//		return ResponseEntity.status(HttpStatus.OK).build();
-//	}
-	
+
+	@GetMapping("/parking-stats/from/{date}")
+	@ResponseBody
+	public ResponseEntity<Object> getParkingAreaStatsFromData(
+			@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date) {
+		logger.info("ParkingResource - START getParkingAreaStatsFromData");
+		List<ParkingAreaStats> stats;
+		try {
+			stats = parkingService.getParkingAreaStatsFromData(date);
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error - getParkingAreaStatsFromData", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - END getParkingAreaStatsFromData");
+		return ResponseEntity.status(HttpStatus.OK).body(stats);
+	}
+
+	@GetMapping("/parking-stats/{startData}/{endData}")
+	@ResponseBody
+	public ResponseEntity<Object> getParkingAreaStatsFromDataToData(
+			@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startData,
+			@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endData) {
+		logger.info("ParkingResource - START getParkingAreaStatsFromDataToData");
+		List<ParkingAreaStats> stats;
+		try {
+			stats = parkingService.getParkingAreaStatsFromDataToData(startData, endData);
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error - getParkingAreaStatsFromDataToData", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - END getParkingAreaStatsFromDataToData");
+		return ResponseEntity.status(HttpStatus.OK).body(stats);
+	}
+
+	@GetMapping("/sensor/parking-stats/{id}/{data}")
+	@ResponseBody
+	public ResponseEntity<Object> getParkingAreaStatsBySensorIdFromData(@PathVariable Long id,
+			@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime data) {
+		logger.info("ParkingResource - START getParkingAreaStatsBySensorIdFromData");
+		List<ParkingAreaStats> stats;
+		try {
+			stats = parkingService.getParkingAreaStatsBySensorIdFromData(id, data);
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error - getParkingAreaStatsBySensorIdFromData", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - END getParkingAreaStatsBySensorIdFromData");
+		return ResponseEntity.status(HttpStatus.OK).body(stats);
+	}
+
+	@GetMapping("/sensor/parking-stats/{id}/{startData}/{endData}")
+	@ResponseBody
+	public ResponseEntity<Object> getParkingAreaStatsBySensorIdFromDataToData(@PathVariable Long id,
+			@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startData,
+			@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endData) {
+		logger.info("ParkingResource - START getParkingAreaStatsBySensorIdFromDataToData");
+		List<ParkingAreaStats> stats;
+		try {
+			stats = parkingService.getParkingAreaStatsBySensorIdFromDataToData(id, startData, endData);
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error - getParkingAreaStatsBySensorIdFromDataToData", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - END getParkingAreaStatsBySensorIdFromDataToData");
+		return ResponseEntity.status(HttpStatus.OK).body(stats);
+	}
+
+	@DeleteMapping("/parking-stats/delete/before/{data}")
+	public ResponseEntity<Object> deleteParkingAreaStatsBeforeDate(
+			@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime data) {
+		logger.info("ParkingResource - START deleteParkingAreaStatsBeforeDate");
+		try {
+			parkingService.deleteParkingAreaStatsBeforeDate(data);
+		} catch (Exception e) {
+			logger.error("ParkingResource -  error - deleteParkingAreaStatsBeforeDate", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingResource - END deleteAllParkingAreaStats");
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+
 	@DeleteMapping("/parking-stats/delete/{id}")
 	public ResponseEntity<Object> deleteParkingAreaStatsById(@PathVariable Long id) {
 		logger.info("ParkingResource - START deleteParkingAreaStatsById");
@@ -873,7 +881,7 @@ public class ParkingResource {
 		logger.info("ParkingResource - END deleteParkingAreaStatsById");
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
-	
+
 	@DeleteMapping("/sensor/parking-stats/delete/{sensorId}")
 	public ResponseEntity<Object> deleteParkingAreaStatsBySensorId(@PathVariable Long sensorId) {
 		logger.info("ParkingResource - START deleteParkingAreaStatsBySensorId");

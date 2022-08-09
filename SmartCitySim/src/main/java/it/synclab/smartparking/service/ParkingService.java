@@ -6,6 +6,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -303,12 +304,16 @@ public class ParkingService {
 
 				ParkingAreaStats stats = buildParkingAreaStatsFromParkingArea(parkArea);
 				saveParkingAreaStats(stats);
+				
 
 				if (!parkAreaUpdate) {
 					parkAreaUpdate = true;
 				}
 			}
 		}
+		
+		LocalDateTime threeYearsAgo = LocalDateTime.now().minus(Period.ofYears(3));
+		deleteParkingAreaStatsBeforeDate(threeYearsAgo);
 
 		if (sensorUpdate) {
 			logger.info("Sensor data updated");
@@ -923,41 +928,41 @@ public class ParkingService {
 		return stats;
 	}
 
-	public List<ParkingAreaStats> getParkingAreaStatsFromData(LocalDateTime data) {
+	public List<ParkingAreaStats> getParkingAreaStatsFromData(LocalDateTime date) {
 		logger.debug("ParkingService START getParkingAreaStatsFromData");
-		List<ParkingAreaStats> stats = parkingAreaStatsRepository.getParkingAreaStatsFromData(data);
+		List<ParkingAreaStats> stats = parkingAreaStatsRepository.getParkingAreaStatsFromData(date);
 		logger.debug("ParkingService END getParkingAreaStatsFromData");
 		return stats;
 	}
 
-//	public List<ParkingAreaStats> getParkingAreaStatsFromDataToData(LocalDateTime startData, LocalDateTime endData) {
-//		logger.debug("ParkingService START getParkingAreaStatsFromDataToData");
-//		List<ParkingAreaStats> stats = parkingAreaStatsRepository.getParkingAreaStatsFromDataToData(startData, endData);
-//		logger.debug("ParkingService END getParkingAreaStatsFromDataToData");
-//		return stats;
-//	}
+	public List<ParkingAreaStats> getParkingAreaStatsFromDataToData(LocalDateTime startData, LocalDateTime endData) {
+		logger.debug("ParkingService START getParkingAreaStatsFromDataToData");
+		List<ParkingAreaStats> stats = parkingAreaStatsRepository.getParkingAreaStatsFromDataToData(startData, endData);
+		logger.debug("ParkingService END getParkingAreaStatsFromDataToData");
+		return stats;
+	}
 
-//	public List<ParkingAreaStats> getParkingAreaStatsBySensorIdFromData(Long id, LocalDateTime data) {
-//		logger.debug("ParkingService START getParkingAreaStatsBySensorIdFromData");
-//		List<ParkingAreaStats> stats = parkingAreaStatsRepository.getParkingAreaStatsBySensorIdFromData(id, data);
-//		logger.debug("ParkingService END getParkingAreaStatsBySensorIdFromData");
-//		return stats;
-//	}
+	public List<ParkingAreaStats> getParkingAreaStatsBySensorIdFromData(Long id, LocalDateTime data) {
+		logger.debug("ParkingService START getParkingAreaStatsBySensorIdFromData");
+		List<ParkingAreaStats> stats = parkingAreaStatsRepository.getParkingAreaStatsBySensorIdFromData(id, data);
+		logger.debug("ParkingService END getParkingAreaStatsBySensorIdFromData");
+		return stats;
+	}
 
-//	public List<ParkingAreaStats> getParkingAreaStatsBySensorIdFromDataToData(Long id, LocalDateTime startData,
-//			LocalDateTime endData) {
-//		logger.debug("ParkingService START getParkingAreaStatsBySensorIdFromDataToData");
-//		List<ParkingAreaStats> stats = parkingAreaStatsRepository.getParkingAreaStatsBySensorIdFromDataToData(id,
-//				startData, endData);
-//		logger.debug("ParkingService END getParkingAreaStatsBySensorIdFromDataToData");
-//		return stats;
-//	}
+	public List<ParkingAreaStats> getParkingAreaStatsBySensorIdFromDataToData(Long id, LocalDateTime startData,
+			LocalDateTime endData) {
+		logger.debug("ParkingService START getParkingAreaStatsBySensorIdFromDataToData");
+		List<ParkingAreaStats> stats = parkingAreaStatsRepository.getParkingAreaStatsBySensorIdFromDataToData(id,
+				startData, endData);
+		logger.debug("ParkingService END getParkingAreaStatsBySensorIdFromDataToData");
+		return stats;
+	}
 	
-//	public void deleteParkingAreaStatsBeforeDate(LocalDateTime data) {
-//		logger.debug("ParkingService START deleteParkingAreaStatsBeforeDate");
-//		parkingAreaStatsRepository.deleteParkingAreaStatsBeforeDate(data);
-//		logger.debug("ParkingService END deleteParkingAreaStatsBeforeDate");
-//	}
+	public void deleteParkingAreaStatsBeforeDate(LocalDateTime data) {
+		logger.debug("ParkingService START deleteParkingAreaStatsBeforeDate");
+		parkingAreaStatsRepository.deleteParkingAreaStatsBeforeDate(data);
+		logger.debug("ParkingService END deleteParkingAreaStatsBeforeDate");
+	}
 
 	public void deleteParkingAreaStatsById(Long id) {
 		logger.debug("ParkingService START deleteParkingAreaStatsById");
