@@ -80,10 +80,10 @@ public class ParkingStatsServices {
 		return stats;
 	}
 
-	public List<ParkingAreaStats> getParkingAreaStatsFromDataToData(LocalDateTime startData, LocalDateTime endData) {
-		logger.debug("ParkingService START getParkingAreaStatsFromDataToData");
-		List<ParkingAreaStats> stats = parkingAreaStatsRepository.getParkingAreaStatsFromDataToData(startData, endData);
-		logger.debug("ParkingService END getParkingAreaStatsFromDataToData");
+	public List<ParkingAreaStats> getParkingAreaStatsFromDateToDate(LocalDateTime startData, LocalDateTime endData) {
+		logger.debug("ParkingService START getParkingAreaStatsFromDateToDate");
+		List<ParkingAreaStats> stats = parkingAreaStatsRepository.getParkingAreaStatsFromDateToDate(startData, endData);
+		logger.debug("ParkingService END getParkingAreaStatsFromDateToDate");
 		return stats;
 	}
 

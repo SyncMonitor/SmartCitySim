@@ -1,42 +1,52 @@
 package it.synclab.smartparking;
 
+import org.assertj.core.api.Assertions;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import it.synclab.smartparking.repository.SensorsRepository;
 import it.synclab.smartparking.repository.model.Sensor;
-import it.synclab.smartparking.service.ParkingService;
+import junit.framework.Assert;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SmartCitySim.class)
-public class RepositoryTest {
+public class SensorRepositoryTest {
 
 	@Autowired
 	private SensorsRepository sensorsRepository;
-	
-	
-	@Autowired
-	private ParkingService parkingService;
-	
-	
-	
+
+	Sensor sensor = null;
+
+	@Before
+	public void init() {
+		sensor = new Sensor();
+		sensor.setId(109L);
+		sensor.setName("Sensor 109");
+		sensor.setBattery("3,3V");
+		sensor.setCharge("3");
+		sensor.setType("parkingArea");
+		sensor.setActive(true);
+	}
+
 	@Test
-	public void saveSensors() {
+	public void saveSensor() {
 		try {
-			Sensor sensor = new Sensor();
+
 			sensorsRepository.save(sensor);
 		} catch (Exception e) {
 			System.out.println("Error: " + e);
 		}
 
 	}
+//
+//	@Test
+//	public void getSensorByIdTest(Long id) {
+//		
+//
+//	}
 
 }

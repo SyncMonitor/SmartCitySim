@@ -88,9 +88,9 @@ public class SensorServices {
 		return sensors;
 	}
 
-	public Sensor getSensorById(Long i) {
-		logger.debug("SensorServices START getSensorById - sensorId:{}", i);
-		Sensor s = sensorsRepository.getSensorById(i);
+	public Sensor getSensorById(Long id) {
+		logger.debug("SensorServices START getSensorById - sensorId:{}", id);
+		Sensor s = sensorsRepository.getSensorById(id);
 		logger.debug("ParkingService END getSensorById - sensorName:{} - sensorId:{}", s.getName(), s.getId());
 		return s;
 	}

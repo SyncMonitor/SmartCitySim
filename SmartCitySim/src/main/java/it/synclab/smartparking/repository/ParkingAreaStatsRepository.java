@@ -24,7 +24,7 @@ public interface ParkingAreaStatsRepository extends CrudRepository<ParkingAreaSt
 	public List<ParkingAreaStats> getParkingAreaStatsFromData(LocalDateTime date);
 	
 	@Query("select s from ParkingAreaStats s where lastUpdate >= ?1 and lastUpdate <= ?2")
-	public List<ParkingAreaStats> getParkingAreaStatsFromDataToData(LocalDateTime startDate, LocalDateTime endDate);
+	public List<ParkingAreaStats> getParkingAreaStatsFromDateToDate(LocalDateTime startDate, LocalDateTime endDate);
 	
 	@Query("select s from ParkingAreaStats s where fkSensorId = ?1 and lastUpdate >= ?2")
 	public List<ParkingAreaStats> getParkingAreaStatsBySensorIdFromData(Long sensorId, LocalDateTime date);

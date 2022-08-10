@@ -1,6 +1,7 @@
 package it.synclab.smartparking.resources;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -19,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.synclab.smartparking.model.SearchDateFilter;
 import it.synclab.smartparking.repository.model.ParkingAreaStats;
 import it.synclab.smartparking.service.ParkingStatsServices;
-
 
 @RestController
 @RequestMapping("/scs")
@@ -29,8 +30,7 @@ import it.synclab.smartparking.service.ParkingStatsServices;
 public class ParkingStatsResources {
 
 	private static final Logger logger = LogManager.getLogger(ParkingStatsResources.class);
-	
-	
+
 	@Autowired
 	private ParkingStatsServices parkingStatsService;
 
@@ -95,20 +95,21 @@ public class ParkingStatsResources {
 		return ResponseEntity.status(HttpStatus.OK).body(stats);
 	}
 
-	@GetMapping("/parking-stats/from-date-to-date")
+	@GetMapping("/parking-stats/abc")
 	@ResponseBody
-	public ResponseEntity<Object> getParkingAreaStatsFromDataToData(
-			@RequestBody @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startData,
-			@RequestBody @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endData) {
-		logger.info("ParkingStatsResources - START getParkingAreaStatsFromDataToData");
+	public ResponseEntity<Object> getParkingAreaStatsFromDataToData(@RequestBody SearchDateFilter date) {
+		logger.info("ParkingResource - START getParkingAreaStatsFromDataToData");
 		List<ParkingAreaStats> stats;
 		try {
-			stats = parkingStatsService.getParkingAreaStatsFromDataToData(startData, endData);
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+			LocalDateTime startDate = LocalDateTime.parse(date.getStartDate(), formatter);
+			LocalDateTime endDate = LocalDateTime.parse(date.getEndDate(), formatter);
+			stats = parkingStatsService.getParkingAreaStatsFromDateToDate(startDate, endDate);
 		} catch (Exception e) {
-			logger.error("ParkingStatsResources -  error - getParkingAreaStatsFromDataToData", e);
+			logger.error("ParkingResource -  error - getParkingAreaStatsFromDataToData", e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
-		logger.info("ParkingStatsResources - END getParkingAreaStatsFromDataToData");
+		logger.info("ParkingResource - END getParkingAreaStatsFromDataToData");
 		return ResponseEntity.status(HttpStatus.OK).body(stats);
 	}
 
