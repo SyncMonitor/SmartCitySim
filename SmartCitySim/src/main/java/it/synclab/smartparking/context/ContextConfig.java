@@ -1,42 +1,64 @@
 package it.synclab.smartparking.context;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import it.synclab.smartparking.datasource.config.PostgreClient;
-import it.synclab.smartparking.service.ParkingService;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.jdbc.DataSourceBuilder;
-import javax.sql.DataSource;
-import it.synclab.smartparking.datasource.config.MySqlClient;
+import it.synclab.smartparking.service.MailServices;
+import it.synclab.smartparking.service.ParkingAreaServices;
+import it.synclab.smartparking.service.ParkingStatsServices;
+import it.synclab.smartparking.service.SensorMaintainerServices;
+import it.synclab.smartparking.service.SensorServices;
+import it.synclab.smartparking.service.StartUpServices;
 
 @Configuration
 public class ContextConfig {
+
+	// @Bean
+	public StartUpServices createStartUpServices() {
+		return new StartUpServices();
+	}
 	
-	//@Bean
-	public ParkingService createParkingService() {
-		return new ParkingService();
+	// @Bean
+	public SensorServices createPSensorServices() {
+		return new SensorServices();
+	}
+	
+	// @Bean
+	public ParkingAreaServices createParkingService() {
+		return new ParkingAreaServices();
+	}
+	
+	// @Bean
+	public SensorMaintainerServices createSensorMaintainerServices() {
+		return new SensorMaintainerServices();
+	}
+	
+	// @Bean
+	public ParkingStatsServices createParkingStatsServices() {
+		return new ParkingStatsServices();
+	}
+	
+	// @Bean
+	public MailServices MailServices() {
+		return new MailServices();
 	}
 
-//  Uncomment this if you want to use PostgerSQL DB
+	// Uncomment this if you want to use PostgerSQL DB
 	@Bean
 	public PostgreClient createPostgresClient() {
- 		return new PostgreClient();
+		return new PostgreClient();
 	}
-	
-//	Uncomment this if you want to use MySQL DB
-//	@Bean
-//    public DataSource datasource() {
-//        return DataSourceBuilder.create()
-//          .driverClassName("com.mysql.cj.jdbc.Driver")
-//          .url("jdbc:mysql://localhost:3306/smartcity")
-//          .username("lubu")
-//          .password("password")
-//          .build();	
-//    }
-	
+
+	// Uncomment this if you want to use MySQL DB
+	// @Bean
+	// public DataSource datasource() {
+	// 	return DataSourceBuilder.create()
+	// 			.driverClassName("com.mysql.cj.jdbc.Driver")
+	// 			.url("jdbc:mysql://localhost:3306/smartcity")
+	// 			.username("lubu")
+	// 			.password("password")
+	// 			.build();
+	// }
+
 }

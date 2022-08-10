@@ -8,7 +8,6 @@ import java.util.Properties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 public class PostgreClient {
 
@@ -24,8 +23,6 @@ public class PostgreClient {
 	private String password;
 	
 	private String jdbcURL = "jdbc:postgresql://localhost:5432/SmartCitySimulator";
-//	private String username = "lubu";
-//	private String password = "password";
 
 	private Connection conn = null;
 

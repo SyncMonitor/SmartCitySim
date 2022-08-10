@@ -60,7 +60,7 @@ public interface ParkingAreaRepository extends CrudRepository<ParkingArea, Long>
 	
 	@Modifying
 	@Query("update ParkingArea p set p.lastUpdate = ?1 where fkSensorId = ?2")
-	public void updateSensorDateBySensorId(LocalDateTime data, Long sensorId);
+	public void updateLastUpdateBySensorId(LocalDateTime data, Long sensorId);
 
 
 	@Modifying

@@ -31,11 +31,7 @@ public interface SensorsRepository extends CrudRepository<Sensor, Long> {
 	public List<Sensor> getSensorByNameEndingWith(String str);
 	
 	@Query("select s from Sensor s where s.name like %?1%")
-	public List<Sensor> getSensorByNameContaining(String str);
-	
-	@Query("select s from Sensor s")
-	public List<Sensor> getAllSensors();
-	
+	public List<Sensor> getSensorByNameContaining(String str);	
 	
 	public List<Sensor> getSensorsByName(String name);
 	
