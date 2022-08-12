@@ -46,6 +46,13 @@ public class ParkingAreaServices {
 		return parkArea;
 	}
 
+	public List<ParkingArea> getAllParkingAreas() {
+		logger.debug("ParkingService START getAllParkingAreas");
+		List<ParkingArea> parkingAreas = parkingAreaRepository.getAllParkingArea();
+		logger.debug("ParkingService END getAllParkingAreas");
+		return parkingAreas;
+	}
+
 	public ParkingArea getParkingAreaById(Long id) {
 		logger.debug("ParkingService START getParkingAreaById - parkingAreaId:{}", id);
 		ParkingArea p = parkingAreaRepository.getParkingAreaById(id);
@@ -53,7 +60,7 @@ public class ParkingAreaServices {
 		return p;
 	}
 
-	public ParkingArea getParkingAreaBySensorId(Long sensorId) {
+	public ParkingArea getParkingAreaBySensorId(Long sensorId) throws NullPointerException {
 		logger.debug("ParkingService START getParkingAreaBySensorId - sensorId:{}", sensorId);
 		ParkingArea p = parkingAreaRepository.getParkingAreaByFkSensorId(sensorId);
 		logger.debug("ParkingService END getParkingAreaBySensorId - sensorId:{}", p.getId());

@@ -84,7 +84,7 @@ public class SensorServices {
 	public List<Sensor> getSensorsByName(String name) {
 		logger.debug("SensorServices START getSensorsByName - sensorName:{}", name);
 		List<Sensor> sensors = sensorsRepository.getSensorsByName(name);
-		logger.debug("SensorServices END getSensorByName - snesorName:{} - sensorsListSize:{}", sensors.size());
+		logger.debug("SensorServices END getSensorByName - snesorName:{} - sensorsListSize:{}", name, sensors.size());
 		return sensors;
 	}
 

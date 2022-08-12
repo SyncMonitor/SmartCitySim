@@ -23,6 +23,19 @@ public class Marker {
 	+ "\n\t\t\t}";
 	}
 
+	public Marker(Long id, String name, String address, String lat, String lng, boolean state, String battery, boolean active) {
+		this.id = id;
+		this.name = name;
+		this.address = address;
+		this.lat = lat;
+		this.lng = lng;
+		this.state = state;
+		this.battery = battery;
+		this.active = active;
+	}
+
+	public Marker(){}
+
 	public Long getId() {
 		return id;
 	}

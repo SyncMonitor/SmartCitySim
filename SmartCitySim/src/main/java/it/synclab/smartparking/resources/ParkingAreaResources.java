@@ -34,6 +34,22 @@ public class ParkingAreaResources {
 	@Autowired
 	private ParkingAreaServices parkingAreaService;
 
+	@GetMapping("/parking-area/all")
+	@ResponseBody
+	public ResponseEntity<Object> getAllParkingArea() {
+		logger.info("ParkingAreaResources - START getAllParkingArea");
+		List<ParkingArea> parkingAreas;
+		// Security user check
+		try {
+			parkingAreas = parkingAreaService.getAllParkingAreas();
+		} catch (Exception e) {
+			logger.error("ParkingAreaResources -  error - getAllParkingArea", e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		logger.info("ParkingAreaResources - END getAllParkingArea");
+		return ResponseEntity.status(HttpStatus.OK).body(parkingAreas);
+	}
+
 	@GetMapping("/parking-area/data/{id}")
 	@ResponseBody
 	public ResponseEntity<Object> getParkingAreaData(@PathVariable Long id) {
