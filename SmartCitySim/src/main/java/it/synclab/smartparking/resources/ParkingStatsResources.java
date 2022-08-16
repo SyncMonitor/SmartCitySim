@@ -120,7 +120,7 @@ public class ParkingStatsResources {
 		logger.info("ParkingStatsResources - START getParkingAreaStatsBySensorIdFromData");
 		List<ParkingAreaStats> stats;
 		try {
-			stats = parkingStatsService.getParkingAreaStatsBySensorIdFromData(id, data);
+			stats = parkingStatsService.getParkingAreaStatsBySensorIdFromDate(id, data);
 		} catch (Exception e) {
 			logger.error("ParkingStatsResources -  error - getParkingAreaStatsBySensorIdFromData", e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -137,7 +137,7 @@ public class ParkingStatsResources {
 		logger.info("ParkingStatsResources - START getParkingAreaStatsBySensorIdFromDataToData");
 		List<ParkingAreaStats> stats;
 		try {
-			stats = parkingStatsService.getParkingAreaStatsBySensorIdFromDataToData(id, startData, endData);
+			stats = parkingStatsService.getParkingAreaStatsBySensorIdFromDateToDate(id, startData, endData);
 		} catch (Exception e) {
 			logger.error("ParkingStatsResources -  error - getParkingAreaStatsBySensorIdFromDataToData", e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

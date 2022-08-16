@@ -11,7 +11,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import it.synclab.smartparking.model.Marker;
 import it.synclab.smartparking.repository.model.ParkingArea;
 import it.synclab.smartparking.repository.model.Sensor;
-import it.synclab.smartparking.resources.SensorResources;
 import it.synclab.smartparking.service.ParkingAreaServices;
 import it.synclab.smartparking.service.SensorServices;
 

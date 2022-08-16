@@ -87,14 +87,14 @@ public class ParkingStatsServices {
 		return stats;
 	}
 
-	public List<ParkingAreaStats> getParkingAreaStatsBySensorIdFromData(Long id, LocalDateTime data) {
+	public List<ParkingAreaStats> getParkingAreaStatsBySensorIdFromDate(Long id, LocalDateTime data) {
 		logger.debug("ParkingService START getParkingAreaStatsBySensorIdFromData");
 		List<ParkingAreaStats> stats = parkingAreaStatsRepository.getParkingAreaStatsBySensorIdFromData(id, data);
 		logger.debug("ParkingService END getParkingAreaStatsBySensorIdFromData");
 		return stats;
 	}
 
-	public List<ParkingAreaStats> getParkingAreaStatsBySensorIdFromDataToData(Long id, LocalDateTime startData,
+	public List<ParkingAreaStats> getParkingAreaStatsBySensorIdFromDateToDate(Long id, LocalDateTime startData,
 			LocalDateTime endData) {
 		logger.debug("ParkingService START getParkingAreaStatsBySensorIdFromDataToData");
 		List<ParkingAreaStats> stats = parkingAreaStatsRepository.getParkingAreaStatsBySensorIdFromDataToData(id,
