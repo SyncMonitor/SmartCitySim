@@ -34,6 +34,7 @@ public class SensorServicesTest {
 	Marker marker = new Marker();
 	int size = 0;
 
+
 	@Before
 	public void init() {
 		parkingArea.add(new ParkingArea("45.12564", "24.65489", "Via Indirizzo di prova 100", true, null));
@@ -117,14 +118,6 @@ public class SensorServicesTest {
 		Assert.assertEquals(2, sensors.size());
 	}
 
-	// // @Test
-	// // public void getSensorsByNameTest2() {
-	// // sensorServices.saveSensorData(sensor);
-	// // sensorServices.saveSensorData(InactiveSensor);
-	// // List<Sensor> sensors = sensorServices.getSensorsByName("TestName");
-	// // Assert.assertEquals(0, sensors.size());
-	// // }
-
 	@Test
 	public void getSensorByIdTest() {
 		sensorServices.saveSensorData(sensor);
@@ -200,7 +193,6 @@ public class SensorServicesTest {
 		// Arrange
 		List<Marker> sensors = new ArrayList<>();
 		// Act
-
 		Marker marker = new Marker(size + 1004L, "TestSensor", "TestAddress", "TestLat", "TestLng", false, "3,0V",
 				false);
 		Marker one = new Marker(size + 1005L, "TestSensor", "TestAddress", "TestLat", "TestLng", false, "1,9V", false);
@@ -242,34 +234,6 @@ public class SensorServicesTest {
 		// Assert
 		Assert.assertEquals(3, sensorServices.getCorruptedSensors(markerList).size());
 	}
-
-	// @Test
-	// public void updateSensorNameByIdTest() {
-	// 	sensorServices.saveSensorData(sensor);
-	// 	updateSensorById(sensor.getId());
-	// 	Sensor retreievedSensor = getSensorById(sensor.getId());
-	// 	Assert.assertEquals("NameUpdate", retreievedSensor.getName());
-	// 	sensorServices.deleteSensorById(sensor.getId());
-
-	// }
-
-	// public Sensor getSensorById(Long id) {
-	// 	Sensor result = sensorServices.getSensorById(id);
-	// 	return result;
-	// }
-
-	// public void updateSensorById(Long id) {
-	// 	sensorServices.updateSensorNameById("NameUpdate", sensor.getId());
-	// }
-
-	// @Test
-	// public void updateSensorBatteryByIdTest() {
-	// 	sensorServices.saveSensorData(sensor);
-	// 	sensorServices.updateSensorBatteryById("BatteryUpdate", sensor.getId());
-	// 	Sensor result = sensorServices.getSensorById(sensor.getId());
-	// 	Assert.assertEquals("BatteryUpdate", result.getBattery());
-	// 	sensorServices.deleteSensorById(sensor.getId());
-	// }
 
 	@Test
 	public void deleteSensorByIdTest() {

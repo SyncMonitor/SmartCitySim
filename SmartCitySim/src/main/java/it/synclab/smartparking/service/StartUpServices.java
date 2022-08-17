@@ -99,7 +99,7 @@ public class StartUpServices {
 		logger.debug("StartUpServices START updateSensorsData");
 		try {
 			MarkerList sensors = readDataFromSources();
-			writeSensorsIfAddes(sensors);
+			writeSensorsIfAdded(sensors);
 			updateDBData(sensors);
 			mailServices.sendLowBatterySensorsMail();
 			mailServices.sendCorruptedSensorsMail();
@@ -110,8 +110,7 @@ public class StartUpServices {
 	}
 
 	public void updateDBData(MarkerList sensors) {
-		boolean sensorUpdate = false;
-		boolean parkAreaUpdate = false;
+	
 		for (Marker m : sensors.getMarkers().getMarkers()) {
 			Sensor sensor = sensorServices.buildSensorFromMarker(m);
 			ParkingArea parkArea = parkingAreaServices.buildParkingAreaFromMarker(m);
@@ -119,59 +118,35 @@ public class StartUpServices {
 			ParkingArea parkingAreaFromDB = parkingAreaServices.getParkingAreaBySensorId(parkArea.getFkSensorId());
 			if (!sensorFromDB.getName().equals(sensor.getName())) {
 				sensorServices.updateSensorNameById(sensor.getName(), sensor.getId());
-				if (!sensorUpdate) {
-					sensorUpdate = true;
-				}
 			}
 			if (!sensorFromDB.getBattery().equals(sensor.getBattery())) {
 				sensorServices.updateSensorBatteryById(sensor.getBattery(), sensor.getId());
-				if (!sensorUpdate) {
-					sensorUpdate = true;
-				}
 			}
 			if (!sensorFromDB.getCharge().equals(sensor.getCharge())) {
 				sensorServices.updateSensorChargeById(sensor.getCharge(), sensor.getId());
 				if (sensor.getCharge().equals("2") || sensor.getCharge().equals("1")) {
 					sensorMaintainerServices.updateSensorMaintainerToBeChargedBySensorId(true, sensor.getId());
 				}
-				if (!sensorUpdate) {
-					sensorUpdate = true;
-				}
 			}
 			if (!sensorFromDB.getType().equals(sensor.getType())) {
 				sensorServices.updateSensorTypeById(sensor.getType(), sensor.getId());
-				if (!sensorUpdate) {
-					sensorUpdate = true;
-				}
 			}
 			if (sensorFromDB.isActive() != sensor.isActive()) {
 				sensorServices.updateSensorStateById(sensor.isActive(), sensor.getId());
 				if (!sensor.isActive()) {
 					sensorMaintainerServices.updateSensorMaintainerToBeRepairedBySensorId(true, sensor.getId());
 				}
-				if (!sensorUpdate) {
-					sensorUpdate = true;
-				}
 			}
 			if (!parkingAreaFromDB.getLatitude().equals(parkArea.getLatitude())) {
 				// tmp.getId() because when extract data from sensor you don't
 //					have p.Id because this is automatically assigned by DB
 				parkingAreaServices.updateParkingAreaLatitudeById(parkArea.getLatitude(), parkingAreaFromDB.getId());
-				if (!parkAreaUpdate) {
-					parkAreaUpdate = true;
-				}
 			}
 			if (!parkingAreaFromDB.getLongitude().equals(parkArea.getLongitude())) {
 				parkingAreaServices.updateParkingAreaLongitudeById(parkArea.getLongitude(), parkingAreaFromDB.getId());
-				if (!parkAreaUpdate) {
-					parkAreaUpdate = true;
-				}
 			}
 			if (!parkingAreaFromDB.getAddress().equals(parkArea.getAddress())) {
 				parkingAreaServices.updateParkingAreaAddressById(parkArea.getAddress(), parkingAreaFromDB.getId());
-				if (!parkAreaUpdate) {
-					parkAreaUpdate = true;
-				}
 			}
 			// value = state
 			if (parkingAreaFromDB.getValue() != parkArea.getValue()) {
@@ -179,23 +154,10 @@ public class StartUpServices {
 				parkingAreaServices.updateParkingAreaLastUpdateBySensorId(LocalDateTime.now(), sensor.getId());
 				ParkingAreaStats stats = parkingStatsServices.buildParkingAreaStatsFromParkingArea(parkArea);
 				parkingStatsServices.saveParkingAreaStats(stats);
-				if (!parkAreaUpdate) {
-					parkAreaUpdate = true;
-				}
 			}
 		}
 		LocalDateTime threeYearsAgo = LocalDateTime.now().minus(Period.ofYears(3));
 		parkingStatsServices.deleteParkingAreaStatsBeforeDate(threeYearsAgo);
-		if (sensorUpdate) {
-			logger.info("Sensor data updated");
-		} else {
-			logger.info("No Sensors data to update");
-		}
-		if (parkAreaUpdate) {
-			logger.info("ParkingArea data updated");
-		} else {
-			logger.info("No ParkingArea data to update");
-		}
 	}
 	
 	public MarkerList readParkingAreaData() throws Exception {
@@ -242,7 +204,7 @@ public class StartUpServices {
 		logger.debug("SensorServices END writeSensorData");
 	}
 	
-	public void writeSensorsIfAddes(MarkerList sensors) {
+	public void writeSensorsIfAdded(MarkerList sensors) {
 		int markerListSize = (sensors.getMarkers().markers.size());
 		int sensorListFromDB = (sensorServices.getAllSensorsFromDB().size());
 		logger.debug("Number of sensors from file:{}", markerListSize);
@@ -252,7 +214,7 @@ public class StartUpServices {
 			writeSensorsData();
 			writeSensorsMaintainerData();
 		}
-		else if (markerListSize != sensorListFromDB) {
+		else if (sensorListFromDB != markerListSize ) {
 			logger.debug("there is a new sensor.");
 			for (int i = sensorListFromDB; i < markerListSize; i++) {
 				Marker marker = sensors.getMarkers().getMarkers().get(i);

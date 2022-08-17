@@ -39,10 +39,13 @@ public class ParkingStatsServicesTest {
     ParkingAreaStats stat;
     ParkingAreaStats stat2 = new ParkingAreaStats();
     ParkingArea parkArea;
-    int size;
+    int size = 0;
+    Long id = 0L;
 
     @Before
     public void init() {
+        id = sensorServices.getAllSensorsFromDB().get(0).getId();
+
         marker = new Marker();
 
         marker.setId(1234567890123456789L);
@@ -55,7 +58,7 @@ public class ParkingStatsServicesTest {
         marker.setActive(true);
 
         stat2.setId(1234567890123456788L);
-        stat2.setFkSensorId(10L);
+        stat2.setFkSensorId(id);
         stat2.setLastUpdate(LocalDateTime.of(1980, 1, 1, 0, 0, 0));
         stat2.setValue(true);
 
@@ -98,7 +101,7 @@ public class ParkingStatsServicesTest {
     @Transactional
     @Test
     public void getParkingAreaStatsById() {
-        stat2.setFkSensorId(10L);
+        stat2.setFkSensorId(id);
         parkingStatsServices.saveParkingAreaStats(stat2);
         ParkingAreaStats result = parkingStatsServices
                 .getParkingAreaStatsById(parkingStatsServices.getParkingAreaStats().get(0).getId());
@@ -109,16 +112,16 @@ public class ParkingStatsServicesTest {
     @Transactional
     @Test
     public void getParkingAreaStatsBySensorIdTest() {
-        int size = parkingStatsServices.getParkingAreaStatsBySensorId(10L).size();
-        stat2.setFkSensorId(10L);
+        int size = parkingStatsServices.getParkingAreaStatsBySensorId(id).size();
+        stat2.setFkSensorId(id);
         parkingStatsServices.saveParkingAreaStats(stat2);
-        Assert.assertEquals(size + 1, parkingStatsServices.getParkingAreaStatsBySensorId(10L).size());
+        Assert.assertEquals(size + 1, parkingStatsServices.getParkingAreaStatsBySensorId(id).size());
     }
 
     @Transactional
     @Test
     public void getParkingAreaStatsFromDateTest() {
-        stat2.setFkSensorId(10L);
+        stat2.setFkSensorId(id);
         parkingStatsServices.saveParkingAreaStats(stat2);
         List<ParkingAreaStats> result = parkingStatsServices.getParkingAreaStatsFromDate(LocalDateTime.of(1980, 1, 1, 0, 0, 0));
         Assert.assertEquals(size + 1, result.size());
@@ -127,7 +130,7 @@ public class ParkingStatsServicesTest {
     @Transactional
     @Test
     public void getParkingAreaStatsFromDateToDateTest() {
-        stat2.setFkSensorId(10L);
+        stat2.setFkSensorId(id);
         parkingStatsServices.saveParkingAreaStats(stat2);
         stat2.setFkSensorId(8L);
         parkingStatsServices.saveParkingAreaStats(stat2);
@@ -139,23 +142,23 @@ public class ParkingStatsServicesTest {
     @Transactional
     @Test
     public void getParkingAreaStatsBySensorIdFromDateTest() {
-        int size = parkingStatsServices.getParkingAreaStatsBySensorIdFromDate(10L, LocalDateTime.of(1980, 1, 1, 0, 0, 0)).size();
-        stat2.setFkSensorId(10L);
+        int size = parkingStatsServices.getParkingAreaStatsBySensorIdFromDate(id, LocalDateTime.of(1980, 1, 1, 0, 0, 0)).size();
+        stat2.setFkSensorId(id);
         parkingStatsServices.saveParkingAreaStats(stat2);
-        List<ParkingAreaStats> result = parkingStatsServices.getParkingAreaStatsBySensorIdFromDate(10L, LocalDateTime.of(1979, 1, 1, 0, 0, 0));
+        List<ParkingAreaStats> result = parkingStatsServices.getParkingAreaStatsBySensorIdFromDate(id, LocalDateTime.of(1979, 1, 1, 0, 0, 0));
         Assert.assertEquals(size + 1, result.size());
     }
 
     @Transactional
     @Test
     public void getParkingAreaStatsBySensorIdFromDateToDateTest() {
-        int size = parkingStatsServices.getParkingAreaStatsBySensorIdFromDateToDate(10L, LocalDateTime.of(1979, 1, 1, 0, 0, 0),
+        int size = parkingStatsServices.getParkingAreaStatsBySensorIdFromDateToDate(id, LocalDateTime.of(1979, 1, 1, 0, 0, 0),
                 LocalDateTime.now()).size();
-        stat2.setFkSensorId(10L);
+        stat2.setFkSensorId(id);
         parkingStatsServices.saveParkingAreaStats(stat2);
         stat2.setLastUpdate(LocalDateTime.of(1997, 11, 30, 11, 07, 36));
         parkingStatsServices.saveParkingAreaStats(stat2);
-        List<ParkingAreaStats> result = parkingStatsServices.getParkingAreaStatsBySensorIdFromDateToDate(10L, LocalDateTime.of(1979, 1, 1, 0, 0, 0),
+        List<ParkingAreaStats> result = parkingStatsServices.getParkingAreaStatsBySensorIdFromDateToDate(id, LocalDateTime.of(1979, 1, 1, 0, 0, 0),
                 LocalDateTime.now());
         Assert.assertEquals(size + 2, result.size());
     }
@@ -177,10 +180,10 @@ public class ParkingStatsServicesTest {
     @Test
     public void deleteParkingAreaStatsById() {
         parkingStatsServices.saveParkingAreaStats(stat2);
-        Long id = parkingStatsServices.getParkingAreaStatsBySensorId(10L).get(0).getId();
-        Assert.assertNotNull(parkingStatsServices.getParkingAreaStatsById(id));
-        parkingStatsServices.deleteParkingAreaStatsById(id);
-        Assert.assertNull(parkingStatsServices.getParkingAreaStatsById(id));
+        Long parkingAreaId = parkingStatsServices.getParkingAreaStatsBySensorId(id).get(0).getId();
+        Assert.assertNotNull(parkingStatsServices.getParkingAreaStatsById(parkingAreaId));
+        parkingStatsServices.deleteParkingAreaStatsById(parkingAreaId);
+        Assert.assertNull(parkingStatsServices.getParkingAreaStatsById(parkingAreaId));
     }
 
     @Transactional
@@ -189,10 +192,10 @@ public class ParkingStatsServicesTest {
         parkingStatsServices.saveParkingAreaStats(stat2);
         stat2.setFkSensorId(8L);
         parkingStatsServices.saveParkingAreaStats(stat2);
-        int size = parkingStatsServices.getParkingAreaStatsBySensorIdFromDateToDate(10L, LocalDateTime.of(1979,1,1,0,0,0), LocalDateTime.of(1995,1,1,0,0,0)).size();
+        int size = parkingStatsServices.getParkingAreaStatsBySensorIdFromDateToDate(id, LocalDateTime.of(1979,1,1,0,0,0), LocalDateTime.of(1995,1,1,0,0,0)).size();
         Assert.assertTrue(size > 0);
-        parkingStatsServices.deleteParkingAreaStatsBySensorId(10L);
-        size = parkingStatsServices.getParkingAreaStatsBySensorId(10L).size();
+        parkingStatsServices.deleteParkingAreaStatsBySensorId(id);
+        size = parkingStatsServices.getParkingAreaStatsBySensorId(id).size();
         Assert.assertTrue("fail Delete by sensorId", size == 0);
     }
 

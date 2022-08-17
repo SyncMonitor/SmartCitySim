@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import it.synclab.smartparking.model.Maintainer;
 import it.synclab.smartparking.model.Marker;
 import it.synclab.smartparking.repository.model.Sensor;
 import it.synclab.smartparking.repository.model.SensorsMaintainer;
@@ -33,6 +34,7 @@ public class SensorMaintainerServicesTest {
     SensorsMaintainer maintainer = new SensorsMaintainer();
     SensorsMaintainer maintainer2 = new SensorsMaintainer();
     List<SensorsMaintainer> list = new ArrayList<>();
+    Long id = 0L;
 
     int size = 0;
 
@@ -54,6 +56,7 @@ public class SensorMaintainerServicesTest {
         sensor = sensorServices.buildSensorFromMarker(marker);
         sensor.setMaintainers(list);
         size = sensorMaintainerServices.getAllSensorsMaintainerData().size();
+        id = sensorServices.getAllSensorsFromDB().get(0).getId();
     }
 
     @Test
@@ -79,7 +82,7 @@ public class SensorMaintainerServicesTest {
     @Test
     public void saveSensorsMaintainerDataTest() {
         maintainer2.setId(1234567890123456789L);
-        maintainer2.setFkSensorId(10L);
+        maintainer2.setFkSensorId(id);
         maintainer2.setType("ParkingArea");
         maintainer2.setOwnerName("TestOwnerName");
         maintainer2.setOwnerSurname("TestOwnerSurname");
@@ -145,5 +148,66 @@ public class SensorMaintainerServicesTest {
             sensorMaintainerServices.deleteAllSensorMaintainers();
             Assert.assertEquals(0, sensorMaintainerServices.getAllSensorsMaintainerData().size());
         }
+    }
+
+    @Test
+    public void updateSensorsMaintainerDataBySensorId() {
+        String name = sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getOwnerName();
+        String surname = sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getOwnerSurname();
+        String company = sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getCompany();
+        String phoneNumber = sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getPhoneNumber();
+        String mail = sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getMail();
+
+        sensorMaintainerServices.updateSensorsMaintainerDataBySensorId(new Maintainer("TestName", "TestSurname", "Agency S.r.l.", "3693693693", "example@example.com"), id); 
+        Assert.assertEquals("TestName", sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getOwnerName());
+        Assert.assertEquals("TestSurname", sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getOwnerSurname());
+        Assert.assertEquals("Agency S.r.l.", sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getCompany());
+        Assert.assertEquals("3693693693", sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getPhoneNumber());
+        Assert.assertEquals("example@example.com", sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getMail());
+
+        sensorMaintainerServices.updateSensorsMaintainerDataBySensorId(new Maintainer(null, null, null , null, null), id);
+        Assert.assertNotNull(sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getOwnerName());
+        Assert.assertNotNull(sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getOwnerSurname());
+        Assert.assertNotNull(sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getCompany());
+        Assert.assertNotNull(sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getPhoneNumber());
+        Assert.assertNotNull(sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getMail());
+
+        sensorMaintainerServices.updateSensorsMaintainerDataBySensorId(new Maintainer(name, surname, company , phoneNumber, mail), id);
+        Assert.assertEquals(name, sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getOwnerName());
+        Assert.assertEquals(surname, sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getOwnerSurname());
+        Assert.assertEquals(company, sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getCompany());
+        Assert.assertEquals(phoneNumber, sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getPhoneNumber());
+        Assert.assertEquals(mail, sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getMail());
+    }
+
+    @Test
+    public void updateSensorsMaintainerDataById() {
+        Long maintainerId = sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getId();
+        String name = sensorMaintainerServices.getSensorsMaintainerDataById(maintainerId).getOwnerName();
+        String surname = sensorMaintainerServices.getSensorsMaintainerDataById(maintainerId).getOwnerSurname();
+        String company = sensorMaintainerServices.getSensorsMaintainerDataById(maintainerId).getCompany();
+        String phoneNumber = sensorMaintainerServices.getSensorsMaintainerDataById(maintainerId).getPhoneNumber();
+        String mail = sensorMaintainerServices.getSensorsMaintainerDataById(maintainerId).getMail();
+
+        sensorMaintainerServices.updateSensorsMaintainerDataById(new Maintainer("TestName", "TestSurname", "Agency S.r.l.", "3693693693", "example@example.com"), id); 
+        Assert.assertEquals("TestName", sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getOwnerName());
+        Assert.assertEquals("TestSurname", sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getOwnerSurname());
+        Assert.assertEquals("Agency S.r.l.", sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getCompany());
+        Assert.assertEquals("3693693693", sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getPhoneNumber());
+        Assert.assertEquals("example@example.com", sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getMail());
+
+        sensorMaintainerServices.updateSensorsMaintainerDataById(new Maintainer(null, null, null , null, null), id);
+        Assert.assertNotNull(sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getOwnerName());
+        Assert.assertNotNull(sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getOwnerSurname());
+        Assert.assertNotNull(sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getCompany());
+        Assert.assertNotNull(sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getPhoneNumber());
+        Assert.assertNotNull(sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getMail());
+
+        sensorMaintainerServices.updateSensorsMaintainerDataById(new Maintainer(name, surname, company , phoneNumber, mail), id);
+        Assert.assertEquals(name, sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getOwnerName());
+        Assert.assertEquals(surname, sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getOwnerSurname());
+        Assert.assertEquals(company, sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getCompany());
+        Assert.assertEquals(phoneNumber, sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getPhoneNumber());
+        Assert.assertEquals(mail, sensorMaintainerServices.getSensorsMaintainerDataBySensorId(id).get(0).getMail());
     }
 }
