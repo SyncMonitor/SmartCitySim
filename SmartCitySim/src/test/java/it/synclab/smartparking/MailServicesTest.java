@@ -70,7 +70,7 @@ public class MailServicesTest {
             sensors.getMarkers().getMarkers().get(9).setLng("TestLng");
             sensors.getMarkers().getMarkers().get(9).setBattery("2,0V");
             sensors.getMarkers().getMarkers().get(9).setActive(false);
-            sensors.getMarkers().getMarkers().get(8).setBattery("TestBattery");
+            sensors.getMarkers().getMarkers().get(9).setBattery("TestBattery");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -92,7 +92,7 @@ public class MailServicesTest {
             sensors.getMarkers().getMarkers().get(9).setLng("TestLng");
             sensors.getMarkers().getMarkers().get(9).setBattery("2,0V");
             sensors.getMarkers().getMarkers().get(9).setActive(true);
-            sensors.getMarkers().getMarkers().get(8).setBattery("1,3V");
+            sensors.getMarkers().getMarkers().get(9).setBattery("1,3V");
         } catch (Exception e) {
             e.printStackTrace();
         }

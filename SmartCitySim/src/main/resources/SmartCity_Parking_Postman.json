@@ -204,7 +204,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/sensor/name/nameUpdated",
+					"raw": "localhost:8080/scs/sensor/name/156A2C71",
 					"host": [
 						"localhost"
 					],
@@ -213,7 +213,7 @@
 						"scs",
 						"sensor",
 						"name",
-						"nameUpdated"
+						"156A2C71"
 					]
 				}
 			},
@@ -618,7 +618,7 @@
 				"method": "PUT",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/sensor/update/state/true/2",
+					"raw": "localhost:8080/scs/sensor/update/state/false/2",
 					"host": [
 						"localhost"
 					],
@@ -628,7 +628,7 @@
 						"sensor",
 						"update",
 						"state",
-						"true",
+						"false",
 						"2"
 					]
 				}
@@ -708,6 +708,41 @@
 			"response": []
 		},
 		{
+			"name": "getAllParkingAreas",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/parking-area/all",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"parking-area",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "getParkingAreaById",
 			"request": {
 				"auth": {
@@ -728,7 +763,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/parking-area/data/640",
+					"raw": "localhost:8080/scs/parking-area/data/3",
 					"host": [
 						"localhost"
 					],
@@ -737,7 +772,7 @@
 						"scs",
 						"parking-area",
 						"data",
-						"640"
+						"3"
 					]
 				}
 			},
@@ -800,7 +835,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/parking-area/latitude/640",
+					"raw": "localhost:8080/scs/parking-area/latitude/10",
 					"host": [
 						"localhost"
 					],
@@ -809,7 +844,7 @@
 						"scs",
 						"parking-area",
 						"latitude",
-						"640"
+						"10"
 					]
 				}
 			},
@@ -836,7 +871,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/parking-area/longitude/640",
+					"raw": "localhost:8080/scs/parking-area/longitude/10",
 					"host": [
 						"localhost"
 					],
@@ -845,7 +880,7 @@
 						"scs",
 						"parking-area",
 						"longitude",
-						"640"
+						"10"
 					]
 				}
 			},
@@ -908,7 +943,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/parking-area/address/640",
+					"raw": "localhost:8080/scs/parking-area/address/10",
 					"host": [
 						"localhost"
 					],
@@ -917,7 +952,7 @@
 						"scs",
 						"parking-area",
 						"address",
-						"640"
+						"10"
 					]
 				}
 			},
@@ -944,7 +979,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/parking-area/state/640",
+					"raw": "localhost:8080/scs/parking-area/state/10",
 					"host": [
 						"localhost"
 					],
@@ -953,7 +988,7 @@
 						"scs",
 						"parking-area",
 						"state",
-						"640"
+						"10"
 					]
 				}
 			},
@@ -1050,7 +1085,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/parking-area/last-update-date/6",
+					"raw": "localhost:8080/scs/parking-area/last-update-date/15",
 					"host": [
 						"localhost"
 					],
@@ -1059,7 +1094,7 @@
 						"scs",
 						"parking-area",
 						"last-update-date",
-						"6"
+						"15"
 					]
 				}
 			},
@@ -1090,7 +1125,7 @@
 					"raw": "updateLatitude"
 				},
 				"url": {
-					"raw": "localhost:8080/scs/parking-area/update/latitude/640",
+					"raw": "localhost:8080/scs/parking-area/update/latitude/2",
 					"host": [
 						"localhost"
 					],
@@ -1100,7 +1135,7 @@
 						"parking-area",
 						"update",
 						"latitude",
-						"640"
+						"2"
 					]
 				}
 			},
@@ -1131,7 +1166,7 @@
 					"raw": "updateLongitude"
 				},
 				"url": {
-					"raw": "localhost:8080/scs/parking-area/update/longitude/640",
+					"raw": "localhost:8080/scs/parking-area/update/longitude/2",
 					"host": [
 						"localhost"
 					],
@@ -1141,7 +1176,7 @@
 						"parking-area",
 						"update",
 						"longitude",
-						"640"
+						"2"
 					]
 				}
 			},
@@ -1172,7 +1207,7 @@
 					"raw": "updatedAddress"
 				},
 				"url": {
-					"raw": "localhost:8080/scs/parking-area/update/address/640",
+					"raw": "localhost:8080/scs/parking-area/update/address/2",
 					"host": [
 						"localhost"
 					],
@@ -1182,7 +1217,7 @@
 						"parking-area",
 						"update",
 						"address",
-						"640"
+						"2"
 					]
 				}
 			},
@@ -1209,7 +1244,7 @@
 				"method": "PUT",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/parking-area/update/state/true/180",
+					"raw": "localhost:8080/scs/parking-area/update/state/true/2",
 					"host": [
 						"localhost"
 					],
@@ -1220,7 +1255,7 @@
 						"update",
 						"state",
 						"true",
-						"180"
+						"2"
 					]
 				}
 			},
@@ -1247,7 +1282,7 @@
 				"method": "PUT",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/parking-area/update/state/true/180",
+					"raw": "localhost:8080/scs/parking-area/update/state/false/10",
 					"host": [
 						"localhost"
 					],
@@ -1257,8 +1292,8 @@
 						"parking-area",
 						"update",
 						"state",
-						"true",
-						"180"
+						"false",
+						"10"
 					]
 				}
 			},
@@ -1430,7 +1465,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/maintainer/660",
+					"raw": "localhost:8080/scs/maintainer/8",
 					"host": [
 						"localhost"
 					],
@@ -1438,7 +1473,7 @@
 					"path": [
 						"scs",
 						"maintainer",
-						"660"
+						"8"
 					]
 				}
 			},
@@ -1501,7 +1536,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\" : \"Luca\",\n    \"surname\" : \"Busacca\",\n    \"company\":\"Azienda S.r.l.\",\n    \"phoneNumber\" : \"+39 3333333333\",\n    \"mail\" : \"LuBu@prova.com\"\n}",
+					"raw": "{\n    \"name\" : \"Pinco\",\n    \"surname\" : \"Pallino\",\n    \"company\":\"Azienda S.r.l.\",\n    \"phoneNumber\" : \"+39 3333333333\",\n    \"mail\" : \"luca_busacca@hotmail.com\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1509,7 +1544,7 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/scs/update/maintainer/sensor/3",
+					"raw": "localhost:8080/scs/update/maintainer/sensor/1",
 					"host": [
 						"localhost"
 					],
@@ -1519,7 +1554,7 @@
 						"update",
 						"maintainer",
 						"sensor",
-						"3"
+						"1"
 					]
 				}
 			},
@@ -1547,7 +1582,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\" : \"Pinco\",\n    \"surname\" : \"Pallino\",\n    \"company\":\"Azienda S.r.l.\",\n    \"phoneNumber\" : \"+39 3232323232\",\n    \"mail\" : \"Pinco_Pallino@prova.com\"\n}",
+					"raw": "{\n    \"name\" : \"Mario\",\n    \"surname\" : \"Rossi\",\n    \"company\":\"Azienda S.r.l.\",\n    \"phoneNumber\" : \"+39 3232323232\",\n    \"mail\" : \"luca_busacca@hotmail.com\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1555,7 +1590,7 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/scs/update/maintainer/664",
+					"raw": "localhost:8080/scs/update/maintainer/2",
 					"host": [
 						"localhost"
 					],
@@ -1564,7 +1599,7 @@
 						"scs",
 						"update",
 						"maintainer",
-						"664"
+						"2"
 					]
 				}
 			},
@@ -1887,7 +1922,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/parking-stats/660",
+					"raw": "localhost:8080/scs/parking-stats/750",
 					"host": [
 						"localhost"
 					],
@@ -1895,7 +1930,7 @@
 					"path": [
 						"scs",
 						"parking-stats",
-						"660"
+						"750"
 					]
 				}
 			},
@@ -1975,6 +2010,9 @@
 		},
 		{
 			"name": "getParkingStatsFromDataToData",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"auth": {
 					"type": "apikey",
@@ -1993,8 +2031,17 @@
 				},
 				"method": "GET",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"startDate\":\"2022-08-10 00:00\",\"endDate\":\"2022-08-15 00:00\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "localhost:8080/scs/parking-stats/2022-08-08T20:08:00.000/2022-08-08T20:10:00.000",
+					"raw": "localhost:8080/scs/parking-stats/abc",
 					"host": [
 						"localhost"
 					],
@@ -2002,8 +2049,7 @@
 					"path": [
 						"scs",
 						"parking-stats",
-						"2022-08-08T20:08:00.000",
-						"2022-08-08T20:10:00.000"
+						"abc"
 					]
 				}
 			},
