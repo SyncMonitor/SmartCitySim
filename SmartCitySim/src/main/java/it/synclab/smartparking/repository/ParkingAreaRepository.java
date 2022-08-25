@@ -14,11 +14,14 @@ import it.synclab.smartparking.repository.model.ParkingArea;
 @Transactional
 @Repository
 public interface ParkingAreaRepository extends CrudRepository<ParkingArea, Long> {
-
+	
+	@Query("select p from ParkingArea p order by id")
+	public List<ParkingArea> getAllParkingArea();
+	
 	public ParkingArea getParkingAreaById(Long id);
 	
 	public ParkingArea getParkingAreaByFkSensorId(Long sensorId);
-
+	
 	@Query("select p.latitude from ParkingArea p where p.id = ?1")
 	public String getLatitudeById(Long id);
 
@@ -60,9 +63,14 @@ public interface ParkingAreaRepository extends CrudRepository<ParkingArea, Long>
 	
 	@Modifying
 	@Query("update ParkingArea p set p.lastUpdate = ?1 where fkSensorId = ?2")
-	public void updateSensorDateBySensorId(LocalDateTime data, Long sensorId);
+	public void updateLastUpdateBySensorId(LocalDateTime data, Long sensorId);
 
 
+	@Modifying
+	@Query("delete ParkingArea p where p.id = ?1")
+	public void deleteParkingAreaById(Long id);
 	
-
+	@Modifying
+	@Query("delete ParkingArea p where p.fkSensorId = ?1")
+	public void deleteParkingAreaBySensorId(Long sensorId);
 }

@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "getAllDataFromSourceFile",
+			"name": "getSensorsDataFromDB",
 			"request": {
 				"auth": {
 					"type": "apikey",
@@ -36,6 +36,76 @@
 						"scs",
 						"sensor",
 						"get-all-data"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getSensorsDataFromSource",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/sensor/get-data-from-XML",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"sensor",
+						"get-data-from-XML"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "writeSensorDataFromXml",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/sensor/save-data",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"sensor",
+						"save-data"
 					]
 				}
 			},
@@ -108,6 +178,42 @@
 						"sensor",
 						"state",
 						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getSensorsByName",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/sensor/name/156A2C71",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"sensor",
+						"name",
+						"156A2C71"
 					]
 				}
 			},
@@ -261,6 +367,76 @@
 			"response": []
 		},
 		{
+			"name": "getActiveSensors",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/sensor/isActive",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"sensor",
+						"isActive"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getInactiveSensors",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/sensor/notActive",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"sensor",
+						"notActive"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "updateSensorNameById",
 			"request": {
 				"auth": {
@@ -296,42 +472,6 @@
 						"update",
 						"name",
 						"2"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "getSensorsByName",
-			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "key",
-							"value": "SMART-PARKY-API-KEY",
-							"type": "string"
-						},
-						{
-							"key": "value",
-							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:8080/scs/sensor/name/nameUpdated",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"scs",
-						"sensor",
-						"name",
-						"nameUpdated"
 					]
 				}
 			},
@@ -420,7 +560,7 @@
 			"response": []
 		},
 		{
-			"name": "getActiveSensors",
+			"name": "updateSensorIsActiveTrueById",
 			"request": {
 				"auth": {
 					"type": "apikey",
@@ -437,10 +577,10 @@
 						}
 					]
 				},
-				"method": "GET",
+				"method": "PUT",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/sensor/isActive",
+					"raw": "localhost:8080/scs/sensor/update/state/true/2",
 					"host": [
 						"localhost"
 					],
@@ -448,14 +588,127 @@
 					"path": [
 						"scs",
 						"sensor",
-						"isActive"
+						"update",
+						"state",
+						"true",
+						"2"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "getInactiveSensors",
+			"name": "updateSensorIsActiveFalseById",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/sensor/update/state/false/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"sensor",
+						"update",
+						"state",
+						"false",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteSensorById",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/sensor/delete/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"sensor",
+						"delete",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteAllSensorsData",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/sensor/delete/all",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"sensor",
+						"delete",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllParkingAreas",
 			"request": {
 				"auth": {
 					"type": "apikey",
@@ -475,15 +728,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/sensor/notActive",
+					"raw": "localhost:8080/scs/parking-area/all",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"scs",
-						"sensor",
-						"notActive"
+						"parking-area",
+						"all"
 					]
 				}
 			},
@@ -510,7 +763,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/parking-area/data/640",
+					"raw": "localhost:8080/scs/parking-area/data/3",
 					"host": [
 						"localhost"
 					],
@@ -519,7 +772,7 @@
 						"scs",
 						"parking-area",
 						"data",
-						"640"
+						"3"
 					]
 				}
 			},
@@ -582,7 +835,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/parking-area/latitude/640",
+					"raw": "localhost:8080/scs/parking-area/latitude/10",
 					"host": [
 						"localhost"
 					],
@@ -591,7 +844,7 @@
 						"scs",
 						"parking-area",
 						"latitude",
-						"640"
+						"10"
 					]
 				}
 			},
@@ -618,7 +871,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/parking-area/longitude/640",
+					"raw": "localhost:8080/scs/parking-area/longitude/10",
 					"host": [
 						"localhost"
 					],
@@ -627,7 +880,7 @@
 						"scs",
 						"parking-area",
 						"longitude",
-						"640"
+						"10"
 					]
 				}
 			},
@@ -690,7 +943,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/parking-area/address/640",
+					"raw": "localhost:8080/scs/parking-area/address/10",
 					"host": [
 						"localhost"
 					],
@@ -699,7 +952,7 @@
 						"scs",
 						"parking-area",
 						"address",
-						"640"
+						"10"
 					]
 				}
 			},
@@ -726,7 +979,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/parking-area/state/640",
+					"raw": "localhost:8080/scs/parking-area/state/10",
 					"host": [
 						"localhost"
 					],
@@ -735,168 +988,7 @@
 						"scs",
 						"parking-area",
 						"state",
-						"640"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "updateParkingAreaLatitudeById",
-			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "key",
-							"value": "SMART-PARKY-API-KEY",
-							"type": "string"
-						},
-						{
-							"key": "value",
-							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
-							"type": "string"
-						}
-					]
-				},
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "updateLatitude"
-				},
-				"url": {
-					"raw": "localhost:8080/scs/parking-area/update/latitude/640",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"scs",
-						"parking-area",
-						"update",
-						"latitude",
-						"640"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "updateParkingAreaLongitudeByid",
-			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "key",
-							"value": "SMART-PARKY-API-KEY",
-							"type": "string"
-						},
-						{
-							"key": "value",
-							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
-							"type": "string"
-						}
-					]
-				},
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "updateLongitude"
-				},
-				"url": {
-					"raw": "localhost:8080/scs/parking-area/update/longitude/640",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"scs",
-						"parking-area",
-						"update",
-						"longitude",
-						"640"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "updateParkingAreaAddressById",
-			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "key",
-							"value": "SMART-PARKY-API-KEY",
-							"type": "string"
-						},
-						{
-							"key": "value",
-							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
-							"type": "string"
-						}
-					]
-				},
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "updatedAddress"
-				},
-				"url": {
-					"raw": "localhost:8080/scs/parking-area/update/address/640",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"scs",
-						"parking-area",
-						"update",
-						"address",
-						"640"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "updateParkingAreaStateById(Id=565)",
-			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "key",
-							"value": "SMART-PARKY-API-KEY",
-							"type": "string"
-						},
-						{
-							"key": "value",
-							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
-							"type": "string"
-						}
-					]
-				},
-				"method": "PUT",
-				"header": [],
-				"url": {
-					"raw": "localhost:8080/scs/parking-area/update/state/false/640",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"scs",
-						"parking-area",
-						"update",
-						"state",
-						"false",
-						"640"
+						"10"
 					]
 				}
 			},
@@ -993,7 +1085,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/parking-area/last-update-date/6",
+					"raw": "localhost:8080/scs/parking-area/last-update-date/15",
 					"host": [
 						"localhost"
 					],
@@ -1002,14 +1094,14 @@
 						"scs",
 						"parking-area",
 						"last-update-date",
-						"6"
+						"15"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "updateSensorsMaintainerBySensorId",
+			"name": "updateParkingAreaLatitudeById",
 			"request": {
 				"auth": {
 					"type": "apikey",
@@ -1030,24 +1122,250 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\" : \"Luca\",\n    \"surname\" : \"Busacca\",\n    \"company\":\"Azienda S.r.l.\",\n    \"phoneNumber\" : \"+39 3333333333\",\n    \"mail\" : \"LuBu@prova.com\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
+					"raw": "updateLatitude"
 				},
 				"url": {
-					"raw": "localhost:8080/scs/update/maintainer/sensor/3",
+					"raw": "localhost:8080/scs/parking-area/update/latitude/2",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"scs",
+						"parking-area",
 						"update",
-						"maintainer",
+						"latitude",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateParkingAreaLongitudeByid",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "updateLongitude"
+				},
+				"url": {
+					"raw": "localhost:8080/scs/parking-area/update/longitude/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"parking-area",
+						"update",
+						"longitude",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateParkingAreaAddressById",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "updatedAddress"
+				},
+				"url": {
+					"raw": "localhost:8080/scs/parking-area/update/address/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"parking-area",
+						"update",
+						"address",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateParkingAreaStateTrueById",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/parking-area/update/state/true/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"parking-area",
+						"update",
+						"state",
+						"true",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateParkingAreaStateFalseById",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/parking-area/update/state/false/10",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"parking-area",
+						"update",
+						"state",
+						"false",
+						"10"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteParkingAreaFromId",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/parking-area/delete/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"parking-area",
+						"delete",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteParkingAreaBySensorId",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/sensor/parking-area/delete/3",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
 						"sensor",
+						"parking-area",
+						"delete",
 						"3"
 					]
 				}
@@ -1055,7 +1373,7 @@
 			"response": []
 		},
 		{
-			"name": "updateSensorsMaintainerById",
+			"name": "deleteAllParkingArea",
 			"request": {
 				"auth": {
 					"type": "apikey",
@@ -1072,66 +1390,19 @@
 						}
 					]
 				},
-				"method": "PUT",
+				"method": "DELETE",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\" : \"Pinco\",\n    \"surname\" : \"Pallino\",\n    \"company\":\"Azienda S.r.l.\",\n    \"phoneNumber\" : \"+39 3232323232\",\n    \"mail\" : \"Pinco_Pallino@prova.com\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "localhost:8080/scs/update/maintainer/664",
+					"raw": "localhost:8080/scs/parking-area/delete/all",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"scs",
-						"update",
-						"maintainer",
-						"664"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "updateSensorsMainteinerFalseById",
-			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "key",
-							"value": "SMART-PARKY-API-KEY",
-							"type": "string"
-						},
-						{
-							"key": "value",
-							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
-							"type": "string"
-						}
-					]
-				},
-				"method": "PUT",
-				"header": [],
-				"url": {
-					"raw": "localhost:8080/scs/update/maintainer/to-be-repaired/false/658",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"scs",
-						"update",
-						"maintainer",
-						"to-be-repaired",
-						"false",
-						"658"
+						"parking-area",
+						"delete",
+						"all"
 					]
 				}
 			},
@@ -1194,7 +1465,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/maintainer/660",
+					"raw": "localhost:8080/scs/maintainer/8",
 					"host": [
 						"localhost"
 					],
@@ -1202,14 +1473,292 @@
 					"path": [
 						"scs",
 						"maintainer",
-						"660"
+						"8"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "deleteSensorById",
+			"name": "getAllSensorsMaintainersData",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/maintainers/all",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"maintainers",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateSensorsMaintainerBySensorId",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\" : \"Pinco\",\n    \"surname\" : \"Pallino\",\n    \"company\":\"Azienda S.r.l.\",\n    \"phoneNumber\" : \"+39 3333333333\",\n    \"mail\" : \"luca_busacca@hotmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/scs/update/maintainer/sensor/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"update",
+						"maintainer",
+						"sensor",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateSensorsMaintainerById",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\" : \"Mario\",\n    \"surname\" : \"Rossi\",\n    \"company\":\"Azienda S.r.l.\",\n    \"phoneNumber\" : \"+39 3232323232\",\n    \"mail\" : \"luca_busacca@hotmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/scs/update/maintainer/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"update",
+						"maintainer",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateMaintainersToBeRepairedTrueBySensorId",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/update/maintainer/to-be-repaired/true/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"update",
+						"maintainer",
+						"to-be-repaired",
+						"true",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateMaintainersToBeRepairedFalseBySensorId",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/update/maintainer/to-be-repaired/false/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"update",
+						"maintainer",
+						"to-be-repaired",
+						"false",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateMaintainersToBeChargedTrueBySensorId",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/update/maintainer/to-be-charged/true/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"update",
+						"maintainer",
+						"to-be-charged",
+						"true",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateMaintainersToBeChargedFalseBySensorId",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/update/maintainer/to-be-charged/false/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"update",
+						"maintainer",
+						"to-be-charged",
+						"false",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteSensorsMaintainersById",
 			"request": {
 				"auth": {
 					"type": "apikey",
@@ -1229,14 +1778,14 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/sensor/delete/2",
+					"raw": "localhost:8080/scs/maintainers/delete/2",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"scs",
-						"sensor",
+						"maintainers",
 						"delete",
 						"2"
 					]
@@ -1245,7 +1794,7 @@
 			"response": []
 		},
 		{
-			"name": "deleteAllSensorsData",
+			"name": "deleteSensorsMaintainerBySensorId",
 			"request": {
 				"auth": {
 					"type": "apikey",
@@ -1265,7 +1814,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/sensor/delete/all",
+					"raw": "localhost:8080/scs/sensor/maintainers/delete/3",
 					"host": [
 						"localhost"
 					],
@@ -1273,15 +1822,16 @@
 					"path": [
 						"scs",
 						"sensor",
+						"maintainers",
 						"delete",
-						"all"
+						"3"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "writeSensorDataFromXml",
+			"name": "deleteAllSensorsMaintainers",
 			"request": {
 				"auth": {
 					"type": "apikey",
@@ -1298,10 +1848,116 @@
 						}
 					]
 				},
-				"method": "POST",
+				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/scs/sensor/save-data",
+					"raw": "localhost:8080/scs/maintainers/delete/all",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"maintainers",
+						"delete",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllParkingStats",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/parking-stats/",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"parking-stats",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getParkingAreaStatsById",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/parking-stats/750",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"parking-stats",
+						"750"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getParkingAreaStatsBySensorId",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/sensor/parking-stats/2",
 					"host": [
 						"localhost"
 					],
@@ -1309,7 +1965,312 @@
 					"path": [
 						"scs",
 						"sensor",
-						"save-data"
+						"parking-stats",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getParkingStatsFromData",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/parking-stats/from/2022-08-08T20:08:00.000",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"parking-stats",
+						"from",
+						"2022-08-08T20:08:00.000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getParkingStatsFromDataToData",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"startDate\":\"2022-08-10 00:00\",\"endDate\":\"2022-08-15 00:00\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/scs/parking-stats/abc",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"parking-stats",
+						"abc"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getParkingStatsFromDataBySensorId",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/sensor/parking-stats/15/2022-08-08T00:00:00.000",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"sensor",
+						"parking-stats",
+						"15",
+						"2022-08-08T00:00:00.000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getParkingStatsFromDataToDataBySensorId",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/sensor/parking-stats/13/2022-08-08T00:00:00.000/2022-08-09T00:00:00.000",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"sensor",
+						"parking-stats",
+						"13",
+						"2022-08-08T00:00:00.000",
+						"2022-08-09T00:00:00.000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteParkingStatsBefore",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/parking-stats/delete/before/2022-08-09T00:00:00.000",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"parking-stats",
+						"delete",
+						"before",
+						"2022-08-09T00:00:00.000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteParkingStatsBySensorId",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/sensor/parking-stats/delete/10",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"sensor",
+						"parking-stats",
+						"delete",
+						"10"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteParkingStatsById",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/parking-stats/delete/662",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"parking-stats",
+						"delete",
+						"662"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteAllParkingStats",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "SMART-PARKY-API-KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "6f75c975-3595-4706-9dcc-d2dd0549d3dd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/scs/parking-stats/delete/all",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"scs",
+						"parking-stats",
+						"delete",
+						"all"
 					]
 				}
 			},

@@ -18,6 +18,7 @@ public class Sensor {
 	private Long id;
 	String name;
 	String battery;
+	String charge;
 	String type;
 	boolean isActive;
 
@@ -32,10 +33,11 @@ public class Sensor {
 	public Sensor() {
 	}
 
-	public Sensor(Long id, String name, String battery, String type, boolean isActive, List<ParkingArea> parkingArea) {
+	public Sensor(Long id, String name, String battery, String charge, String type, boolean isActive, List<ParkingArea> parkingArea) {
 		this.id = id;
 		this.name = name;
 		this.battery = battery;
+		this.charge = charge;
 		this.type = type;
 		this.isActive = isActive;
 		this.parkingArea = parkingArea;
@@ -81,6 +83,14 @@ public class Sensor {
 	public void setBattery(String battery) {
 		this.battery = battery;
 	}
+	
+	public String getCharge() {
+		return charge;
+	}
+
+	public void setCharge(String c) {
+		this.charge = c;
+	}
 
 	public String getType() {
 		return type;
@@ -104,6 +114,7 @@ public class Sensor {
 				+ "\t\"id\" : " + id + ",\n" 
 				+ "\t\"name\" : " + name + ",\n" 
 				+ "\t\"battery\" : \"" + battery + "\",\n"
+				+ "\t\"charge\" : \"" + charge + "\",\n"
 				+ "\t\"type\" : \"" + type + "\",\n"
 				+ "\t\"isActive\":\"" + isActive + "\",\n"
 				+ "\t\"ParkingArea\":" + parkingArea.toString() + "\n}";

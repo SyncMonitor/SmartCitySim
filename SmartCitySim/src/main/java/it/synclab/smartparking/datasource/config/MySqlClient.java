@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import org.springframework.beans.factory.annotation.Value;
 
 
@@ -20,13 +23,16 @@ public class MySqlClient {
 	
 	private Connection conn = null;
 
+	private static final Logger logger = LogManager.getLogger(MySqlClient.class);;
+
 	public MySqlClient(){
 		try {
+			logger.debug("MySqlClient - START - trying connection to MySqlDB");
 			conn = DriverManager.getConnection(jdbcURL, username, password);
 		} catch (SQLException e) {
-			System.out.println(e.toString());
-			e.printStackTrace();
+			logger.error("MySqlClient - ERROR - ", e);
 		}
+		logger.debug("MySqlClient - END - connection to MySqlDB Success");
 	}
 	
 }

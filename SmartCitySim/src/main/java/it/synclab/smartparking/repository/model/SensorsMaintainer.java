@@ -79,7 +79,7 @@ public class SensorsMaintainer {
 		this.ownerName = ownerName;
 	}
 
-	public String getOwnerSurame() {
+	public String getOwnerSurname() {
 		return ownerSurname;
 	}
 

@@ -15,7 +15,6 @@ import it.synclab.smartparking.context.APIKeyAuthFilter;
 
 @Configuration
 @EnableWebSecurity
-//@Order(1)
 public class ApiSecurityConfig extends WebSecurityConfigurerAdapter {
 	 
 	@Value("${api-key}")
