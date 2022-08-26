@@ -2,6 +2,7 @@ package it.synclab.smartparking.service;
 
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
 
 import javax.sql.DataSource;
 import it.synclab.smartparking.datasource.config.MySqlClient;
@@ -103,6 +104,7 @@ public class StartUpServices {
 			updateDBData(sensors);
 			mailServices.sendLowBatterySensorsMail();
 			mailServices.sendCorruptedSensorsMail();
+			mailServices.sendNotUpdatingSensorsMail();
 		} catch (Exception e) {
 			logger.error("StartUpServices ERROR updateSensorsData", e);
 		}
@@ -110,8 +112,9 @@ public class StartUpServices {
 	}
 
 	public void updateDBData(MarkerList sensors) {
-	
+		
 		for (Marker m : sensors.getMarkers().getMarkers()) {
+			boolean updated = false;
 			Sensor sensor = sensorServices.buildSensorFromMarker(m);
 			ParkingArea parkArea = parkingAreaServices.buildParkingAreaFromMarker(m);
 			Sensor sensorFromDB = sensorServices.getSensorById(sensor.getId());
@@ -121,6 +124,7 @@ public class StartUpServices {
 			}
 			if (!sensorFromDB.getBattery().equals(sensor.getBattery())) {
 				sensorServices.updateSensorBatteryById(sensor.getBattery(), sensor.getId());
+				updated = true;
 			}
 			if (!sensorFromDB.getCharge().equals(sensor.getCharge())) {
 				sensorServices.updateSensorChargeById(sensor.getCharge(), sensor.getId());
@@ -133,9 +137,19 @@ public class StartUpServices {
 			}
 			if (sensorFromDB.isActive() != sensor.isActive()) {
 				sensorServices.updateSensorStateById(sensor.isActive(), sensor.getId());
+				updated = true;
 				if (!sensor.isActive()) {
 					sensorMaintainerServices.updateSensorMaintainerToBeRepairedBySensorId(true, sensor.getId());
 				}
+			}
+			
+			if(updated){
+				sensorServices.updateSensorLastSurveyById(sensor.getId());
+			}
+
+			else if(sensorFromDB.getLastSurvey().isBefore(LocalDateTime.now().minusDays(5))){
+				sensorMaintainerServices.updateSensorMaintainerIsUpdatingToFalseById(sensor.getId());
+				sensorServices.updateSensorLastSurveyById(sensor.getId());
 			}
 			if (!parkingAreaFromDB.getLatitude().equals(parkArea.getLatitude())) {
 				// tmp.getId() because when extract data from sensor you don't

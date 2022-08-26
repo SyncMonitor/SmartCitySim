@@ -1,5 +1,6 @@
 package it.synclab.smartparking.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Modifying;
@@ -63,12 +64,15 @@ public interface SensorsRepository extends CrudRepository<Sensor, Long> {
 	@Modifying
 	@Query("update Sensor c set c.charge = ?1 where id = ?2")
 	public void updateSensorChargeById(String charge, Long sensorId);
+
+	@Modifying
+	@Query("update Sensor c set c.lastSurvey = ?1 where id = ?2")
+	public void updateLastSurveyById(LocalDateTime date, Long id);
 	
 	//Delete
 
 	@Modifying
 	@Query("delete Sensor c where id = ?1")
 	public void deleteSensorById(Long sensorId);
-
 
 }

@@ -1,5 +1,7 @@
 package it.synclab.smartparking;
 
+import java.time.LocalDateTime;
+
 import javax.transaction.Transactional;
 
 import org.junit.Assert;
@@ -13,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import it.synclab.smartparking.model.Marker;
 import it.synclab.smartparking.model.MarkerList;
 import it.synclab.smartparking.model.Markers;
+import it.synclab.smartparking.repository.model.Sensor;
 import it.synclab.smartparking.service.MailServices;
 import it.synclab.smartparking.service.ParkingAreaServices;
 import it.synclab.smartparking.service.SensorMaintainerServices;
@@ -146,6 +149,24 @@ public class StartUpServicesTest {
         startUpServices.updateDBData(sensors);
         Assert.assertEquals(sensors.getMarkers().getMarkers().get(9).getBattery(),
                 sensorServices.getSensorById(id).getBattery());
+    }
+
+    @Transactional
+    @Test
+    public void SensorNotUpdatingFromMoreFiveDaysTest() {
+        Sensor sensor = new Sensor();
+        sensor = sensorServices.getSensorById(id);
+        sensor.setLastSurvey(LocalDateTime.now().minusDays(6));
+        MarkerList sensors = new MarkerList();
+        try {
+            sensors = startUpServices.readDataFromSources();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sensorServices.saveSensorData(sensor);
+        startUpServices.updateDBData(sensors);
+        Assert.assertEquals(sensorServices.getSensorById(id).getLastSurvey(),
+                sensorServices.getSensorById(id).getLastSurvey());
     }
 
     @Transactional

@@ -17,33 +17,42 @@ import it.synclab.smartparking.repository.model.SensorsMaintainer;
 @Component
 public class MailServices {
 
-	
 	@Value("${mail.message.low.battery.start}")
 	private String lowBatteryStartMessage;
 
 	@Value("${mail.message.sensor.off.start}")
 	private String sensorOffStartMessage;
 
+	@Value("${mail.message.sensor.not.updating.start}")
+	private String notUpdatingStartMessage;
+
 	@Value("${mail.message.low.battery.end}")
 	private String lowBatteryEndMessage;
 
 	@Value("${mail.message.sensor.off.end}")
 	private String sensorOffEndMessage;
+	
+	@Value("${mail.message.sensor.not.updating.end}")
+	private String notUpdatingEndMessage;
 
 	@Value("${mail.subject.battery.low}")
 	private String lowBatterySubject;
 
 	@Value("${mail.subject.sensor.off}")
 	private String sensorOffSubject;
+
+	@Value("${mail.subject.sensor.not.updating}")
+	String notUpdatingSubject;
+
 	@Autowired
 	JavaMailSender javaMailSender;
-	
+
 	@Autowired
 	SensorServices sensorService;
-	
+
 	@Autowired
 	ParkingAreaServices parkingService;
-	
+
 	@Autowired
 	SensorMaintainerServices sensorMaintainerServices;
 
@@ -59,14 +68,14 @@ public class MailServices {
 			msg.setSubject(subject);
 			msg.setText(text);
 			msg.setFrom(mailSender);
-			logger.info("Mail sent");
-//		    Inserire messaggio nella coda (Listener) -> da dentro la coda mando la mail
+			// Inserire messaggio nella coda (Listener) -> da dentro la coda mando la mail
 			javaMailSender.send(msg);
+			logger.info("Mail sent");
 		} catch (Exception e) {
 			logger.warn("mailService - ERROR in sent mail for subject {}", subject);
 		}
 	}
-	
+
 	public String printMail(Sensor s, List<ParkingArea> parkingArea) {
 		String text = "Id = " + s.getId() + ", Name = " + s.getName() + ", ";
 		for (int i = 0; i < parkingArea.size(); i++) {
@@ -75,7 +84,7 @@ public class MailServices {
 		}
 		return text;
 	}
-	
+
 	public void sendCorruptedSensorsMail() {
 		List<SensorsMaintainer> maintainers;
 		maintainers = sensorMaintainerServices.getAllSensorsMaintainerData();
@@ -104,6 +113,22 @@ public class MailServices {
 				String lowBatterySensorMessage = lowBatteryStartMessage + lowBattery + lowBatteryEndMessage;
 				sendEmail(m.getMail(), lowBatterySubject + " " + s.getName(), lowBatterySensorMessage);
 				m.setToBeCharged(false);
+			}
+		}
+	}
+
+	public void sendNotUpdatingSensorsMail() {
+		List<SensorsMaintainer> maintainers;
+		maintainers = sensorMaintainerServices.getAllSensorsMaintainerData();
+		for (SensorsMaintainer m : maintainers) {
+			if (!m.isUpdating()) {
+				Sensor s = sensorService.getSensorById(m.getFkSensorId());
+				logger.debug("mail: " + m.getMail());
+				String notUpdating = "";
+				notUpdating += printMail(s, s.getParkingArea()) + "\n\n";
+				String notUpdatingSensorMessage = notUpdatingStartMessage + notUpdating + notUpdatingEndMessage;
+				sendEmail(m.getMail(), notUpdatingSubject + " " + s.getName(), notUpdatingSensorMessage);
+				m.setIsUpdating(true);
 			}
 		}
 	}

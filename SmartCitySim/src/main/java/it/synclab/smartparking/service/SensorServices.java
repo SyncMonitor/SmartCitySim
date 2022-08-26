@@ -1,5 +1,6 @@
 package it.synclab.smartparking.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +60,7 @@ public class SensorServices {
 //		if(m.getType() != null) {}
 		s.setType("ParkingArea");
 		s.setActive(marker.isActive());
+		s.setLastSurvey(LocalDateTime.now());
 		ParkingArea p = parkingAreaServices.buildParkingAreaFromMarker(marker);
 		parkArea.add(p);
 		s.setParkingArea(parkArea);
@@ -194,6 +196,12 @@ public class SensorServices {
 		logger.debug("SensorServices START updateSensorStateById - sensorState:{} - sensorId:{}", state, id);
 		sensorsRepository.updateStateById(state, id);
 		logger.debug("SensorServices END updateSensorStateById - sensorState:{} - sensorId:{}", state, id);
+	}
+
+	public void updateSensorLastSurveyById(Long id) {
+		logger.debug("SensorServices START updateSensorLastUpdateById - sensorId:{}", id);
+		sensorsRepository.updateLastSurveyById(LocalDateTime.now(), id);
+		logger.debug("SensorServices END updateSensorLastUpdateById - sensorId:{}", id);
 	}
 
 	public void deleteSensorById(Long sensorId) {
