@@ -1,4 +1,4 @@
-package it.synclab.smartparking.datasource.config;
+package it.synclab.smartparking.config.context;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -10,8 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-
-import it.synclab.smartparking.context.APIKeyAuthFilter;
 
 @Configuration
 @EnableWebSecurity

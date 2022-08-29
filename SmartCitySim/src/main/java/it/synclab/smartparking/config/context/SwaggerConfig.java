@@ -1,4 +1,4 @@
-package it.synclab.smartparking.datasource.config;
+package it.synclab.smartparking.config.context;
 
 
 import io.swagger.v3.oas.models.Components;

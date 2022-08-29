@@ -402,7 +402,7 @@ paths:
     get:
       tags:
         - parking-stats-resources
-      operationId: getParkingAreaStatsBySensorIdFromDataToData
+      operationId: getParkingAreaStatsBySensorIdFromDateToDate
       parameters:
         - name: id
           in: path
@@ -433,7 +433,7 @@ paths:
     get:
       tags:
         - parking-stats-resources
-      operationId: getParkingAreaStatsBySensorIdFromData
+      operationId: getParkingAreaStatsBySensorIdFromDate
       parameters:
         - name: id
           in: path
@@ -631,11 +631,11 @@ paths:
             '*/*':
               schema:
                 type: object
-  /scs/parking-stats/abc:
+  /scs/parking-stats/from-data-to-data:
     get:
       tags:
         - parking-stats-resources
-      operationId: getParkingAreaStatsFromDataToData
+      operationId: getParkingAreaStatsFromDateToDate
       parameters:
         - name: date
           in: query

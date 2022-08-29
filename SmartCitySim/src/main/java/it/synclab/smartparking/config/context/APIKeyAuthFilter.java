@@ -1,4 +1,4 @@
-package it.synclab.smartparking.context;
+package it.synclab.smartparking.config.context;
 
 import javax.servlet.http.HttpServletRequest;
 

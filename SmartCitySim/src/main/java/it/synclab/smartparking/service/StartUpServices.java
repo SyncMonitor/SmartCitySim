@@ -2,10 +2,6 @@ package it.synclab.smartparking.service;
 
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.time.temporal.ChronoUnit;
-
-import javax.sql.DataSource;
-import it.synclab.smartparking.datasource.config.MySqlClient;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +18,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-import it.synclab.smartparking.datasource.config.PostgreClient;
+import it.synclab.smartparking.config.datasource.PostgreClient;
 import it.synclab.smartparking.model.Marker;
 import it.synclab.smartparking.model.MarkerList;
 import it.synclab.smartparking.repository.model.ParkingArea;
@@ -38,9 +34,6 @@ public class StartUpServices {
 
 	@Autowired
 	PostgreClient databaseClient;
-
-//	@Autowired
-//	DataSource databaseClient;
 
 	@Autowired
 	private MailServices mailServices;
