@@ -4,7 +4,7 @@
 	<!-- Logging Properties -->
 	<Properties>
 		<Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %t [%level] %-c{1}:%L - %msg %n</Property>
-		<Property name="APP_LOG_ROOT">./SmartCitySim/logs/</Property>
+		<Property name="APP_LOG_ROOT">./SmartCitySimulatorMailService/logs/</Property>
 	</Properties>
 
 	<Appenders>
