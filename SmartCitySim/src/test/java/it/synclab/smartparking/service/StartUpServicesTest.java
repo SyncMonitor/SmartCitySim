@@ -1,4 +1,4 @@
-package it.synclab.smartparking;
+package it.synclab.smartparking.service;
 
 import java.time.LocalDateTime;
 
@@ -16,11 +16,6 @@ import it.synclab.smartparking.model.Marker;
 import it.synclab.smartparking.model.MarkerList;
 import it.synclab.smartparking.model.Markers;
 import it.synclab.smartparking.repository.model.Sensor;
-import it.synclab.smartparking.service.MailServices;
-import it.synclab.smartparking.service.ParkingAreaServices;
-import it.synclab.smartparking.service.SensorMaintainerServices;
-import it.synclab.smartparking.service.SensorServices;
-import it.synclab.smartparking.service.StartUpServices;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

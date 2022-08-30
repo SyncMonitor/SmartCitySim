@@ -1,4 +1,4 @@
-package it.synclab.smartparking;
+package it.synclab.smartparking.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,6 @@ import it.synclab.smartparking.model.MarkerList;
 import it.synclab.smartparking.model.Markers;
 import it.synclab.smartparking.repository.model.ParkingArea;
 import it.synclab.smartparking.repository.model.Sensor;
-import it.synclab.smartparking.service.SensorServices;
 
 @Transactional
 @RunWith(SpringRunner.class)
@@ -84,10 +83,10 @@ public class SensorServicesTest {
 
 		sensor = sensorServices.buildSensorFromMarker(marker);
 
-		Assert.assertEquals(sensor.getId(), null);
-		Assert.assertEquals(sensor.getName(), null);
-		Assert.assertEquals(sensor.getBattery(), null);
-		Assert.assertEquals(sensor.getCharge(), null);
+		Assert.assertEquals(null, sensor.getId());
+		Assert.assertEquals(null, sensor.getName());
+		Assert.assertEquals(null, sensor.getBattery());
+		Assert.assertEquals(null, sensor.getCharge());
 	}
 
 	@Test

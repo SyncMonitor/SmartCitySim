@@ -1,5 +1,4 @@
-package it.synclab.smartparking;
-
+package it.synclab.smartparking.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +16,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import it.synclab.smartparking.model.MarkerList;
 import it.synclab.smartparking.repository.model.ParkingArea;
 import it.synclab.smartparking.repository.model.Sensor;
-import it.synclab.smartparking.service.MailServices;
-import it.synclab.smartparking.service.SensorServices;
-import it.synclab.smartparking.service.StartUpServices;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -60,23 +56,23 @@ public class MailServicesTest {
     // @Transactional
     // @Test
     // public void sendSensorOffMailTest() {
-    //     MarkerList sensors = new MarkerList();
-    //     try {
-    //         sensors = startUpServices.readDataFromSources();
-    //         sensors.getMarkers().getMarkers().get(0).setId(id);
-    //         sensors.getMarkers().getMarkers().get(9).setName("TestName");
-    //         sensors.getMarkers().getMarkers().get(9).setAddress("TestAddress");
-    //         sensors.getMarkers().getMarkers().get(9).setLat("TestLat");
-    //         sensors.getMarkers().getMarkers().get(9).setLng("TestLng");
-    //         sensors.getMarkers().getMarkers().get(9).setBattery("3,7V");
-    //         sensors.getMarkers().getMarkers().get(9).setActive(false);
-    //         sensors.getMarkers().getMarkers().get(9).setBattery("1,3V");
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    //     startUpServices.updateDBData(sensors);
-    //     Assert.assertTrue(sensorServices.getSensorById(id).getMaintainer().get(0).isToBeRepaired());
-    //     mailServices.sendLowBatterySensorsMail();
+    // MarkerList sensors = new MarkerList();
+    // try {
+    // sensors = startUpServices.readDataFromSources();
+    // sensors.getMarkers().getMarkers().get(0).setId(id);
+    // sensors.getMarkers().getMarkers().get(9).setName("TestName");
+    // sensors.getMarkers().getMarkers().get(9).setAddress("TestAddress");
+    // sensors.getMarkers().getMarkers().get(9).setLat("TestLat");
+    // sensors.getMarkers().getMarkers().get(9).setLng("TestLng");
+    // sensors.getMarkers().getMarkers().get(9).setBattery("3,7V");
+    // sensors.getMarkers().getMarkers().get(9).setActive(false);
+    // sensors.getMarkers().getMarkers().get(9).setBattery("1,3V");
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // }
+    // startUpServices.updateDBData(sensors);
+    // Assert.assertTrue(sensorServices.getSensorById(id).getMaintainer().get(0).isToBeRepaired());
+    // mailServices.sendLowBatterySensorsMail();
     // }
 
     @Transactional
