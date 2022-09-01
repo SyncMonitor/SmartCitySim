@@ -1,27 +1,21 @@
-package it.synclab.smartparking;
+package it.synclab.smartparking.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import it.synclab.smartparking.model.Marker;
 import it.synclab.smartparking.repository.model.ParkingArea;
 import it.synclab.smartparking.repository.model.Sensor;
-import it.synclab.smartparking.service.ParkingAreaServices;
-import it.synclab.smartparking.service.SensorServices;
-
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-
-import org.junit.Assert;
-import org.junit.Before;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -59,7 +53,7 @@ public class ParkingAreaServicesTest {
 
 	@Transactional
 	@Test
-	public void getAllParkingAreasTest(){
+	public void getAllParkingAreasTest() {
 		sensorServices.saveSensorData(sensor);
 		List<ParkingArea> parkingAreas = parkingAreaServices.getAllParkingAreas();
 		Assert.assertTrue(parkingAreas.size() > 0);
@@ -152,15 +146,15 @@ public class ParkingAreaServicesTest {
 		parkingAreaServices.deleteAllParkingArea();
 		List<ParkingArea> parkArea = new ArrayList<>();
 		parkArea.add(parkingArea);
-		for (int i = 0; i < 4; i++){
-		Sensor sensor = new Sensor(i + 1L, "Sensor " + i, "3,7V", "3", "ParkingArea", true, parkArea); 
-		sensorServices.saveSensorData(sensor);
+		for (int i = 0; i < 4; i++) {
+			Sensor sensor = new Sensor(i + 1L, "Sensor " + i, "3,7V", "3", "ParkingArea", true, parkArea);
+			sensorServices.saveSensorData(sensor);
 		}
 		parkingArea.setValue(true);
-		for (int i = 0; i < 5; i++){
-			Sensor sensor = new Sensor(i + 5L, "Sensor " + i, "3,7V", "3", "ParkingArea", true, parkArea); 
+		for (int i = 0; i < 5; i++) {
+			Sensor sensor = new Sensor(i + 5L, "Sensor " + i, "3,7V", "3", "ParkingArea", true, parkArea);
 			sensorServices.saveSensorData(sensor);
-			}
+		}
 		List<ParkingArea> result = parkingAreaServices.getFreeParkingArea();
 		Assert.assertEquals(4, result.size());
 	}
@@ -172,15 +166,15 @@ public class ParkingAreaServicesTest {
 		parkingAreaServices.deleteAllParkingArea();
 		List<ParkingArea> parkArea = new ArrayList<>();
 		parkArea.add(parkingArea);
-		for (int i = 0; i < 4; i++){
-		Sensor sensor = new Sensor(i + 1L, "Sensor " + i, "3,7V", "3", "ParkingArea", true, parkArea); 
-		sensorServices.saveSensorData(sensor);
+		for (int i = 0; i < 4; i++) {
+			Sensor sensor = new Sensor(i + 1L, "Sensor " + i, "3,7V", "3", "ParkingArea", true, parkArea);
+			sensorServices.saveSensorData(sensor);
 		}
 		parkingArea.setValue(true);
-		for (int i = 0; i < 5; i++){
-			Sensor sensor = new Sensor(i + 5L, "Sensor " + i, "3,7V", "3", "ParkingArea", true, parkArea); 
+		for (int i = 0; i < 5; i++) {
+			Sensor sensor = new Sensor(i + 5L, "Sensor " + i, "3,7V", "3", "ParkingArea", true, parkArea);
 			sensorServices.saveSensorData(sensor);
-			}
+		}
 		List<ParkingArea> result = parkingAreaServices.getOccupyParkingArea();
 		Assert.assertEquals(5, result.size());
 	}
@@ -193,7 +187,7 @@ public class ParkingAreaServicesTest {
 		sensorServices.saveSensorData(sensor);
 		String latitude = sensor.getParkingArea().get(0).getLatitude();
 		String longitude = sensor.getParkingArea().get(0).getLongitude();
-		ParkingArea fromDB = parkingAreaServices.getParkingAreaByLatitudeAndLongitude(latitude,longitude);
+		ParkingArea fromDB = parkingAreaServices.getParkingAreaByLatitudeAndLongitude(latitude, longitude);
 		Assert.assertEquals(latitude, fromDB.getLatitude());
 		Assert.assertEquals(longitude, fromDB.getLongitude());
 	}
@@ -214,9 +208,8 @@ public class ParkingAreaServicesTest {
 		sensorServices.saveSensorData(sensor);
 		int size = parkingAreaServices.getAllParkingAreas().size();
 		Long sensorId = sensor.getId();
-		Sensor fromDB = sensorServices.getSensorById(sensorId);
 		parkingAreaServices.deleteParkingAreaBySensorId(sensorId);
-		Assert.assertEquals(size-1, parkingAreaServices.getAllParkingAreas().size());
+		Assert.assertEquals(size - 1, parkingAreaServices.getAllParkingAreas().size());
 	}
 
 	@Test
@@ -229,7 +222,7 @@ public class ParkingAreaServicesTest {
 		parkingAreaServices.deleteParkingAreaById(id);
 		Assert.assertEquals(size, parkingAreaServices.getAllParkingAreas().size());
 	}
-	
+
 	@Test
 	@Transactional
 	public void deleteAllParkingAreasTest() {

@@ -1,4 +1,4 @@
-package it.synclab.smartparking;
+package it.synclab.smartparking.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +16,6 @@ import it.synclab.smartparking.model.Maintainer;
 import it.synclab.smartparking.model.Marker;
 import it.synclab.smartparking.repository.model.Sensor;
 import it.synclab.smartparking.repository.model.SensorsMaintainer;
-import it.synclab.smartparking.service.SensorMaintainerServices;
-import it.synclab.smartparking.service.SensorServices;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

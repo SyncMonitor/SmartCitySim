@@ -1973,7 +1973,7 @@
 			"response": []
 		},
 		{
-			"name": "getParkingStatsFromData",
+			"name": "getParkingStatsFromDate",
 			"request": {
 				"auth": {
 					"type": "apikey",
@@ -2009,7 +2009,7 @@
 			"response": []
 		},
 		{
-			"name": "getParkingStatsFromDataToData",
+			"name": "getParkingStatsFromDateToDate",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -2041,7 +2041,7 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/scs/parking-stats/abc",
+					"raw": "localhost:8080/scs/parking-stats/from-date-to-date",
 					"host": [
 						"localhost"
 					],
@@ -2049,14 +2049,14 @@
 					"path": [
 						"scs",
 						"parking-stats",
-						"abc"
+						"from-date-to-date"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "getParkingStatsFromDataBySensorId",
+			"name": "getParkingStatsFromDateBySensorId",
 			"request": {
 				"auth": {
 					"type": "apikey",
@@ -2093,7 +2093,7 @@
 			"response": []
 		},
 		{
-			"name": "getParkingStatsFromDataToDataBySensorId",
+			"name": "getParkingStatsFromDateToDateBySensorId",
 			"request": {
 				"auth": {
 					"type": "apikey",

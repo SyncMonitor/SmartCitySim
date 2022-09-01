@@ -1,9 +1,9 @@
-package it.synclab.smartparking.context;
+package it.synclab.smartparking.config.context;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import it.synclab.smartparking.datasource.config.PostgreClient;
+import it.synclab.smartparking.config.datasource.PostgreClient;
 import it.synclab.smartparking.service.MailServices;
 import it.synclab.smartparking.service.ParkingAreaServices;
 import it.synclab.smartparking.service.ParkingStatsServices;

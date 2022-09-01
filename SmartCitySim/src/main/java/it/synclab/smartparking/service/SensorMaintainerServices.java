@@ -137,4 +137,16 @@ public class SensorMaintainerServices {
 		sensorsMaintainerRepository.deleteAll();
 		logger.debug("SensorMaintainerServices END deleteAlSensors ");
 	}
+
+	public void updateSensorMaintainerIsUpdatingToFalseById(Long id) {
+		logger.debug("SensorServices START updateSensorIsUpdatingToFalseById - sensorId:{}", id);
+		sensorsMaintainerRepository.updateIsUpdatingById(false, id);
+		logger.debug("SensorServices END updateSensorIsUpdatingToFalseById - sensorId:{}", id);
+	}
+
+	public void updateSensorMaintainerIsUpdatingToTrueById(Long id) {
+		logger.debug("SensorServices START updateSensorIsUpdatingToTrueById - sensorId:{}", id);
+		sensorsMaintainerRepository.updateIsUpdatingById(true, id);
+		logger.debug("SensorServices END updateSensorIsUpdatingToTrueById - sensorId:{}", id);
+	}
 }

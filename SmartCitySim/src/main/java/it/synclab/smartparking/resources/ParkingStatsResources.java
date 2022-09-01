@@ -95,7 +95,7 @@ public class ParkingStatsResources {
 		return ResponseEntity.status(HttpStatus.OK).body(stats);
 	}
 
-	@GetMapping("/parking-stats/abc")
+	@GetMapping("/parking-stats/from-date-to-date")
 	@ResponseBody
 	public ResponseEntity<Object> getParkingAreaStatsFromDataToData(@RequestBody SearchDateFilter date) {
 		logger.info("ParkingResource - START getParkingAreaStatsFromDataToData");

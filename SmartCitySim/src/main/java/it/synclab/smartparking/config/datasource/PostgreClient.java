@@ -1,4 +1,4 @@
-package it.synclab.smartparking.datasource.config;
+package it.synclab.smartparking.config.datasource;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,17 +12,14 @@ import org.springframework.beans.factory.annotation.Value;
 public class PostgreClient {
 
 	Properties props = new Properties();
-//	The url cannot be null (?) don't know why but it works..
-//	@Value("${postgres.jdbc.url}")
-//	private String jdbcURL;
+	@Value("${postgres.jdbc.url}")
+	private String jdbcURL;
 
 	@Value("${postgres.username}")
 	private String username;
 
 	@Value("${postgres.password}")
 	private String password;
-	
-	private String jdbcURL = "jdbc:postgresql://localhost:5432/SmartCitySimulator";
 
 	private Connection conn = null;
 

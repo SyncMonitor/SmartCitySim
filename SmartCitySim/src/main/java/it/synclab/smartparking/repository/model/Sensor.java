@@ -1,5 +1,6 @@
 package it.synclab.smartparking.repository.model;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -21,6 +22,7 @@ public class Sensor {
 	String charge;
 	String type;
 	boolean isActive;
+	LocalDateTime lastSurvey;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "fk_sensor_id", referencedColumnName = "id")
@@ -107,6 +109,14 @@ public class Sensor {
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
+
+	public LocalDateTime getLastSurvey() {
+		return lastSurvey;
+	}
+
+	public void setLastSurvey(LocalDateTime lastSurvey) {
+		this.lastSurvey = lastSurvey;
+	}
 	
 	@Override
 	public String toString() {
@@ -117,6 +127,7 @@ public class Sensor {
 				+ "\t\"charge\" : \"" + charge + "\",\n"
 				+ "\t\"type\" : \"" + type + "\",\n"
 				+ "\t\"isActive\":\"" + isActive + "\",\n"
+				+ "\t\"lastSurvey\":\"" + lastSurvey + "\",\n"
 				+ "\t\"ParkingArea\":" + parkingArea.toString() + "\n}";
 	}
 	

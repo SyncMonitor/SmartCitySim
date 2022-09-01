@@ -1,9 +1,9 @@
-package it.synclab.smartparking;
+package it.synclab.smartparking.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,10 +16,6 @@ import it.synclab.smartparking.model.Marker;
 import it.synclab.smartparking.repository.model.ParkingArea;
 import it.synclab.smartparking.repository.model.ParkingAreaStats;
 import it.synclab.smartparking.repository.model.Sensor;
-import it.synclab.smartparking.service.ParkingAreaServices;
-import it.synclab.smartparking.service.ParkingStatsServices;
-import it.synclab.smartparking.service.SensorServices;
-import org.junit.Assert;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

@@ -11,40 +11,44 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "sensors_maintainer", uniqueConstraints = { @UniqueConstraint(columnNames = { "fk_sensor_id", "type" }) })
 public class SensorsMaintainer {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Column(name = "fk_sensor_id")
 	private Long fkSensorId;
-	
+
 	@Column(name = "name")
 	private String ownerName;
-	
+
 	@Column(name = "surname")
 	private String ownerSurname;
-	
+
 	private String company;
-	
+
 	@Column(name = "phone")
 	private String phoneNumber;
-	
+
 	private String mail;
-	
+
 	private String type;
-	
+
 	@Column(name = "to_be_repaired")
 	private boolean toBeRepaired;
-	
+
 	@Column(name = "to_be_charged")
 	private boolean toBeCharged;
 
+	@Column(name = "isUpdating")
+	boolean isUpdating;
+
 	public SensorsMaintainer() {
-		
+
 	}
 
-	public SensorsMaintainer(String ownerName, String ownerSurame, String company, String phoneNumber, String mail, String type, boolean toBeRepaired, boolean toBeCharged) {
+	public SensorsMaintainer(String ownerName, String ownerSurame, String company, String phoneNumber, String mail,
+			String type, boolean toBeRepaired, boolean toBeCharged) {
 		this.ownerName = ownerName;
 		this.ownerSurname = ownerSurame;
 		this.company = company;
@@ -53,6 +57,7 @@ public class SensorsMaintainer {
 		this.type = type;
 		this.toBeRepaired = toBeRepaired;
 		this.toBeCharged = toBeCharged;
+		this.isUpdating = true;
 	}
 
 	public Long getId() {
@@ -110,11 +115,11 @@ public class SensorsMaintainer {
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
-	
+
 	public String getType() {
 		return type;
 	}
-	
+
 	public void setType(String type) {
 		this.type = type;
 	}
@@ -135,10 +140,19 @@ public class SensorsMaintainer {
 		this.toBeCharged = toBeCharged;
 	}
 
+	public boolean isUpdating() {
+		return isUpdating;
+	}
+
+	public void setIsUpdating(boolean isUpdating) {
+		this.isUpdating = isUpdating;
+	}
+
 	@Override
 	public String toString() {
 		return "SensorsMaintainer [id=" + id + ", fkSensorId=" + fkSensorId + ", ownerName=" + ownerName
 				+ ", ownerSurname=" + ownerSurname + ", company=" + company + ", phoneNumber=" + phoneNumber + ", mail="
-				+ mail + ", type=" + type + ", toBeRepaired=" + toBeRepaired + ", toBeCharged=" + toBeCharged + "]";
+				+ mail + ", type=" + type + ", toBeRepaired=" + toBeRepaired + ", toBeCharged=" + toBeCharged
+				+ ", isUpdating=" + isUpdating + "]";
 	}
 }
