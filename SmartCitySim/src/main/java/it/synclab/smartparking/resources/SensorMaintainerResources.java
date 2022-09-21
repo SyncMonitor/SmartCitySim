@@ -40,9 +40,12 @@ public class SensorMaintainerResources {
 		List<SensorsMaintainer> mainteiners = null;
 		try {
 			mainteiners = sensorsMaintainerServices.getSensorsMaintainerDataBySensorId(sensorId);
+		} catch (NullPointerException e) {
+			logger.error("SensorMaintainerResources -  error - getSensorsMaintainersBySensorId", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
 			logger.error("SensorMaintainerResources -  error - getSensorsMaintainersBySensorId", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorMaintainerResources - END getSensorsMaintainersBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).body(mainteiners);
@@ -56,9 +59,12 @@ public class SensorMaintainerResources {
 		SensorsMaintainer mainteiner = null;
 		try {
 			mainteiner = sensorsMaintainerServices.getSensorsMaintainerDataById(id);
+		} catch (NullPointerException e) {
+			logger.error("SensorMaintainerResources -  error - getSensorsMaintainersBySensorId", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("SensorMaintainerResources -  error - getSensorsMaintainersById", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("SensorMaintainerResources -  error - getSensorsMaintainersBySensorId", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorMaintainerResources - END getSensorsMaintainersBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).body(mainteiner);
@@ -74,7 +80,7 @@ public class SensorMaintainerResources {
 			mainteiners = sensorsMaintainerServices.getAllSensorsMaintainerData();
 		} catch (Exception e) {
 			logger.error("SensorMaintainerResources -  error - getAllSensorsMaintainersData", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorMaintainerResources - END getAllSensorsMaintainersData");
 		return ResponseEntity.status(HttpStatus.OK).body(mainteiners);
@@ -88,9 +94,12 @@ public class SensorMaintainerResources {
 		logger.info("SensorMaintainerResources - START updateMaintainerBySensorId");
 		try {
 			sensorsMaintainerServices.updateSensorsMaintainerDataBySensorId(maintainer, sensorId);
+		} catch (NullPointerException e) {
+			logger.error("SensorMaintainerResources -  error - getSensorsMaintainersBySensorId", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("SensorMaintainerResources -  error - updateMaintainerById", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("SensorMaintainerResources -  error - getSensorsMaintainersBySensorId", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorMaintainerResources - END updateMaintainerBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -103,9 +112,12 @@ public class SensorMaintainerResources {
 		logger.info("SensorMaintainerResources - START updateMaintainerById");
 		try {
 			sensorsMaintainerServices.updateSensorsMaintainerDataById(maintainer, id);
+		} catch (NullPointerException e) {
+			logger.error("SensorMaintainerResources -  error - getSensorsMaintainersBySensorId", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("SensorMaintainerResources -  error - updateMaintainerById", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("SensorMaintainerResources -  error - getSensorsMaintainersBySensorId", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorMaintainerResources - END updateMaintainerById");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -118,9 +130,12 @@ public class SensorMaintainerResources {
 		logger.info("SensorMaintainerResources - START updateSensorMaintainerToBeRepairedTrueBySensorId");
 		try {
 			sensorsMaintainerServices.updateSensorMaintainerToBeRepairedBySensorId(true, sensorId);
+		} catch (NullPointerException e) {
+			logger.error("SensorMaintainerResources -  error - getSensorsMaintainersBySensorId", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("SensorMaintainerResources -  error - updateSensorMaintainerToBeRepairedTrueBySensorId", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("SensorMaintainerResources -  error - getSensorsMaintainersBySensorId", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorMaintainerResources - END updateSensorMaintainerToBeRepairedTrueBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -133,9 +148,12 @@ public class SensorMaintainerResources {
 		logger.info("SensorMaintainerResources - START updateSensorMaintainerToBeRepairedFalseBySensorId");
 		try {
 			sensorsMaintainerServices.updateSensorMaintainerToBeRepairedBySensorId(false, sensorId);
+		} catch (NullPointerException e) {
+			logger.error("SensorMaintainerResources -  error - getSensorsMaintainersBySensorId", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("SensorMaintainerResources -  error - updateSensorMaintainerToBeRepairedFalseBySensorId", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("SensorMaintainerResources -  error - getSensorsMaintainersBySensorId", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorMaintainerResources - END updateSensorMaintainerToBeRepairedFalseBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -148,9 +166,12 @@ public class SensorMaintainerResources {
 		logger.info("SensorMaintainerResources - START updateSensorMaintainerToBeChargedTrueBySensorId");
 		try {
 			sensorsMaintainerServices.updateSensorMaintainerToBeChargedBySensorId(true, sensorId);
+		} catch (NullPointerException e) {
+			logger.error("SensorMaintainerResources -  error - getSensorsMaintainersBySensorId", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("SensorMaintainerResources -  error - updateSensorMaintainerToBeChargedTrueBySensorId", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("SensorMaintainerResources -  error - getSensorsMaintainersBySensorId", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorMaintainerResources - END updateSensorMaintainerToBeChargedTrueBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -175,9 +196,12 @@ public class SensorMaintainerResources {
 		logger.info("SensorMaintainerResources - START deleteSensorMaintainersBySensorId");
 		try {
 			sensorsMaintainerServices.deleteSensorMaintainersBySensorId(sensorId);
+		} catch (NullPointerException e) {
+			logger.error("SensorMaintainerResources -  error - getSensorsMaintainersBySensorId", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("SensorMaintainerResources -  error - deleteSensorMaintainersBySensorId", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("SensorMaintainerResources -  error - getSensorsMaintainersBySensorId", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorMaintainerResources - END deleteSensorMaintainersBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -188,9 +212,12 @@ public class SensorMaintainerResources {
 		logger.info("SensorMaintainerResources - START deleteSensorMaintainersById");
 		try {
 			sensorsMaintainerServices.deleteSensorMaintainersById(id);
+		} catch (NullPointerException e) {
+			logger.error("SensorMaintainerResources -  error - getSensorsMaintainersBySensorId", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("SensorMaintainerResources -  error - deleteSensorMaintainersById", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("SensorMaintainerResources -  error - getSensorsMaintainersBySensorId", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorMaintainerResources - END deleteSensorMaintainersById");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -203,7 +230,7 @@ public class SensorMaintainerResources {
 			sensorsMaintainerServices.deleteAllSensorMaintainers();
 		} catch (Exception e) {
 			logger.error("SensorMaintainerResources -  error - deleteAllSensorMaintainers", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorMaintainerResources - END deleteAllSensorMaintainers");
 		return ResponseEntity.status(HttpStatus.OK).build();

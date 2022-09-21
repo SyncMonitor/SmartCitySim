@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.aop.AopInvocationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -49,7 +50,7 @@ public class SensorResources {
 			list = sensorService.getAllSensorsFromDB();
 		} catch (Exception e) {
 			logger.error("SensorResources -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorResources - END getSensorData");
 		return ResponseEntity.status(HttpStatus.OK).body(list);
@@ -65,7 +66,7 @@ public class SensorResources {
 			list = startUpServices.readDataFromSources();
 		} catch (Exception e) {
 			logger.error("SensorResources -  error - getSensorsDataFromSource", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorResources - END getSensorsDataFromSource");
 		return ResponseEntity.status(HttpStatus.OK).body(list);
@@ -80,7 +81,7 @@ public class SensorResources {
 			startUpServices.writeSensorsData();
 		} catch (Exception e) {
 			logger.error("SensorResources -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorResources - END saveSensorData");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -94,9 +95,13 @@ public class SensorResources {
 		// Security user check
 		try {
 			s = sensorService.getSensorById(sensorId);
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
 			logger.error("SensorResources -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		} 
+		catch (Exception e) {
+			logger.error("SensorResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorResources - END getSensorData");
 		return ResponseEntity.status(HttpStatus.OK).body(s);
@@ -110,9 +115,13 @@ public class SensorResources {
 		// Security user check
 		try {
 			sensorState = sensorService.getSensorState(sensorId);
-		} catch (Exception e) {
+		} catch (AopInvocationException e) {
 			logger.error("SensorResources -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		} 
+		catch (Exception e) {
+			logger.error("SensorResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorResources - END getSensorState");
 		return ResponseEntity.status(HttpStatus.OK).body(sensorState);
@@ -125,9 +134,13 @@ public class SensorResources {
 		logger.info("SensorResources - START getSensorsByName");
 		try {
 			l = sensorService.getSensorsByName(name);
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
 			logger.error("SensorResources -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		} 
+		catch (Exception e) {
+			logger.error("SensorResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorResources - END getSensorsByName");
 		return ResponseEntity.status(HttpStatus.OK).body(l);
@@ -140,9 +153,13 @@ public class SensorResources {
 		logger.info("SensorResources - START getSensorsByType");
 		try {
 			l = sensorService.getSensorsByType(type);
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
 			logger.error("SensorResources -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		} 
+		catch (Exception e) {
+			logger.error("SensorResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorResources - END getSensorsByType");
 		return ResponseEntity.status(HttpStatus.OK).body(l);
@@ -155,9 +172,13 @@ public class SensorResources {
 		logger.info("SensorResources - START getSensorByNameStartingWith");
 		try {
 			sensors = sensorService.getSensorByNameStartingWith(str);
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
 			logger.error("SensorResources -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		} 
+		catch (Exception e) {
+			logger.error("SensorResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorResources - END getSensorByNameStartingWith");
 		return ResponseEntity.status(HttpStatus.OK).body(sensors);
@@ -170,9 +191,13 @@ public class SensorResources {
 		logger.info("SensorResources - START getSensorByNameEndingWith");
 		try {
 			sensors = sensorService.getSensorByNameEndingWith(str);
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
 			logger.error("SensorResources -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		} 
+		catch (Exception e) {
+			logger.error("SensorResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorResources - END getSensorByNameEndingWith");
 		return ResponseEntity.status(HttpStatus.OK).body(sensors);
@@ -185,9 +210,13 @@ public class SensorResources {
 		logger.info("SensorResources - START getSensorByNameContaining");
 		try {
 			sensors = sensorService.getSensorByNameContaining(str);
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
 			logger.error("SensorResources -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		} 
+		catch (Exception e) {
+			logger.error("SensorResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorResources - END getSensorByNameContaining");
 		return ResponseEntity.status(HttpStatus.OK).body(sensors);
@@ -200,9 +229,13 @@ public class SensorResources {
 		logger.info("SensorResources - START getSensorByIsActiveTrue");
 		try {
 			sensors = sensorService.getSensorByIsActiveTrue();
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
 			logger.error("SensorResources -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		} 
+		catch (Exception e) {
+			logger.error("SensorResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorResources - END getSensorByIsActiveTrue");
 		return ResponseEntity.status(HttpStatus.OK).body(sensors);
@@ -215,9 +248,13 @@ public class SensorResources {
 		logger.info("SensorResources - START getSensorByIsActiveFalse");
 		try {
 			sensors = sensorService.getSensorByIsActiveFalse();
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
 			logger.error("SensorResources -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		} 
+		catch (Exception e) {
+			logger.error("SensorResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorResources - END getSensorByIsActiveFalse");
 		return ResponseEntity.status(HttpStatus.OK).body(sensors);
@@ -228,9 +265,13 @@ public class SensorResources {
 		logger.info("SensorResources - START updateSensorNameById");
 		try {
 			sensorService.updateSensorNameById(name, sensorId);
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
 			logger.error("SensorResources -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		} 
+		catch (Exception e) {
+			logger.error("SensorResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorResources - END updateSensorNameById");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -241,9 +282,13 @@ public class SensorResources {
 		logger.info("SensorResources - START updateSensorBatteryById");
 		try {
 			sensorService.updateSensorBatteryById(battery, sensorId);
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
 			logger.error("SensorResources -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		} 
+		catch (Exception e) {
+			logger.error("SensorResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorResources - END updateSensorBatteryById");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -254,9 +299,13 @@ public class SensorResources {
 		logger.info("SensorResources - START updateSensorTypeById");
 		try {
 			sensorService.updateSensorTypeById(type, sensorId);
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
 			logger.error("SensorResources -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		} 
+		catch (Exception e) {
+			logger.error("SensorResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorResources - END updateSensorTypeById");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -268,9 +317,13 @@ public class SensorResources {
 		logger.info("SensorResources - START updateSensorStateById");
 		try {
 			sensorService.updateSensorStateById(state, id);
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
 			logger.error("SensorResources -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		} 
+		catch (Exception e) {
+			logger.error("SensorResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorResources - END updateSensorStateById");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -281,9 +334,13 @@ public class SensorResources {
 		logger.info("SensorResources - START deleteSensorById");
 		try {
 			sensorService.deleteSensorById(sensorId);
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
 			logger.error("SensorResources -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		} 
+		catch (Exception e) {
+			logger.error("SensorResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorResources - END deleteSensorById");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -296,7 +353,7 @@ public class SensorResources {
 			sensorService.deleteAllSensors();
 		} catch (Exception e) {
 			logger.error("SensorResources -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("SensorResources - END deleteSensors");
 		return ResponseEntity.status(HttpStatus.OK).build();

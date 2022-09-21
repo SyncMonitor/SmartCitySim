@@ -43,7 +43,7 @@ public class ParkingStatsResources {
 			stats = parkingStatsService.getParkingAreaStats();
 		} catch (Exception e) {
 			logger.error("ParkingStatsResources -  error - getParkingAreaStats", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkingStatsResources - END getParkingAreaStats");
 		return ResponseEntity.status(HttpStatus.OK).body(stats);
@@ -56,9 +56,12 @@ public class ParkingStatsResources {
 		ParkingAreaStats stat;
 		try {
 			stat = parkingStatsService.getParkingAreaStatsById(id);
+		} catch (NullPointerException e) {
+			logger.error("ParkingStatsResources -  error - getParkingAreaStatsById", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
 			logger.error("ParkingStatsResources -  error - getParkingAreaStatsById", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkingStatsResources - END getParkingAreaStatsById");
 		return ResponseEntity.status(HttpStatus.OK).body(stat);
@@ -71,9 +74,12 @@ public class ParkingStatsResources {
 		List<ParkingAreaStats> stats;
 		try {
 			stats = parkingStatsService.getParkingAreaStatsBySensorId(sensorId);
+		} catch (NullPointerException e) {
+			logger.error("ParkingStatsResources -  error - getParkingAreaStatsById", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkingStatsResources -  error - getParkingAreaStatsBySensorId", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingStatsResources -  error - getParkingAreaStatsById", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkingStatsResources - END getParkingAreaStatsBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).body(stats);
@@ -87,9 +93,12 @@ public class ParkingStatsResources {
 		List<ParkingAreaStats> stats;
 		try {
 			stats = parkingStatsService.getParkingAreaStatsFromDate(date);
+		} catch (NullPointerException e) {
+			logger.error("ParkingStatsResources -  error - getParkingAreaStatsById", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkingStatsResources -  error - getParkingAreaStatsFromDate", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingStatsResources -  error - getParkingAreaStatsById", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkingStatsResources - END getParkingAreaStatsFromDate");
 		return ResponseEntity.status(HttpStatus.OK).body(stats);
@@ -105,9 +114,12 @@ public class ParkingStatsResources {
 			LocalDateTime startDate = LocalDateTime.parse(date.getStartDate(), formatter);
 			LocalDateTime endDate = LocalDateTime.parse(date.getEndDate(), formatter);
 			stats = parkingStatsService.getParkingAreaStatsFromDateToDate(startDate, endDate);
+		} catch (NullPointerException e) {
+			logger.error("ParkingStatsResources -  error - getParkingAreaStatsById", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkingResource -  error - getParkingAreaStatsFromDataToData", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingStatsResources -  error - getParkingAreaStatsById", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkingResource - END getParkingAreaStatsFromDataToData");
 		return ResponseEntity.status(HttpStatus.OK).body(stats);
@@ -121,9 +133,12 @@ public class ParkingStatsResources {
 		List<ParkingAreaStats> stats;
 		try {
 			stats = parkingStatsService.getParkingAreaStatsBySensorIdFromDate(id, data);
+		} catch (NullPointerException e) {
+			logger.error("ParkingStatsResources -  error - getParkingAreaStatsById", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkingStatsResources -  error - getParkingAreaStatsBySensorIdFromData", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingStatsResources -  error - getParkingAreaStatsById", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkingStatsResources - END getParkingAreaStatsBySensorIdFromData");
 		return ResponseEntity.status(HttpStatus.OK).body(stats);
@@ -138,9 +153,12 @@ public class ParkingStatsResources {
 		List<ParkingAreaStats> stats;
 		try {
 			stats = parkingStatsService.getParkingAreaStatsBySensorIdFromDateToDate(id, startData, endData);
+		} catch (NullPointerException e) {
+			logger.error("ParkingStatsResources -  error - getParkingAreaStatsById", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkingStatsResources -  error - getParkingAreaStatsBySensorIdFromDataToData", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingStatsResources -  error - getParkingAreaStatsById", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkingStatsResources - END getParkingAreaStatsBySensorIdFromDataToData");
 		return ResponseEntity.status(HttpStatus.OK).body(stats);
@@ -152,9 +170,12 @@ public class ParkingStatsResources {
 		logger.info("ParkingStatsResources - START deleteParkingAreaStatsBeforeDate");
 		try {
 			parkingStatsService.deleteParkingAreaStatsBeforeDate(data);
+		} catch (NullPointerException e) {
+			logger.error("ParkingStatsResources -  error - getParkingAreaStatsById", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkingStatsResources -  error - deleteParkingAreaStatsBeforeDate", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingStatsResources -  error - getParkingAreaStatsById", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkingStatsResources - END deleteAllParkingAreaStats");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -165,9 +186,12 @@ public class ParkingStatsResources {
 		logger.info("ParkingStatsResources - START deleteParkingAreaStatsById");
 		try {
 			parkingStatsService.deleteParkingAreaStatsById(id);
+		} catch (NullPointerException e) {
+			logger.error("ParkingStatsResources -  error - getParkingAreaStatsById", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkingStatsResources -  error - deleteParkingAreaStatsById", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingStatsResources -  error - getParkingAreaStatsById", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkingStatsResources - END deleteParkingAreaStatsById");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -178,9 +202,12 @@ public class ParkingStatsResources {
 		logger.info("ParkingStatsResources - START deleteParkingAreaStatsBySensorId");
 		try {
 			parkingStatsService.deleteParkingAreaStatsBySensorId(sensorId);
+		} catch (NullPointerException e) {
+			logger.error("ParkingStatsResources -  error - getParkingAreaStatsById", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkingStatsResources -  error - deleteParkingAreaStatsBySensorId", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingStatsResources -  error - getParkingAreaStatsById", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkingStatsResources - END deleteParkingAreaStatsBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -193,7 +220,7 @@ public class ParkingStatsResources {
 			parkingStatsService.deleteAllParkingStats();
 		} catch (Exception e) {
 			logger.error("ParkingStatsResources -  error - deleteAllParkingstats", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkingStatsResources - END deleteAllParkingstats");
 		return ResponseEntity.status(HttpStatus.OK).build();

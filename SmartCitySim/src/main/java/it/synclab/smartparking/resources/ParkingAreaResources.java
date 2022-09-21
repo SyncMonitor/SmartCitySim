@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.aop.AopInvocationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -44,7 +45,7 @@ public class ParkingAreaResources {
 			parkingAreas = parkingAreaService.getAllParkingAreas();
 		} catch (Exception e) {
 			logger.error("ParkingAreaResources -  error - getAllParkingArea", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkingAreaResources - END getAllParkingArea");
 		return ResponseEntity.status(HttpStatus.OK).body(parkingAreas);
@@ -58,9 +59,12 @@ public class ParkingAreaResources {
 		// Security user check
 		try {
 			p = parkingAreaService.getParkingAreaById(id);
+		} catch (NullPointerException e) {
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
 			logger.error("ParkingAreaResources -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkingAreaResources - END getParkingAreaData");
 		return ResponseEntity.status(HttpStatus.OK).body(p);
@@ -74,9 +78,12 @@ public class ParkingAreaResources {
 		// Security user check
 		try {
 			p = parkingAreaService.getParkingAreaBySensorId(sensorId);
+		} catch (NullPointerException e) {
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkiAreangResource -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkingAreaResource - END getParkingAreaDataBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).body(p);
@@ -90,9 +97,12 @@ public class ParkingAreaResources {
 		// Security user check
 		try {
 			latitude = parkingAreaService.getParkingAreaLatitudeById(id);
+		} catch (NullPointerException e) {
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkiAreangResource -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkingAreaResource - END getParkingAreaLatitudeById");
 		return ResponseEntity.status(HttpStatus.OK).body(latitude);
@@ -106,9 +116,12 @@ public class ParkingAreaResources {
 		// Security user check
 		try {
 			latitude = parkingAreaService.getParkingAreaLongitudeById(id);
+		} catch (NullPointerException e) {
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkiAreangResource -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkingAreaResource - END getParkingAreaLongitudeById");
 		return ResponseEntity.status(HttpStatus.OK).body(latitude);
@@ -122,9 +135,12 @@ public class ParkingAreaResources {
 		// Security user check
 		try {
 			address = parkingAreaService.getParkingAreaAddressById(id);
+		} catch (NullPointerException e) {
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkiAreangResource -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkiAreangResource - END getParkingAreaAddressById");
 		return ResponseEntity.status(HttpStatus.OK).body(address);
@@ -138,9 +154,12 @@ public class ParkingAreaResources {
 		// Security user check
 		try {
 			state = parkingAreaService.getParkingAreaStateById(id);
+		} catch (AopInvocationException e) {
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkiAreangResource -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkiAreangResource - END getParkingAreaStateById");
 		return ResponseEntity.status(HttpStatus.OK).body(state);
@@ -156,7 +175,7 @@ public class ParkingAreaResources {
 			state = parkingAreaService.getFreeParkingArea();
 		} catch (Exception e) {
 			logger.error("ParkiAreangResource -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkiAreangResource - END getFreeParkingArea");
 		return ResponseEntity.status(HttpStatus.OK).body(state);
@@ -172,7 +191,7 @@ public class ParkingAreaResources {
 			state = parkingAreaService.getOccupyParkingArea();
 		} catch (Exception e) {
 			logger.error("ParkiAreangResource -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkiAreangResource - END getOccupyParkingArea");
 		return ResponseEntity.status(HttpStatus.OK).body(state);
@@ -187,9 +206,12 @@ public class ParkingAreaResources {
 		// Security user check
 		try {
 			parkArea = parkingAreaService.getParkingAreaByLatitudeAndLongitude(latitude, longitude);
+		} catch (NullPointerException e) {
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkiAreangResource -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkiAreangResource - END getParkingAreaByLatitudeAndLongitude");
 		return ResponseEntity.status(HttpStatus.OK).body(parkArea);
@@ -203,9 +225,12 @@ public class ParkingAreaResources {
 		// Security user check
 		try {
 			date = parkingAreaService.getParkingAreaLastUpdateDateBySensorId(sensorId);
+		} catch (NullPointerException e) {
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkiAreangResource -  ERROR - getParkingAreaLastUpdateDateBySensorId", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkiAreangResource - END getParkingAreaLastUpdateDateBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).body(date);
@@ -217,9 +242,12 @@ public class ParkingAreaResources {
 		logger.info("ParkiAreangResource - START updateParkingAreaLatitudeById");
 		try {
 			parkingAreaService.updateParkingAreaLatitudeById(latitude, id);
+		} catch (NullPointerException e) {
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkiAreangResource -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkiAreangResource - END updateParkingAreaLatitudeById");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -231,9 +259,12 @@ public class ParkingAreaResources {
 		logger.info("ParkiAreangResource - START updateParkingAreaLatitudeById");
 		try {
 			parkingAreaService.updateParkingAreaLongitudeById(longitude, id);
+		} catch (NullPointerException e) {
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkiAreangResource -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkiAreangResource - END updateParkingAreaLongitudeById");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -245,9 +276,12 @@ public class ParkingAreaResources {
 		logger.info("ParkiAreangResource - START updateParkingAreaAddressById");
 		try {
 			parkingAreaService.updateParkingAreaAddressById(address, id);
+		} catch (NullPointerException e) {
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkiAreangResource -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkiAreangResource - END updateParkingAreaAddressById");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -259,9 +293,12 @@ public class ParkingAreaResources {
 		logger.info("ParkiAreangResource - START updateParkingAreaStateById");
 		try {
 			parkingAreaService.updateParkingAreaValueById(state, id);
+		} catch (NullPointerException e) {
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkiAreangResource -  error", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkiAreangResource - END updateParkingAreaStateById");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -272,9 +309,12 @@ public class ParkingAreaResources {
 		logger.info("ParkiAreangResource - START deleteParkingAreaBySensorId");
 		try {
 			parkingAreaService.deleteParkingAreaBySensorId(sensorId);
+		} catch (NullPointerException e) {
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkiAreangResource -  error - deleteParkingAreaBySensorId", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkiAreangResource - END deleteParkingAreaBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -285,9 +325,12 @@ public class ParkingAreaResources {
 		logger.info("ParkiAreangResource - START deleteParkingAreaById");
 		try {
 			parkingAreaService.deleteParkingAreaById(id);
+		} catch (NullPointerException e) {
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkiAreangResource -  error - deleteParkingAreaById", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			logger.error("ParkingAreaResources -  error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkiAreangResource - END deleteAllParkingArea");
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -300,7 +343,7 @@ public class ParkingAreaResources {
 			parkingAreaService.deleteAllParkingArea();
 		} catch (Exception e) {
 			logger.error("ParkiAreangResource -  error - deleteAllParkingArea", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkiAreangResource - END deleteAllParkingArea");
 		return ResponseEntity.status(HttpStatus.OK).build();
