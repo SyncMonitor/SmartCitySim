@@ -20,29 +20,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import it.synclab.smartparking.repository.model.ParkingArea;
-import it.synclab.smartparking.service.ParkingAreaServices;
+import it.synclab.smartparking.repository.model.ParkingSensors;
+import it.synclab.smartparking.service.ParkingSensorsServices;
 
 
 
 @RestController
 @RequestMapping("/scs")
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
-public class ParkingAreaResources {
+public class ParkingSensorsResources {
 
-	private static final Logger logger = LogManager.getLogger(ParkingAreaResources.class);
+	private static final Logger logger = LogManager.getLogger(ParkingSensorsResources.class);
 	
 	@Autowired
-	private ParkingAreaServices parkingAreaService;
+	private ParkingSensorsServices parkingSensorsService;
 
 	@GetMapping("/parking-area/all")
 	@ResponseBody
 	public ResponseEntity<Object> getAllParkingArea() {
 		logger.info("ParkingAreaResources - START getAllParkingArea");
-		List<ParkingArea> parkingAreas;
+		List<ParkingSensors> parkingAreas;
 		// Security user check
 		try {
-			parkingAreas = parkingAreaService.getAllParkingAreas();
+			parkingAreas = parkingSensorsService.getAllParkingSensors();
 		} catch (Exception e) {
 			logger.error("ParkingAreaResources -  error - getAllParkingArea", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -55,10 +55,10 @@ public class ParkingAreaResources {
 	@ResponseBody
 	public ResponseEntity<Object> getParkingAreaData(@PathVariable Long id) {
 		logger.info("ParkingAreaResources - START getParkingAreaData");
-		ParkingArea p;
+		ParkingSensors p;
 		// Security user check
 		try {
-			p = parkingAreaService.getParkingAreaById(id);
+			p = parkingSensorsService.getParkingSensorById(id);
 		} catch (NullPointerException e) {
 			logger.error("ParkingAreaResources -  error", e);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -74,10 +74,10 @@ public class ParkingAreaResources {
 	@ResponseBody
 	public ResponseEntity<Object> getParkingAreaDataBySensorId(@PathVariable Long sensorId) {
 		logger.info("ParkingAreaResource - START getParkingAreaDataBySensorId");
-		ParkingArea p;
+		ParkingSensors p;
 		// Security user check
 		try {
-			p = parkingAreaService.getParkingAreaBySensorId(sensorId);
+			p = parkingSensorsService.getParkingSensorBySensorId(sensorId);
 		} catch (NullPointerException e) {
 			logger.error("ParkingAreaResources -  error", e);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -96,7 +96,7 @@ public class ParkingAreaResources {
 		String latitude;
 		// Security user check
 		try {
-			latitude = parkingAreaService.getParkingAreaLatitudeById(id);
+			latitude = parkingSensorsService.getParkingSensorLatitudeById(id);
 		} catch (NullPointerException e) {
 			logger.error("ParkingAreaResources -  error", e);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -112,10 +112,10 @@ public class ParkingAreaResources {
 	@ResponseBody
 	public ResponseEntity<Object> getParkingAreaLongitudeById(@PathVariable Long id) {
 		logger.info("ParkingAreaResource - START getParkingAreaLongitudeById");
-		String latitude;
+		String longitude;
 		// Security user check
 		try {
-			latitude = parkingAreaService.getParkingAreaLongitudeById(id);
+			longitude = parkingSensorsService.getParkingSensorLongitudeById(id);
 		} catch (NullPointerException e) {
 			logger.error("ParkingAreaResources -  error", e);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -124,7 +124,7 @@ public class ParkingAreaResources {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		logger.info("ParkingAreaResource - END getParkingAreaLongitudeById");
-		return ResponseEntity.status(HttpStatus.OK).body(latitude);
+		return ResponseEntity.status(HttpStatus.OK).body(longitude);
 	}
 
 	@GetMapping("/parking-area/address/{id}")
@@ -134,7 +134,7 @@ public class ParkingAreaResources {
 		String address;
 		// Security user check
 		try {
-			address = parkingAreaService.getParkingAreaAddressById(id);
+			address = parkingSensorsService.getParkingSensorAddressById(id);
 		} catch (NullPointerException e) {
 			logger.error("ParkingAreaResources -  error", e);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -153,7 +153,7 @@ public class ParkingAreaResources {
 		boolean state;
 		// Security user check
 		try {
-			state = parkingAreaService.getParkingAreaStateById(id);
+			state = parkingSensorsService.getParkingSensorStateById(id);
 		} catch (AopInvocationException e) {
 			logger.error("ParkingAreaResources -  error", e);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -169,10 +169,10 @@ public class ParkingAreaResources {
 	@ResponseBody
 	public ResponseEntity<Object> getFreeParkingArea() {
 		logger.info("ParkiAreangResource - START getFreeParkingArea");
-		List<ParkingArea> state;
+		List<ParkingSensors> state;
 		// Security user check
 		try {
-			state = parkingAreaService.getFreeParkingArea();
+			state = parkingSensorsService.getFreeParkingSensors();
 		} catch (Exception e) {
 			logger.error("ParkiAreangResource -  error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -184,16 +184,16 @@ public class ParkingAreaResources {
 	@GetMapping("/parking-area/occupy")
 	@ResponseBody
 	public ResponseEntity<Object> getOccupyParkingArea() {
-		logger.info("ParkiAreangResource - START getOccupyParkingArea");
-		List<ParkingArea> state;
+		logger.info("ParkiAreangResource - START getOccupiedParkingArea");
+		List<ParkingSensors> state;
 		// Security user check
 		try {
-			state = parkingAreaService.getOccupyParkingArea();
+			state = parkingSensorsService.getOccupiedParkingSensors();
 		} catch (Exception e) {
 			logger.error("ParkiAreangResource -  error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-		logger.info("ParkiAreangResource - END getOccupyParkingArea");
+		logger.info("ParkiAreangResource - END getOccupiedParkingArea");
 		return ResponseEntity.status(HttpStatus.OK).body(state);
 	}
 
@@ -202,10 +202,10 @@ public class ParkingAreaResources {
 	public ResponseEntity<Object> getParkingAreaByLatitudeAndLongitude(@PathVariable String latitude,
 			@PathVariable String longitude) {
 		logger.info("ParkiAreangResource - START getParkingAreaByLatitudeAndLongitude");
-		ParkingArea parkArea;
+		ParkingSensors parkArea;
 		// Security user check
 		try {
-			parkArea = parkingAreaService.getParkingAreaByLatitudeAndLongitude(latitude, longitude);
+			parkArea = parkingSensorsService.getParkingSensorByLatitudeAndLongitude(latitude, longitude);
 		} catch (NullPointerException e) {
 			logger.error("ParkingAreaResources -  error", e);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -224,7 +224,7 @@ public class ParkingAreaResources {
 		LocalDateTime date;
 		// Security user check
 		try {
-			date = parkingAreaService.getParkingAreaLastUpdateDateBySensorId(sensorId);
+			date = parkingSensorsService.getParkingSensorLastUpdateDateBySensorId(sensorId);
 		} catch (NullPointerException e) {
 			logger.error("ParkingAreaResources -  error", e);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -241,7 +241,7 @@ public class ParkingAreaResources {
 	public ResponseEntity<Object> updateParkingAreaLatitudeById(@PathVariable Long id, @RequestBody String latitude) {
 		logger.info("ParkiAreangResource - START updateParkingAreaLatitudeById");
 		try {
-			parkingAreaService.updateParkingAreaLatitudeById(latitude, id);
+			parkingSensorsService.updateParkingSensorLatitudeById(latitude, id);
 		} catch (NullPointerException e) {
 			logger.error("ParkingAreaResources -  error", e);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -258,7 +258,7 @@ public class ParkingAreaResources {
 	public ResponseEntity<Object> updateParkingAreaLongitudeById(@PathVariable Long id, @RequestBody String longitude) {
 		logger.info("ParkiAreangResource - START updateParkingAreaLatitudeById");
 		try {
-			parkingAreaService.updateParkingAreaLongitudeById(longitude, id);
+			parkingSensorsService.updateParkingSensorLongitudeById(longitude, id);
 		} catch (NullPointerException e) {
 			logger.error("ParkingAreaResources -  error", e);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -275,7 +275,7 @@ public class ParkingAreaResources {
 	public ResponseEntity<Object> updateParkingAreaAddressById(@PathVariable Long id, @RequestBody String address) {
 		logger.info("ParkiAreangResource - START updateParkingAreaAddressById");
 		try {
-			parkingAreaService.updateParkingAreaAddressById(address, id);
+			parkingSensorsService.updateParkingSensorAddressById(address, id);
 		} catch (NullPointerException e) {
 			logger.error("ParkingAreaResources -  error", e);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -292,7 +292,7 @@ public class ParkingAreaResources {
 	public ResponseEntity<Object> updateParkingAreaStateById(@PathVariable boolean state, @PathVariable Long id) {
 		logger.info("ParkiAreangResource - START updateParkingAreaStateById");
 		try {
-			parkingAreaService.updateParkingAreaValueById(state, id);
+			parkingSensorsService.updateParkingAreaValueById(state, id);
 		} catch (NullPointerException e) {
 			logger.error("ParkingAreaResources -  error", e);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -306,46 +306,46 @@ public class ParkingAreaResources {
 
 	@DeleteMapping("sensor/parking-area/delete/{sensorId}")
 	public ResponseEntity<Object> deleteParkingAreaBySensorId(@PathVariable Long sensorId) {
-		logger.info("ParkiAreangResource - START deleteParkingAreaBySensorId");
+		logger.info("ParkingSensorResource - START deleteParkingSensorBySensorId");
 		try {
-			parkingAreaService.deleteParkingAreaBySensorId(sensorId);
+			parkingSensorsService.deleteParkingSensorBySensorId(sensorId);
 		} catch (NullPointerException e) {
-			logger.error("ParkingAreaResources -  error", e);
+			logger.error("ParkingSensorResources -  error", e);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkingAreaResources -  error", e);
+			logger.error("ParkingSensorResources -  error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-		logger.info("ParkiAreangResource - END deleteParkingAreaBySensorId");
+		logger.info("ParkiSensorngResource - END deleteParkingSensorBySensorId");
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@DeleteMapping("/parking-area/delete/{id}")
 	public ResponseEntity<Object> deleteParkingAreaById(@PathVariable Long id) {
-		logger.info("ParkiAreangResource - START deleteParkingAreaById");
+		logger.info("ParkingSensorResource - START deleteParkingSensorById");
 		try {
-			parkingAreaService.deleteParkingAreaById(id);
+			parkingSensorsService.deleteParkingSensorById(id);
 		} catch (NullPointerException e) {
-			logger.error("ParkingAreaResources -  error", e);
+			logger.error("ParkingSensorResources -  error", e);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
-			logger.error("ParkingAreaResources -  error", e);
+			logger.error("ParkingSensorResources -  error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-		logger.info("ParkiAreangResource - END deleteAllParkingArea");
+		logger.info("ParkingSensorResource - END deleteAllParkingSensors");
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@DeleteMapping("/parking-area/delete/all")
 	public ResponseEntity<Object> deleteAllParkingArea() {
-		logger.info("ParkiAreangResource - START deleteAllParkingArea");
+		logger.info("ParkingSensorResource - START deleteAllParkingSensors");
 		try {
-			parkingAreaService.deleteAllParkingArea();
+			parkingSensorsService.deleteAllParkingSensors();
 		} catch (Exception e) {
-			logger.error("ParkiAreangResource -  error - deleteAllParkingArea", e);
+			logger.error("ParkingSensorResource -  error - deleteAllParkingSensors", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-		logger.info("ParkiAreangResource - END deleteAllParkingArea");
+		logger.info("ParkingSensorResource - END deleteAllParkingSensors");
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 }

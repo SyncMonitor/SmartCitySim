@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.synclab.smartparking.repository.ParkingAreaStatsRepository;
-import it.synclab.smartparking.repository.model.ParkingArea;
+import it.synclab.smartparking.repository.model.ParkingSensors;
 import it.synclab.smartparking.repository.model.ParkingAreaStats;
 
 @Component
@@ -28,14 +28,14 @@ public class ParkingStatsServices {
 	
 	private static final Logger logger = LogManager.getLogger(ParkingStatsServices.class);
 	
-	public ParkingAreaStats buildParkingAreaStatsFromParkingArea(ParkingArea parkArea) {
+	public ParkingAreaStats buildParkingAreaStatsFromParkingArea(ParkingSensors parkArea) {
 		logger.debug("ParkingService START buildParkingAreaStatsFromParkingArea");
 		ParkingAreaStats stats = new ParkingAreaStats();
 		if (parkArea.getFkSensorId() != null) {
 			stats.setFkSensorId(parkArea.getFkSensorId());
 		}
-		if (parkArea.getLastUpdate() != null) {
-			stats.setLastUpdate(parkArea.getLastUpdate());
+		if (parkArea.getTimestamp() != null) {
+			stats.setLastUpdate(parkArea.getTimestamp());
 		}
 		logger.debug("ParkingService END buildParkingAreaStatsFromParkingArea");
 		stats.setValue(parkArea.getValue());

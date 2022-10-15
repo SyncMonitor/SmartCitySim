@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import it.synclab.smartparking.model.Maintainer;
 import it.synclab.smartparking.model.Marker;
-import it.synclab.smartparking.repository.model.Sensor;
+import it.synclab.smartparking.repository.model.Sensors;
 import it.synclab.smartparking.repository.model.SensorsMaintainer;
 
 @RunWith(SpringRunner.class)
@@ -25,10 +25,10 @@ public class SensorMaintainerServicesTest {
     private SensorMaintainerServices sensorMaintainerServices;
 
     @Autowired
-    private SensorServices sensorServices;
+    private SensorsServices sensorsServices;
 
     Marker marker = new Marker();
-    Sensor sensor = new Sensor();
+    Sensors sensor = new Sensors();
     SensorsMaintainer maintainer = new SensorsMaintainer();
     SensorsMaintainer maintainer2 = new SensorsMaintainer();
     List<SensorsMaintainer> list = new ArrayList<>();
@@ -51,10 +51,10 @@ public class SensorMaintainerServicesTest {
         maintainer = sensorMaintainerServices.buildSensorsMaintainerFromMarker(marker);
         list.add(maintainer);
 
-        sensor = sensorServices.buildSensorFromMarker(marker);
+        sensor = sensorsServices.buildSensorFromMarker(marker);
         sensor.setMaintainers(list);
         size = sensorMaintainerServices.getAllSensorsMaintainerData().size();
-        id = sensorServices.getAllSensorsFromDB().get(0).getId();
+        id = sensorsServices.getAllSensorsFromDB().get(0).getId();
     }
 
     @Test
@@ -97,7 +97,7 @@ public class SensorMaintainerServicesTest {
     @Transactional
     @Test
     public void getAllSensorsMaintainerDataTest() {
-        sensorServices.saveSensorData(sensor);
+    	sensorsServices.saveSensorData(sensor);
         int result = sensorMaintainerServices.getAllSensorsMaintainerData().size();
         Assert.assertEquals(size + 1, result);
     }
@@ -105,7 +105,7 @@ public class SensorMaintainerServicesTest {
     @Transactional
     @Test
     public void getSensorsMaintainerDataBySensorIdTest() {
-        sensorServices.saveSensorData(sensor);
+    	sensorsServices.saveSensorData(sensor);
         Long result = sensorMaintainerServices.getSensorsMaintainerDataBySensorId(sensor.getId()).get(0).getFkSensorId();
         Assert.assertEquals(sensor.getId(), result);
     }
@@ -113,8 +113,8 @@ public class SensorMaintainerServicesTest {
     @Transactional
     @Test
     public void getSensorsMaintainerDataByIdTest() {
-        sensorServices.saveSensorData(sensor);
-        Long maintainerId = sensorServices.getSensorById(sensor.getId()).getMaintainer().get(0).getId();
+    	sensorsServices.saveSensorData(sensor);
+        Long maintainerId = sensorsServices.getSensorById(sensor.getId()).getMaintainers().get(0).getId();
         SensorsMaintainer result = sensorMaintainerServices.getSensorsMaintainerDataById(maintainerId);
         Assert.assertEquals(maintainer.getFkSensorId(), result.getFkSensorId());
         Assert.assertEquals(maintainer.getType(), result.getType());
@@ -124,7 +124,7 @@ public class SensorMaintainerServicesTest {
     @Transactional
     @Test
     public void deleteSensorMaintainersBySensorIdTest() {
-        sensorServices.saveSensorData(sensor);
+    	sensorsServices.saveSensorData(sensor);
         Assert.assertNotEquals(size, sensorMaintainerServices.getAllSensorsMaintainerData().size());
         sensorMaintainerServices.deleteSensorMaintainersBySensorId(sensor.getId());
         Assert.assertEquals(size, sensorMaintainerServices.getAllSensorsMaintainerData().size());
@@ -133,9 +133,9 @@ public class SensorMaintainerServicesTest {
     @Transactional
     @Test
     public void deleteSensorMaintainerByIdTest() {
-        sensorServices.saveSensorData(sensor);
+    	sensorsServices.saveSensorData(sensor);
         Assert.assertNotEquals(size, sensorMaintainerServices.getAllSensorsMaintainerData().size());
-        sensorMaintainerServices.deleteSensorMaintainersById(sensorServices.getSensorById(sensor.getId()).getMaintainer().get(0).getId());
+        sensorMaintainerServices.deleteSensorMaintainersById(sensorsServices.getSensorById(sensor.getId()).getMaintainers().get(0).getId());
         Assert.assertEquals(size, sensorMaintainerServices.getAllSensorsMaintainerData().size());
     }
 

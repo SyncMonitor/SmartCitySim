@@ -13,34 +13,34 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.synclab.smartparking.model.Marker;
-import it.synclab.smartparking.repository.model.ParkingArea;
+import it.synclab.smartparking.repository.model.ParkingSensors;
 import it.synclab.smartparking.repository.model.ParkingAreaStats;
-import it.synclab.smartparking.repository.model.Sensor;
+import it.synclab.smartparking.repository.model.Sensors;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ParkingStatsServicesTest {
 
     @Autowired
-    private SensorServices sensorServices;
+    private SensorsServices sensorsServices;
 
     @Autowired
-    private ParkingAreaServices parkingAreaServices;
+    private ParkingSensorsServices parkingAreaServices;
 
     @Autowired
     private ParkingStatsServices parkingStatsServices;
 
     Marker marker;
-    Sensor sensor;
+    Sensors sensor;
     ParkingAreaStats stat;
     ParkingAreaStats stat2 = new ParkingAreaStats();
-    ParkingArea parkArea;
+    ParkingSensors parkArea;
     int size = 0;
     Long id = 0L;
 
     @Before
     public void init() {
-        id = sensorServices.getAllSensorsFromDB().get(0).getId();
+        id = sensorsServices.getAllSensorsFromDB().get(0).getId();
 
         marker = new Marker();
 
@@ -58,7 +58,7 @@ public class ParkingStatsServicesTest {
         stat2.setLastUpdate(LocalDateTime.of(1980, 1, 1, 0, 0, 0));
         stat2.setValue(true);
 
-        sensor = sensorServices.buildSensorFromMarker(marker);
+        sensor = sensorsServices.buildSensorFromMarker(marker);
 
         size = parkingStatsServices.getParkingAreaStats().size();
     }
@@ -66,17 +66,17 @@ public class ParkingStatsServicesTest {
     @Transactional
     @Test
     public void buildParkingAreaStatsFromParkingAreaTest() {
-        sensorServices.saveSensorData(sensor);
-        ParkingArea parkingArea = parkingAreaServices.getParkingAreaBySensorId(1234567890123456789L);
+    	sensorsServices.saveSensorData(sensor);
+        ParkingSensors parkingArea = parkingAreaServices.getParkingSensorBySensorId(1234567890123456789L);
         parkingArea.setValue(!parkingArea.getValue());
         stat = parkingStatsServices.buildParkingAreaStatsFromParkingArea(parkingArea);
         Assert.assertNotNull(stat);
         Assert.assertEquals(parkingArea.getFkSensorId(), stat.getFkSensorId());
         Assert.assertEquals(parkingArea.getValue(), stat.isValue());
-        Assert.assertEquals(parkingArea.getLastUpdate(), stat.getLastUpdate());
+        Assert.assertEquals(parkingArea.getTimestamp(), stat.getLastUpdate());
 
-        parkingArea.setSensorId(null);
-        parkingArea.setLastUpdate(null);
+        parkingArea.setSensors(null);
+        parkingArea.setTimestamp(null);
         stat = parkingStatsServices.buildParkingAreaStatsFromParkingArea(parkingArea);
         Assert.assertNotNull(stat);
     }

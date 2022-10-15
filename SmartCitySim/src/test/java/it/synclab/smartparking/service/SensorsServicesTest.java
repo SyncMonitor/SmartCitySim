@@ -15,33 +15,36 @@ import org.springframework.transaction.annotation.Transactional;
 import it.synclab.smartparking.model.Marker;
 import it.synclab.smartparking.model.MarkerList;
 import it.synclab.smartparking.model.Markers;
-import it.synclab.smartparking.repository.model.ParkingArea;
-import it.synclab.smartparking.repository.model.Sensor;
+import it.synclab.smartparking.repository.model.ParkingSensors;
+import it.synclab.smartparking.repository.model.Sensors;
 
 @Transactional
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SensorServicesTest {
+public class SensorsServicesTest {
 
 	@Autowired
-	private SensorServices sensorServices;
+	private SensorsServices sensorsServices;
 
-	Sensor sensor = null;
-	Sensor inactiveSensor = null;
-	List<ParkingArea> parkingArea = new ArrayList<>();
-	List<ParkingArea> InactiveparkingArea = new ArrayList<>();
+	Sensors sensor = null;
+	Sensors inactiveSensor = null;
+	List<ParkingSensors> parkingArea = new ArrayList<>();
+	ParkingSensors parkingSensor;
+	ParkingSensors inactiveParkingSensor;
+	List<ParkingSensors> InactiveparkingArea = new ArrayList<>();
 	Marker marker = new Marker();
 	int size = 0;
 
 
 	@Before
 	public void init() {
-		parkingArea.add(new ParkingArea("45.12564", "24.65489", "Via Indirizzo di prova 100", true, null));
-		sensor = new Sensor(size + 1000L, "sensor 109109109", "3,7V", "3", "ParkingArea", true, null);
-		sensor.setParkingArea(parkingArea);
-
-		inactiveSensor = new Sensor(size + 1001L, "sensor 110110110", "2,2V", "2", "ParkingArea", false, null);
-		inactiveSensor.setParkingArea(InactiveparkingArea);
+		parkingSensor = new ParkingSensors("45.12564", "24.65489", "Via Indirizzo di prova 100", true, null);
+		sensor = new Sensors(size + 1000L, "sensor 109109109", "3,7V", "3", "ParkingArea", true, null);
+		sensor.setParkingSensors(parkingSensor);
+		
+		inactiveParkingSensor = new ParkingSensors();
+		inactiveSensor = new Sensors(size + 1001L, "sensor 110110110", "2,2V", "2", "ParkingArea", false, null);
+		inactiveSensor.setParkingSensors(inactiveParkingSensor);
 
 		marker.setId(size + 1002L);
 		marker.setName("sensor 97");
@@ -52,20 +55,20 @@ public class SensorServicesTest {
 		marker.setBattery("3,5V");
 		marker.setActive(true);
 
-		size = sensorServices.getAllSensorsFromDB().size();
+		size = sensorsServices.getAllSensorsFromDB().size();
 	}
 
 	@Test
 	public void saveSensorDataTest() {
-		sensorServices.saveSensorData(sensor);
-		sensorServices.saveSensorData(inactiveSensor);
-		Assert.assertEquals(size + 2, sensorServices.getAllSensorsFromDB().size());
+		sensorsServices.saveSensorData(sensor);
+		sensorsServices.saveSensorData(inactiveSensor);
+		Assert.assertEquals(size + 2, sensorsServices.getAllSensorsFromDB().size());
 	}
 
 	@Test
 	public void buildSensorFromMarkerTest() {
-		Sensor sensor = sensorServices.buildSensorFromMarker(marker);
-		ParkingArea parkArea = sensor.getParkingArea().get(0);
+		Sensors sensor = sensorsServices.buildSensorFromMarker(marker);
+		ParkingSensors parkArea = sensor.getParkingSensors();
 
 		Assert.assertEquals(sensor.getId(), marker.getId());
 		Assert.assertEquals(sensor.getName(), marker.getName());
@@ -81,7 +84,7 @@ public class SensorServicesTest {
 		marker.setName(null);
 		marker.setBattery(null);
 
-		sensor = sensorServices.buildSensorFromMarker(marker);
+		sensor = sensorsServices.buildSensorFromMarker(marker);
 
 		Assert.assertEquals(null, sensor.getId());
 		Assert.assertEquals(null, sensor.getName());
@@ -91,19 +94,19 @@ public class SensorServicesTest {
 
 	@Test
 	public void getAllSensorsFromDBTest() {
-		List<Sensor> sensors = sensorServices.getAllSensorsFromDB();
+		List<Sensors> sensors = sensorsServices.getAllSensorsFromDB();
 		Assert.assertEquals(size, sensors.size());
 	}
 
 	@Test
 	public void getSensorStateTest() {
-		sensorServices.saveSensorData(sensor);
-		sensorServices.saveSensorData(inactiveSensor);
+		sensorsServices.saveSensorData(sensor);
+		sensorsServices.saveSensorData(inactiveSensor);
 
-		boolean state = sensorServices.getSensorState(sensor.getId());
+		boolean state = sensorsServices.getSensorState(sensor.getId());
 		Assert.assertEquals(true, state);
 
-		state = sensorServices.getSensorState(inactiveSensor.getId());
+		state = sensorsServices.getSensorState(inactiveSensor.getId());
 		Assert.assertEquals(false, state);
 	}
 
@@ -111,16 +114,16 @@ public class SensorServicesTest {
 	public void getSensorsByNameTest() {
 		sensor.setName("TestSensor");
 		inactiveSensor.setName("TestSensor");
-		sensorServices.saveSensorData(sensor);
-		sensorServices.saveSensorData(inactiveSensor);
-		List<Sensor> sensors = sensorServices.getSensorsByName("TestSensor");
+		sensorsServices.saveSensorData(sensor);
+		sensorsServices.saveSensorData(inactiveSensor);
+		List<Sensors> sensors = sensorsServices.getSensorsByName("TestSensor");
 		Assert.assertEquals(2, sensors.size());
 	}
 
 	@Test
 	public void getSensorByIdTest() {
-		sensorServices.saveSensorData(sensor);
-		Sensor result = sensorServices.getSensorById(sensor.getId());
+		sensorsServices.saveSensorData(sensor);
+		Sensors result = sensorsServices.getSensorById(sensor.getId());
 		Assert.assertEquals(sensor.getId(), result.getId());
 		Assert.assertEquals(sensor.getName(), result.getName());
 		Assert.assertEquals(sensor.getBattery(), result.getBattery());
@@ -133,9 +136,9 @@ public class SensorServicesTest {
 	public void getSensorsByTypeTest() {
 		sensor.setType("SensorType");
 		inactiveSensor.setType("SensorType");
-		sensorServices.saveSensorData(sensor);
-		sensorServices.saveSensorData(inactiveSensor);
-		List<Sensor> result = sensorServices.getSensorsByType("SensorType");
+		sensorsServices.saveSensorData(sensor);
+		sensorsServices.saveSensorData(inactiveSensor);
+		List<Sensors> result = sensorsServices.getSensorsByType("SensorType");
 		Assert.assertEquals(2, result.size());
 	}
 
@@ -143,9 +146,9 @@ public class SensorServicesTest {
 	public void getSensorByNameStartingWithTest() {
 		sensor.setName("TestSensor");
 		inactiveSensor.setName("TestSensor");
-		sensorServices.saveSensorData(sensor);
-		sensorServices.saveSensorData(inactiveSensor);
-		List<Sensor> result = sensorServices.getSensorByNameStartingWith("Test");
+		sensorsServices.saveSensorData(sensor);
+		sensorsServices.saveSensorData(inactiveSensor);
+		List<Sensors> result = sensorsServices.getSensorByNameStartingWith("Test");
 		Assert.assertEquals(2, result.size());
 	}
 
@@ -153,9 +156,9 @@ public class SensorServicesTest {
 	public void getSensorByNameContainingTest() {
 		sensor.setName("TestNameContaining");
 		inactiveSensor.setName("TestNameContaining");
-		sensorServices.saveSensorData(sensor);
-		sensorServices.saveSensorData(inactiveSensor);
-		List<Sensor> result = sensorServices.getSensorByNameContaining("stNameCo");
+		sensorsServices.saveSensorData(sensor);
+		sensorsServices.saveSensorData(inactiveSensor);
+		List<Sensors> result = sensorsServices.getSensorByNameContaining("stNameCo");
 		Assert.assertEquals(2, result.size());
 	}
 
@@ -163,27 +166,27 @@ public class SensorServicesTest {
 	public void getSensorByNameEndingWithTest() {
 		sensor.setName("TestSensorEndingWith");
 		inactiveSensor.setName("TestSensorEndingWith");
-		sensorServices.saveSensorData(sensor);
-		sensorServices.saveSensorData(inactiveSensor);
-		List<Sensor> result = sensorServices.getSensorByNameEndingWith("EndingWith");
+		sensorsServices.saveSensorData(sensor);
+		sensorsServices.saveSensorData(inactiveSensor);
+		List<Sensors> result = sensorsServices.getSensorByNameEndingWith("EndingWith");
 		Assert.assertEquals(2, result.size());
 	}
 
 	@Test
 	public void getSensorByIsActiveTrueTest() {
-		sensorServices.deleteAllSensors();
-		sensorServices.saveSensorData(sensor);
-		sensorServices.saveSensorData(inactiveSensor);
-		List<Sensor> result = sensorServices.getSensorByIsActiveTrue();
+		sensorsServices.deleteAllSensors();
+		sensorsServices.saveSensorData(sensor);
+		sensorsServices.saveSensorData(inactiveSensor);
+		List<Sensors> result = sensorsServices.getSensorByIsActiveTrue();
 		Assert.assertEquals(1, result.size());
 	}
 
 	@Test
 	public void getSensorByIsActiveFalseTest() {
-		sensorServices.deleteAllSensors();
-		sensorServices.saveSensorData(sensor);
-		sensorServices.saveSensorData(inactiveSensor);
-		List<Sensor> result = sensorServices.getSensorByIsActiveFalse();
+		sensorsServices.deleteAllSensors();
+		sensorsServices.saveSensorData(sensor);
+		sensorsServices.saveSensorData(inactiveSensor);
+		List<Sensors> result = sensorsServices.getSensorByIsActiveFalse();
 		Assert.assertEquals(1, result.size());
 	}
 
@@ -207,7 +210,7 @@ public class SensorServicesTest {
 		Markers markers = new Markers(sensors);
 		MarkerList markerList = new MarkerList(markers);
 		// Assert
-		Assert.assertEquals(2, sensorServices.getLowBatterySensors(markerList).size());
+		Assert.assertEquals(2, sensorsServices.getLowBatterySensors(markerList).size());
 	}
 
 	@Test
@@ -231,7 +234,7 @@ public class SensorServicesTest {
 		Markers markers = new Markers(sensors);
 		MarkerList markerList = new MarkerList(markers);
 		// Assert
-		Assert.assertEquals(3, sensorServices.getCorruptedSensors(markerList).size());
+		Assert.assertEquals(3, sensorsServices.getCorruptedSensors(markerList).size());
 	}
 
 	@Test
@@ -239,23 +242,23 @@ public class SensorServicesTest {
 		saveSensor(sensor);
 		saveSensor(inactiveSensor);
 		deleteSensorById(sensor.getId());
-		Assert.assertEquals(size + 1, sensorServices.getAllSensorsFromDB().size());
+		Assert.assertEquals(size + 1, sensorsServices.getAllSensorsFromDB().size());
 		deleteSensorById(inactiveSensor.getId());
-		Assert.assertEquals(size, sensorServices.getAllSensorsFromDB().size());
+		Assert.assertEquals(size, sensorsServices.getAllSensorsFromDB().size());
 	}
 
-	public void saveSensor(Sensor sensor) {
-		sensorServices.saveSensorData(sensor);
+	public void saveSensor(Sensors sensor) {
+		sensorsServices.saveSensorData(sensor);
 	}
 
 	public void deleteSensorById(Long id) {
-		sensorServices.deleteSensorById(id);
+		sensorsServices.deleteSensorById(id);
 	}
 
 	@Test
 	public void deleteAllSensorsByIdTest() {
-		Assert.assertEquals(size, sensorServices.getAllSensorsFromDB().size());
-		sensorServices.deleteAllSensors();
-		Assert.assertEquals(0, sensorServices.getAllSensorsFromDB().size());
+		Assert.assertEquals(size, sensorsServices.getAllSensorsFromDB().size());
+		sensorsServices.deleteAllSensors();
+		Assert.assertEquals(0, sensorsServices.getAllSensorsFromDB().size());
 	}
 }

@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import it.synclab.smartparking.model.Marker;
 import it.synclab.smartparking.model.MarkerList;
 import it.synclab.smartparking.model.Markers;
-import it.synclab.smartparking.repository.model.Sensor;
+import it.synclab.smartparking.repository.model.Sensors;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -25,10 +25,10 @@ public class StartUpServicesTest {
     private StartUpServices startUpServices;
 
     @Autowired
-    private SensorServices sensorServices;
+    private SensorsServices sensorsServices;
 
     @Autowired
-    private ParkingAreaServices parkingAreaServices;
+    private ParkingSensorsServices parkingAreaServices;
 
     @Autowired
     private SensorMaintainerServices sensorMaintainersServices;
@@ -50,7 +50,7 @@ public class StartUpServicesTest {
                 new Marker(1L, "156A2C71", "Padova Galleria Spagna", "45.389040", "11.928577", false, "3,7V", true));
         markers.getMarkers().add(
                 new Marker(2L, "156A2A71", "Padova Galleria Spagna", "45.389029", "11.928598", true, "2,7V", false));
-        id = sensorServices.getAllSensorsFromDB().get(0).getId();
+        id = sensorsServices.getAllSensorsFromDB().get(0).getId();
     }
 
     @Test
@@ -109,12 +109,12 @@ public class StartUpServicesTest {
             e.printStackTrace();
         }
         sensorMaintainersServices.deleteAllSensorMaintainers();
-        parkingAreaServices.deleteAllParkingArea();
-        sensorServices.deleteAllSensors();
+        parkingAreaServices.deleteAllParkingSensors();
+        sensorsServices.deleteAllSensors();
 
         startUpServices.updateSensorsData();
 
-        Assert.assertEquals(size, sensorServices.getAllSensorsFromDB().size());
+        Assert.assertEquals(size, sensorsServices.getAllSensorsFromDB().size());
     }
 
     @Test
@@ -135,7 +135,7 @@ public class StartUpServicesTest {
         }
         startUpServices.updateDBData(sensors);
         Assert.assertEquals(sensors.getMarkers().getMarkers().get(9).getName(),
-                sensorServices.getSensorById(id).getName());
+                sensorsServices.getSensorById(id).getName());
         try {
             sensors = startUpServices.readDataFromSources();
         } catch (Exception e) {
@@ -143,14 +143,14 @@ public class StartUpServicesTest {
         }
         startUpServices.updateDBData(sensors);
         Assert.assertEquals(sensors.getMarkers().getMarkers().get(9).getBattery(),
-                sensorServices.getSensorById(id).getBattery());
+        		sensorsServices.getSensorById(id).getBattery());
     }
 
     @Transactional
     @Test
     public void SensorNotUpdatingFromMoreFiveDaysTest() {
-        Sensor sensor = new Sensor();
-        sensor = sensorServices.getSensorById(id);
+        Sensors sensor = new Sensors();
+        sensor = sensorsServices.getSensorById(id);
         sensor.setLastSurvey(LocalDateTime.now().minusDays(6));
         MarkerList sensors = new MarkerList();
         try {
@@ -158,10 +158,10 @@ public class StartUpServicesTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        sensorServices.saveSensorData(sensor);
+        sensorsServices.saveSensorData(sensor);
         startUpServices.updateDBData(sensors);
-        Assert.assertEquals(sensorServices.getSensorById(id).getLastSurvey(),
-                sensorServices.getSensorById(id).getLastSurvey());
+        Assert.assertEquals(sensorsServices.getSensorById(id).getLastSurvey(),
+                sensorsServices.getSensorById(id).getLastSurvey());
     }
 
     @Transactional
@@ -176,7 +176,7 @@ public class StartUpServicesTest {
             e.printStackTrace();
         }
         startUpServices.writeSensorsIfAdded(sensors);
-        Assert.assertEquals(sensors.getMarkers().getMarkers().size(), sensorServices.getAllSensorsFromDB().size());
+        Assert.assertEquals(sensors.getMarkers().getMarkers().size(), sensorsServices.getAllSensorsFromDB().size());
     }
 
     @Test

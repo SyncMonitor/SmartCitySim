@@ -14,8 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import it.synclab.smartparking.model.MarkerList;
-import it.synclab.smartparking.repository.model.ParkingArea;
-import it.synclab.smartparking.repository.model.Sensor;
+import it.synclab.smartparking.repository.model.ParkingSensors;
+import it.synclab.smartparking.repository.model.Sensors;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -28,28 +28,28 @@ public class MailServicesTest {
     private StartUpServices startUpServices;
 
     @Autowired
-    private SensorServices sensorServices;
+    private SensorsServices sensorsServices;
 
-    Sensor sensor;
-    ParkingArea parkingArea;
-    List<ParkingArea> list = new ArrayList<>();
+    Sensors sensor;
+    ParkingSensors parkingSensor;
+    List<ParkingSensors> list = new ArrayList<>();
     Long id = 0L;
 
     @Before
     public void init() {
-        parkingArea = new ParkingArea("45.00000", "24.00000", "Sensor address", false, null);
-        list.add(parkingArea);
-        sensor = new Sensor(1234567890L, "TestSensor", "TestAddress", "T", "TestType", true, list);
-        id = sensorServices.getAllSensorsFromDB().get(0).getId();
+    	parkingSensor = new ParkingSensors("45.00000", "24.00000", "Sensor address", false, null);
+        list.add(parkingSensor);
+        sensor = new Sensors(1234567890L, "TestSensor", "TestAddress", "T", "TestType", true, parkingSensor);
+        id = sensorsServices.getAllSensorsFromDB().get(0).getId();
     }
 
     @Test
     public void printMailTest() {
         String expected = "Id = " + sensor.getId() + ", Name = " + sensor.getName() + ", " + "Address = "
-                + sensor.getParkingArea().get(0).getAddress() + ", Latitude = "
-                + sensor.getParkingArea().get(0).getLatitude() + ", Longitude = "
-                + sensor.getParkingArea().get(0).getLongitude();
-        String result = mailServices.printMail(sensor, sensor.getParkingArea());
+                + sensor.getParkingSensors().getAddress() + ", Latitude = "
+                + sensor.getParkingSensors().getLatitude() + ", Longitude = "
+                + sensor.getParkingSensors().getLongitude();
+        String result = mailServices.printMail(sensor, sensor.getParkingSensors());
         Assert.assertEquals(expected, result);
     }
 
@@ -93,7 +93,7 @@ public class MailServicesTest {
             e.printStackTrace();
         }
         startUpServices.updateDBData(sensors);
-        Assert.assertTrue(sensorServices.getSensorById(id).getMaintainer().get(0).isToBeCharged());
+        Assert.assertTrue(sensorsServices.getSensorById(id).getMaintainers().get(0).isToBeCharged());
         mailServices.sendLowBatterySensorsMail();
     }
 }

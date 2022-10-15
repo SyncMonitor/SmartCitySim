@@ -22,29 +22,29 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.synclab.smartparking.model.MarkerList;
-import it.synclab.smartparking.repository.model.Sensor;
-import it.synclab.smartparking.service.SensorServices;
+import it.synclab.smartparking.repository.model.Sensors;
+import it.synclab.smartparking.service.SensorsServices;
 import it.synclab.smartparking.service.StartUpServices;
 
 @RestController
 @RequestMapping("/scs")
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
-public class SensorResources {
+public class SensorsResources {
 
-	private static final Logger logger = LogManager.getLogger(SensorResources.class);
+	private static final Logger logger = LogManager.getLogger(SensorsResources.class);
 
 	@Autowired
 	private StartUpServices startUpServices;
 	
 	@Autowired
-	private SensorServices sensorService;
+	private SensorsServices sensorService;
 	
 
 	@GetMapping("/sensor/get-all-data")
 	@ResponseBody
 	public ResponseEntity<Object> getSensorsData() {
 		logger.info("SensorResources - START getSensorData");
-		List<Sensor> list = null;
+		List<Sensors> list = null;
 		// Security user check
 		try {
 			list = sensorService.getAllSensorsFromDB();
@@ -91,7 +91,7 @@ public class SensorResources {
 	@ResponseBody
 	public ResponseEntity<Object> getSensorData(@PathVariable Long sensorId) {
 		logger.info("SensorResources - START getSensorData");
-		Sensor s;
+		Sensors s;
 		// Security user check
 		try {
 			s = sensorService.getSensorById(sensorId);
@@ -130,7 +130,7 @@ public class SensorResources {
 	@GetMapping("/sensor/name/{name}")
 	@ResponseBody
 	public ResponseEntity<Object> getSensorsByName(@PathVariable String name) {
-		List<Sensor> l = new ArrayList<>();
+		List<Sensors> l = new ArrayList<>();
 		logger.info("SensorResources - START getSensorsByName");
 		try {
 			l = sensorService.getSensorsByName(name);
@@ -149,7 +149,7 @@ public class SensorResources {
 	@GetMapping("/sensor/type/{type}")
 	@ResponseBody
 	public ResponseEntity<Object> getSensorsBytype(@PathVariable String type) {
-		List<Sensor> l = new ArrayList<>();
+		List<Sensors> l = new ArrayList<>();
 		logger.info("SensorResources - START getSensorsByType");
 		try {
 			l = sensorService.getSensorsByType(type);
@@ -168,7 +168,7 @@ public class SensorResources {
 	@GetMapping("/sensor/name/starting-with/{str}")
 	@ResponseBody
 	public ResponseEntity<Object> getSensorByNameStartingWith(@PathVariable String str) {
-		List<Sensor> sensors = new ArrayList<>();
+		List<Sensors> sensors = new ArrayList<>();
 		logger.info("SensorResources - START getSensorByNameStartingWith");
 		try {
 			sensors = sensorService.getSensorByNameStartingWith(str);
@@ -187,7 +187,7 @@ public class SensorResources {
 	@GetMapping("/sensor/name/ending-with/{str}")
 	@ResponseBody
 	public ResponseEntity<Object> getSensorByNameEndingWith(@PathVariable String str) {
-		List<Sensor> sensors = new ArrayList<>();
+		List<Sensors> sensors = new ArrayList<>();
 		logger.info("SensorResources - START getSensorByNameEndingWith");
 		try {
 			sensors = sensorService.getSensorByNameEndingWith(str);
@@ -206,7 +206,7 @@ public class SensorResources {
 	@GetMapping("/sensor/name/containing/{str}")
 	@ResponseBody
 	public ResponseEntity<Object> getSensorByNameContaining(@PathVariable String str) {
-		List<Sensor> sensors = new ArrayList<>();
+		List<Sensors> sensors = new ArrayList<>();
 		logger.info("SensorResources - START getSensorByNameContaining");
 		try {
 			sensors = sensorService.getSensorByNameContaining(str);
@@ -225,7 +225,7 @@ public class SensorResources {
 	@GetMapping("/sensor/isActive")
 	@ResponseBody
 	public ResponseEntity<Object> getSensorByIsActiveTrue() {
-		List<Sensor> sensors = new ArrayList<>();
+		List<Sensors> sensors = new ArrayList<>();
 		logger.info("SensorResources - START getSensorByIsActiveTrue");
 		try {
 			sensors = sensorService.getSensorByIsActiveTrue();
@@ -244,7 +244,7 @@ public class SensorResources {
 	@GetMapping("/sensor/notActive")
 	@ResponseBody
 	public ResponseEntity<Object> getSensorByIsActiveFalse() {
-		List<Sensor> sensors = new ArrayList<>();
+		List<Sensors> sensors = new ArrayList<>();
 		logger.info("SensorResources - START getSensorByIsActiveFalse");
 		try {
 			sensors = sensorService.getSensorByIsActiveFalse();

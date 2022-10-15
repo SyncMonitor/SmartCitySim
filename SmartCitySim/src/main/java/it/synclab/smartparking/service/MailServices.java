@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import it.synclab.smartparking.repository.model.ParkingArea;
-import it.synclab.smartparking.repository.model.Sensor;
+import it.synclab.smartparking.repository.model.ParkingSensors;
+import it.synclab.smartparking.repository.model.Sensors;
 import it.synclab.smartparking.repository.model.SensorsMaintainer;
 
 @Component
@@ -53,10 +53,10 @@ public class MailServices {
 	JmsTemplate jmsTemplate;
 
 	@Autowired
-	SensorServices sensorService;
+	SensorsServices sensorService;
 
 	@Autowired
-	ParkingAreaServices parkingService;
+	ParkingSensorsServices parkingSensorsService;
 
 	@Autowired
 	SensorMaintainerServices sensorMaintainerServices;
@@ -82,12 +82,10 @@ public class MailServices {
 		}
 	}
 
-	public String printMail(Sensor s, List<ParkingArea> parkingArea) {
+	public String printMail(Sensors s, ParkingSensors parkingSensor) {
 		String text = "Id = " + s.getId() + ", Name = " + s.getName() + ", ";
-		for (int i = 0; i < parkingArea.size(); i++) {
-			text += "Address = " + parkingArea.get(i).getAddress() + ", Latitude = " + parkingArea.get(i).getLatitude()
-					+ ", Longitude = " + parkingArea.get(i).getLongitude();
-		}
+			text += "Address = " + parkingSensor.getAddress() + ", Latitude = " + parkingSensor.getLatitude()
+					+ ", Longitude = " + parkingSensor.getLongitude();
 		return text;
 	}
 
@@ -96,10 +94,10 @@ public class MailServices {
 		maintainers = sensorMaintainerServices.getAllSensorsMaintainerData();
 		for (SensorsMaintainer m : maintainers) {
 			if (m.isToBeRepaired()) {
-				Sensor s = sensorService.getSensorById(m.getFkSensorId());
+				Sensors s = sensorService.getSensorById(m.getFkSensorId());
 				logger.debug("mail: " + m.getMail());
 				String sensorOff = "";
-				sensorOff += printMail(s, s.getParkingArea()) + "\n\n";
+				sensorOff += printMail(s, s.getParkingSensors()) + "\n\n";
 				String sensorOffMessage = sensorOffStartMessage + sensorOff + sensorOffEndMessage;
 				sendEmailParametersToQue(m.getMail(), sensorOffSubject + " " + s.getName(), sensorOffMessage);
 				m.setToBeRepaired(false);
@@ -112,10 +110,10 @@ public class MailServices {
 		maintainers = sensorMaintainerServices.getAllSensorsMaintainerData();
 		for (SensorsMaintainer m : maintainers) {
 			if (m.isToBeCharged()) {
-				Sensor s = sensorService.getSensorById(m.getFkSensorId());
+				Sensors s = sensorService.getSensorById(m.getFkSensorId());
 				logger.debug("mail: " + m.getMail());
 				String lowBattery = "";
-				lowBattery += printMail(s, s.getParkingArea()) + "\n\n";
+				lowBattery += printMail(s, s.getParkingSensors()) + "\n\n";
 				String lowBatterySensorMessage = lowBatteryStartMessage + lowBattery + lowBatteryEndMessage;
 				sendEmailParametersToQue(m.getMail(), lowBatterySubject + " " + s.getName(), lowBatterySensorMessage);
 				m.setToBeCharged(false);
@@ -128,10 +126,10 @@ public class MailServices {
 		maintainers = sensorMaintainerServices.getAllSensorsMaintainerData();
 		for (SensorsMaintainer m : maintainers) {
 			if (!m.isUpdating()) {
-				Sensor s = sensorService.getSensorById(m.getFkSensorId());
+				Sensors s = sensorService.getSensorById(m.getFkSensorId());
 				logger.debug("mail: " + m.getMail());
 				String notUpdating = "";
-				notUpdating += printMail(s, s.getParkingArea()) + "\n\n";
+				notUpdating += printMail(s, s.getParkingSensors()) + "\n\n";
 				String notUpdatingSensorMessage = notUpdatingStartMessage + notUpdating + notUpdatingEndMessage;
 				sendEmailParametersToQue(m.getMail(), notUpdatingSubject + " " + s.getName(), notUpdatingSensorMessage);
 				m.setIsUpdating(true);

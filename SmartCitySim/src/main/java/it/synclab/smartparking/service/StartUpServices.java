@@ -21,9 +21,9 @@ import com.squareup.okhttp.Response;
 import it.synclab.smartparking.config.datasource.PostgreClient;
 import it.synclab.smartparking.model.Marker;
 import it.synclab.smartparking.model.MarkerList;
-import it.synclab.smartparking.repository.model.ParkingArea;
+import it.synclab.smartparking.repository.model.ParkingSensors;
 import it.synclab.smartparking.repository.model.ParkingAreaStats;
-import it.synclab.smartparking.repository.model.Sensor;
+import it.synclab.smartparking.repository.model.Sensors;
 import it.synclab.smartparking.repository.model.SensorsMaintainer;
 
 @Component
@@ -39,10 +39,10 @@ public class StartUpServices {
 	private MailServices mailServices;
 	
 	@Autowired
-	private SensorServices sensorServices;
+	private SensorsServices sensorServices;
 	
 	@Autowired
-	private ParkingAreaServices parkingAreaServices;
+	private ParkingSensorsServices parkingSensorServices;
 	
 	@Autowired
 	private SensorMaintainerServices sensorMaintainerServices;
@@ -108,10 +108,10 @@ public class StartUpServices {
 		
 		for (Marker m : sensors.getMarkers().getMarkers()) {
 			boolean updated = false;
-			Sensor sensor = sensorServices.buildSensorFromMarker(m);
-			ParkingArea parkArea = parkingAreaServices.buildParkingAreaFromMarker(m);
-			Sensor sensorFromDB = sensorServices.getSensorById(sensor.getId());
-			ParkingArea parkingAreaFromDB = parkingAreaServices.getParkingAreaBySensorId(parkArea.getFkSensorId());
+			Sensors sensor = sensorServices.buildSensorFromMarker(m);
+			ParkingSensors parkSensor = parkingSensorServices.buildParkingSensorFromMarker(m);
+			Sensors sensorFromDB = sensorServices.getSensorById(sensor.getId());
+			ParkingSensors parkingSensorFromDB = parkingSensorServices.getParkingSensorBySensorId(parkSensor.getFkSensorId());
 			if (!sensorFromDB.getName().equals(sensor.getName())) {
 				sensorServices.updateSensorNameById(sensor.getName(), sensor.getId());
 			}
@@ -144,22 +144,22 @@ public class StartUpServices {
 				sensorMaintainerServices.updateSensorMaintainerIsUpdatingToFalseById(sensor.getId());
 				sensorServices.updateSensorLastSurveyById(sensor.getId());
 			}
-			if (!parkingAreaFromDB.getLatitude().equals(parkArea.getLatitude())) {
+			if (!parkingSensorFromDB.getLatitude().equals(parkSensor.getLatitude())) {
 				// tmp.getId() because when extract data from sensor you don't
 //					have p.Id because this is automatically assigned by DB
-				parkingAreaServices.updateParkingAreaLatitudeById(parkArea.getLatitude(), parkingAreaFromDB.getId());
+				parkingSensorServices.updateParkingSensorLatitudeById(parkSensor.getLatitude(), parkingSensorFromDB.getId());
 			}
-			if (!parkingAreaFromDB.getLongitude().equals(parkArea.getLongitude())) {
-				parkingAreaServices.updateParkingAreaLongitudeById(parkArea.getLongitude(), parkingAreaFromDB.getId());
+			if (!parkingSensorFromDB.getLongitude().equals(parkSensor.getLongitude())) {
+				parkingSensorServices.updateParkingSensorLongitudeById(parkSensor.getLongitude(), parkingSensorFromDB.getId());
 			}
-			if (!parkingAreaFromDB.getAddress().equals(parkArea.getAddress())) {
-				parkingAreaServices.updateParkingAreaAddressById(parkArea.getAddress(), parkingAreaFromDB.getId());
+			if (!parkingSensorFromDB.getAddress().equals(parkSensor.getAddress())) {
+				parkingSensorServices.updateParkingSensorAddressById(parkSensor.getAddress(), parkingSensorFromDB.getId());
 			}
 			// value = state
-			if (parkingAreaFromDB.getValue() != parkArea.getValue()) {
-				parkingAreaServices.updateParkingAreaValueById(parkArea.getValue(), parkingAreaFromDB.getId());
-				parkingAreaServices.updateParkingAreaLastUpdateBySensorId(LocalDateTime.now(), sensor.getId());
-				ParkingAreaStats stats = parkingStatsServices.buildParkingAreaStatsFromParkingArea(parkArea);
+			if (parkingSensorFromDB.getValue() != parkSensor.getValue()) {
+				parkingSensorServices.updateParkingAreaValueById(parkSensor.getValue(), parkingSensorFromDB.getId());
+				parkingSensorServices.updateParkingSensorLastUpdateBySensorId(LocalDateTime.now(), sensor.getId());
+				ParkingAreaStats stats = parkingStatsServices.buildParkingAreaStatsFromParkingArea(parkSensor);
 				parkingStatsServices.saveParkingAreaStats(stats);
 			}
 		}
@@ -202,7 +202,7 @@ public class StartUpServices {
 		try {
 			MarkerList sensors = readDataFromSources();
 			for (Marker m : sensors.getMarkers().getMarkers()) {
-				Sensor s = sensorServices.buildSensorFromMarker(m);
+				Sensors s = sensorServices.buildSensorFromMarker(m);
 				sensorServices.saveSensorData(s);
 			}
 		} catch (Exception e) {

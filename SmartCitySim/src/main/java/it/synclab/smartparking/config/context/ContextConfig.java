@@ -5,10 +5,10 @@ import org.springframework.context.annotation.Configuration;
 
 import it.synclab.smartparking.config.datasource.PostgreClient;
 import it.synclab.smartparking.service.MailServices;
-import it.synclab.smartparking.service.ParkingAreaServices;
+import it.synclab.smartparking.service.ParkingSensorsServices;
 import it.synclab.smartparking.service.ParkingStatsServices;
 import it.synclab.smartparking.service.SensorMaintainerServices;
-import it.synclab.smartparking.service.SensorServices;
+import it.synclab.smartparking.service.SensorsServices;
 import it.synclab.smartparking.service.StartUpServices;
 
 @Configuration
@@ -20,13 +20,13 @@ public class ContextConfig {
 	}
 	
 	// @Bean
-	public SensorServices createPSensorServices() {
-		return new SensorServices();
+	public SensorsServices createPSensorServices() {
+		return new SensorsServices();
 	}
 	
 	// @Bean
-	public ParkingAreaServices createParkingService() {
-		return new ParkingAreaServices();
+	public ParkingSensorsServices createParkingService() {
+		return new ParkingSensorsServices();
 	}
 	
 	// @Bean

@@ -9,70 +9,70 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import it.synclab.smartparking.repository.model.Sensor;
+import it.synclab.smartparking.repository.model.Sensors;
 
 @Transactional
 @Repository
-public interface SensorsRepository extends CrudRepository<Sensor, Long> {
+public interface SensorsRepository extends CrudRepository<Sensors, Long> {
 	
 	// JPQL query based on Java class, not on DB tables.
-	@Query("select s from Sensor s where s.id = ?1 order by id")
-	public Sensor getSensorById(Long sensorId);
+	@Query("select s from Sensors s where s.id = ?1 order by id")
+	public Sensors getSensorById(Long sensorId);
 	
-	@Query("select s from Sensor s order by id")
-	public List<Sensor> getAllSensorFromDB();
+	@Query("select s from Sensors s order by id")
+	public List<Sensors> getAllSensorFromDB();
 
-	@Query("select s.isActive from Sensor s where s.id = ?1")
+	@Query("select s.isActive from Sensors s where s.id = ?1")
 	public boolean getSensorState(Long sensorId);
 	
-	@Query("select s from Sensor s where s.name like ?1%")
-	public List<Sensor> getSensorByNameStartingWith(String str);
+	@Query("select s from Sensors s where s.name like ?1%")
+	public List<Sensors> getSensorByNameStartingWith(String str);
 
-	@Query("select s from Sensor s where s.name like %?1")
-	public List<Sensor> getSensorByNameEndingWith(String str);
+	@Query("select s from Sensors s where s.name like %?1")
+	public List<Sensors> getSensorByNameEndingWith(String str);
 	
-	@Query("select s from Sensor s where s.name like %?1%")
-	public List<Sensor> getSensorByNameContaining(String str);	
+	@Query("select s from Sensors s where s.name like %?1%")
+	public List<Sensors> getSensorsByNameContaining(String str);	
 	
-	public List<Sensor> getSensorsByName(String name);
+	public List<Sensors> getSensorsByName(String name);
 	
-	public List<Sensor> getSensorsByType(String type);
+	public List<Sensors> getSensorsByType(String type);
 	
-	public List<Sensor> getSensorByIsActiveTrue();
+	public List<Sensors> getSensorsByIsActiveTrue();
 	
-	public List<Sensor> getSensorByIsActiveFalse();
+	public List<Sensors> getSensorsByIsActiveFalse();
 		
 	//Update
 
 	@Modifying
-	@Query("update Sensor c set c.name = ?1 where id = ?2")
-	public void updateSensorName(String name, Long sensorId);
+	@Query("update Sensors c set c.name = ?1 where id = ?2")
+	public void updateSensorsName(String name, Long sensorId);
 	
 	@Modifying
-	@Query("update Sensor c set c.battery = ?1 where id = ?2")
-	public void updateSensorBattery(String battery, Long sensorId);
+	@Query("update Sensors c set c.battery = ?1 where id = ?2")
+	public void updateSensorsBattery(String battery, Long sensorId);
 	
 	
 	@Modifying
-	@Query("update Sensor c set c.type = ?1 where id = ?2")
+	@Query("update Sensors c set c.type = ?1 where id = ?2")
 	public void updateSensorTypeById(String type, Long sensorId);
 	
 	@Modifying
-	@Query("update Sensor c set c.isActive = ?1 where id = ?2")
+	@Query("update Sensors c set c.isActive = ?1 where id = ?2")
 	public void updateStateById(boolean state, Long id);
 	
 	@Modifying
-	@Query("update Sensor c set c.charge = ?1 where id = ?2")
+	@Query("update Sensors c set c.charge = ?1 where id = ?2")
 	public void updateSensorChargeById(String charge, Long sensorId);
 
 	@Modifying
-	@Query("update Sensor c set c.lastSurvey = ?1 where id = ?2")
+	@Query("update Sensors c set c.lastSurvey = ?1 where id = ?2")
 	public void updateLastSurveyById(LocalDateTime date, Long id);
 	
 	//Delete
 
 	@Modifying
-	@Query("delete Sensor c where id = ?1")
+	@Query("delete Sensors c where id = ?1")
 	public void deleteSensorById(Long sensorId);
 
 }
