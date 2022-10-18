@@ -21,8 +21,8 @@ public interface ParkingSensorsRepository extends CrudRepository<ParkingSensors,
 	
 	public ParkingSensors getParkingSensorsById(Long id);
 	
-	@Query("select p.latitude from ParkingSensors p where p.sensors.id = ?1")
-	public ParkingSensors getParkingSensorsBySensorId(Long sensorId);
+	@Query("select p from ParkingSensors p where p.sensors.id = ?1")
+	public ParkingSensors getParkingSensorsBySensorsId(Long sensorId);
 	
 	@Query("select p.latitude from ParkingSensors p where p.id = ?1")
 	public String getLatitudeById(Long id);

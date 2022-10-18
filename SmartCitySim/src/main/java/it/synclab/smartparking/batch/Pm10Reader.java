@@ -6,6 +6,7 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
+import org.springframework.beans.factory.annotation.Value;
 
 import it.synclab.smartparking.repository.model.Pm10;
 
@@ -19,9 +20,12 @@ public class Pm10Reader implements ItemReader<Pm10>
     private List<Pm10> pm10Data;
     
     //Set initial data that does not change
-  	private String address = "Corso Spagna 30";
-  	private String latitude = "45.388638";
-  	private String longitude = "11.928341";
+    @Value("${sensor.environmental.address}")
+    private String address;
+    @Value("${sensor.environmental.latitude}")
+  	private String latitude;
+  	@Value("${sensor.environmental.longitude}")
+  	private String longitude;
   	private Long fkSensorId = 17L;
     
     public Pm10Reader(List<SensorsData> sensorsDatas, List<Pm10> pm10Data)

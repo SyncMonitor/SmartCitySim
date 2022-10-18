@@ -39,10 +39,10 @@ public class StartUpServices {
 	private MailServices mailServices;
 	
 	@Autowired
-	private SensorsServices sensorServices;
+	private SensorsServices sensorsServices;
 	
 	@Autowired
-	private ParkingSensorsServices parkingSensorServices;
+	private ParkingSensorsServices parkingsensorsServices;
 	
 	@Autowired
 	private SensorMaintainerServices sensorMaintainerServices;
@@ -108,28 +108,29 @@ public class StartUpServices {
 		
 		for (Marker m : sensors.getMarkers().getMarkers()) {
 			boolean updated = false;
-			Sensors sensor = sensorServices.buildSensorFromMarker(m);
-			ParkingSensors parkSensor = parkingSensorServices.buildParkingSensorFromMarker(m);
-			Sensors sensorFromDB = sensorServices.getSensorById(sensor.getId());
-			ParkingSensors parkingSensorFromDB = parkingSensorServices.getParkingSensorBySensorId(parkSensor.getFkSensorId());
+			Sensors sensor = sensorsServices.buildSensorFromMarker(m);
+			ParkingSensors parkSensor = parkingsensorsServices.buildParkingSensorFromMarker(m);
+			Sensors sensorFromDB = sensorsServices.getSensorById(sensor.getId());
+			ParkingSensors parkingSensorFromDB = parkingsensorsServices.getParkingSensorBySensorId(parkSensor.getFkSensorId());
+			//Exception when name is null!! Is it intended?
 			if (!sensorFromDB.getName().equals(sensor.getName())) {
-				sensorServices.updateSensorNameById(sensor.getName(), sensor.getId());
+				sensorsServices.updateSensorNameById(sensor.getName(), sensor.getId());
 			}
 			if (!sensorFromDB.getBattery().equals(sensor.getBattery())) {
-				sensorServices.updateSensorBatteryById(sensor.getBattery(), sensor.getId());
+				sensorsServices.updateSensorBatteryById(sensor.getBattery(), sensor.getId());
 				updated = true;
 			}
 			if (!sensorFromDB.getCharge().equals(sensor.getCharge())) {
-				sensorServices.updateSensorChargeById(sensor.getCharge(), sensor.getId());
+				sensorsServices.updateSensorChargeById(sensor.getCharge(), sensor.getId());
 				if (sensor.getCharge().equals("2") || sensor.getCharge().equals("1")) {
 					sensorMaintainerServices.updateSensorMaintainerToBeChargedBySensorId(true, sensor.getId());
 				}
 			}
 			if (!sensorFromDB.getType().equals(sensor.getType())) {
-				sensorServices.updateSensorTypeById(sensor.getType(), sensor.getId());
+				sensorsServices.updateSensorTypeById(sensor.getType(), sensor.getId());
 			}
 			if (sensorFromDB.isActive() != sensor.isActive()) {
-				sensorServices.updateSensorStateById(sensor.isActive(), sensor.getId());
+				sensorsServices.updateSensorStateById(sensor.isActive(), sensor.getId());
 				updated = true;
 				if (!sensor.isActive()) {
 					sensorMaintainerServices.updateSensorMaintainerToBeRepairedBySensorId(true, sensor.getId());
@@ -137,28 +138,28 @@ public class StartUpServices {
 			}
 			
 			if(updated){
-				sensorServices.updateSensorLastSurveyById(sensor.getId());
+				sensorsServices.updateSensorLastSurveyById(sensor.getId());
 			}
 
 			else if(sensorFromDB.getLastSurvey().isBefore(LocalDateTime.now().minusDays(5))){
 				sensorMaintainerServices.updateSensorMaintainerIsUpdatingToFalseById(sensor.getId());
-				sensorServices.updateSensorLastSurveyById(sensor.getId());
+				sensorsServices.updateSensorLastSurveyById(sensor.getId());
 			}
 			if (!parkingSensorFromDB.getLatitude().equals(parkSensor.getLatitude())) {
 				// tmp.getId() because when extract data from sensor you don't
 //					have p.Id because this is automatically assigned by DB
-				parkingSensorServices.updateParkingSensorLatitudeById(parkSensor.getLatitude(), parkingSensorFromDB.getId());
+				parkingsensorsServices.updateParkingSensorLatitudeById(parkSensor.getLatitude(), parkingSensorFromDB.getId());
 			}
 			if (!parkingSensorFromDB.getLongitude().equals(parkSensor.getLongitude())) {
-				parkingSensorServices.updateParkingSensorLongitudeById(parkSensor.getLongitude(), parkingSensorFromDB.getId());
+				parkingsensorsServices.updateParkingSensorLongitudeById(parkSensor.getLongitude(), parkingSensorFromDB.getId());
 			}
 			if (!parkingSensorFromDB.getAddress().equals(parkSensor.getAddress())) {
-				parkingSensorServices.updateParkingSensorAddressById(parkSensor.getAddress(), parkingSensorFromDB.getId());
+				parkingsensorsServices.updateParkingSensorAddressById(parkSensor.getAddress(), parkingSensorFromDB.getId());
 			}
 			// value = state
 			if (parkingSensorFromDB.getValue() != parkSensor.getValue()) {
-				parkingSensorServices.updateParkingAreaValueById(parkSensor.getValue(), parkingSensorFromDB.getId());
-				parkingSensorServices.updateParkingSensorLastUpdateBySensorId(LocalDateTime.now(), sensor.getId());
+				parkingsensorsServices.updateParkingAreaValueById(parkSensor.getValue(), parkingSensorFromDB.getId());
+				parkingsensorsServices.updateParkingSensorLastUpdateBySensorId(LocalDateTime.now(), sensor.getId());
 				ParkingAreaStats stats = parkingStatsServices.buildParkingAreaStatsFromParkingArea(parkSensor);
 				parkingStatsServices.saveParkingAreaStats(stats);
 			}
@@ -198,22 +199,22 @@ public class StartUpServices {
 	}
 	
 	public void writeSensorsData() {
-		logger.debug("SensorServices START writeSensorData");
+		logger.debug("sensorsServices START writeSensorData");
 		try {
 			MarkerList sensors = readDataFromSources();
 			for (Marker m : sensors.getMarkers().getMarkers()) {
-				Sensors s = sensorServices.buildSensorFromMarker(m);
-				sensorServices.saveSensorData(s);
+				Sensors s = sensorsServices.buildSensorFromMarker(m);
+				sensorsServices.saveSensorData(s);
 			}
 		} catch (Exception e) {
-			logger.error("SensorServices - Error", e);
+			logger.error("sensorsServices - Error", e);
 		}
-		logger.debug("SensorServices END writeSensorData");
+		logger.debug("sensorsServices END writeSensorData");
 	}
 	
 	public void writeSensorsIfAdded(MarkerList sensors) {
 		int markerListSize = (sensors.getMarkers().markers.size());
-		int sensorListFromDB = (sensorServices.getAllSensorsFromDB().size());
+		int sensorListFromDB = (sensorsServices.getAllSensorsFromDB().size());
 		logger.debug("Number of sensors from file:{}", markerListSize);
 		logger.debug("Number of sensors from Data Base:{}", sensorListFromDB);
 		if (sensorListFromDB == 0) {
@@ -225,7 +226,7 @@ public class StartUpServices {
 			logger.debug("there is a new sensor.");
 			for (int i = sensorListFromDB; i < markerListSize; i++) {
 				Marker marker = sensors.getMarkers().getMarkers().get(i);
-				sensorServices.saveSensorData(sensorServices.buildSensorFromMarker(marker));
+				sensorsServices.saveSensorData(sensorsServices.buildSensorFromMarker(marker));
 				sensorMaintainerServices.saveSensorsMaintainerData(sensorMaintainerServices.buildSensorsMaintainerFromMarker(marker));
 			}
 		}

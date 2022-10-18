@@ -19,9 +19,9 @@ public class TempReader implements ItemReader<Temperature>
     private List<Temperature> tempData;
     
     //Set initial data that does not change
-  	private String address = "Corso Spagna 30";
-  	private String latitude = "45.388638";
-  	private String longitude = "11.928341";
+    private String address = "${sensor.parking.address}";
+  	private String latitude = "${sensor.parking.latitude}";
+  	private String longitude = "${sensor.parking.longitude}";
   	private Long fkSensorId = 18L;
     
     public TempReader(List<SensorsData> sensorsDatas, List<Temperature> tempData)

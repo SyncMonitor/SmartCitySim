@@ -33,7 +33,7 @@ public class ParkingSensorsServices {
 		logger.debug("ParkingService START buildParkingSensorFromMarker");
 		ParkingSensors parkSensor = new ParkingSensors();
 		if (marker.getId() != null) {
-			parkSensor.getSensors().setId(marker.getId());;
+			parkSensor.setSensors(sensorsRepository.getSensorById(marker.getId()));;
 		}
 		if (marker.getLat() != null) {
 			parkSensor.setLatitude(marker.getLat());
@@ -66,7 +66,7 @@ public class ParkingSensorsServices {
 
 	public ParkingSensors getParkingSensorBySensorId(Long sensorId) throws NullPointerException {
 		logger.debug("ParkingService START getParkingAreaBySensorId - sensorId:{}", sensorId);
-		ParkingSensors p = parkingAreaRepository.getParkingSensorsBySensorId(sensorId);
+		ParkingSensors p = parkingAreaRepository.getParkingSensorsBySensorsId(sensorId);
 		logger.debug("ParkingService END getParkingAreaBySensorId - sensorId:{}", p.getId());
 		return p;
 	}
