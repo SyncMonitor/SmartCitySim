@@ -6,11 +6,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.Data;
 
 @Entity
-@Table(name = "parking_area")
+@Table(name = "parking_area", 
+		uniqueConstraints = { @UniqueConstraint(name = "UniqueCoordinates", columnNames = { "latitude", "longitude" }) })
 @Data
 public class ParkingArea 
 {

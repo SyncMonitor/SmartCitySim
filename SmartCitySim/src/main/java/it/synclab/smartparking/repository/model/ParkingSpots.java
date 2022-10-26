@@ -8,12 +8,14 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.persistence.JoinColumn;
 
 import lombok.Data;
 
 @Entity
-@Table(name="parking_spots")
+@Table(name="parking_spots",
+		uniqueConstraints = { @UniqueConstraint(name = "UniqueCoordinates", columnNames = { "latitude", "longitude" }) })
 @Data
 public class ParkingSpots 
 {

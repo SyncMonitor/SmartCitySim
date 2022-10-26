@@ -24,7 +24,7 @@ import it.synclab.smartparking.model.MarkerList;
 import it.synclab.smartparking.repository.model.ParkingSensors;
 import it.synclab.smartparking.repository.model.ParkingAreaStats;
 import it.synclab.smartparking.repository.model.Sensors;
-import it.synclab.smartparking.repository.model.SensorsMaintainer;
+import it.synclab.smartparking.repository.model.MaintainersRegistry;
 
 @Component
 @Transactional
@@ -189,7 +189,7 @@ public class StartUpServices {
 		try {
 			MarkerList sensors = readDataFromSources();
 			for (Marker m : sensors.getMarkers().getMarkers()) {
-				SensorsMaintainer maintainer = sensorMaintainerServices.buildSensorsMaintainerFromMarker(m);
+				MaintainersRegistry maintainer = sensorMaintainerServices.buildSensorsMaintainerFromMarker(m);
 				sensorMaintainerServices.saveSensorsMaintainerData(maintainer);
 			}
 		} catch (Exception e) {

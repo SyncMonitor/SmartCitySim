@@ -35,7 +35,7 @@ import it.synclab.smartparking.repository.HumidRepository;
 
 @Configuration
 @EnableBatchProcessing
-public class SensorsBatch 
+public class EnvironmentalSensorsBatch 
 {	
 	@Autowired
 	private JobBuilderFactory jobBuilderFactory;

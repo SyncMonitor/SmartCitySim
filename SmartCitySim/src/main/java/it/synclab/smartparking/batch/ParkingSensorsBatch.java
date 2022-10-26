@@ -24,7 +24,7 @@ import it.synclab.smartparking.repository.SensorsRepository;
 
 @Configuration
 @EnableBatchProcessing
-public class SmartParkingBatch 
+public class ParkingSensorsBatch 
 {	
 	@Autowired
 	private JobBuilderFactory jobBuilderFactory;
@@ -97,7 +97,7 @@ public class SmartParkingBatch
 	}
 	
 	@Bean
-	public Step readingStep()
+	public Step importingStep()
 	{
 		return stepBuilderFactory.get("xmlFileToDBStep")
 				.<ParkingSensorsInputData,ParkingSensors>chunk(10)
@@ -112,7 +112,7 @@ public class SmartParkingBatch
 	{
 		return jobBuilderFactory.get("importDataParkingArea")
 				.flow(clearingStep())
-				.next(readingStep())
+				.next(importingStep())
 				.end()
 				.build();
 	}	

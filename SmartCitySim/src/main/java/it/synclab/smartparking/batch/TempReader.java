@@ -6,6 +6,7 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
+import org.springframework.beans.factory.annotation.Value;
 
 import it.synclab.smartparking.repository.model.Temperature;
 
@@ -19,9 +20,12 @@ public class TempReader implements ItemReader<Temperature>
     private List<Temperature> tempData;
     
     //Set initial data that does not change
-    private String address = "${sensor.parking.address}";
-  	private String latitude = "${sensor.parking.latitude}";
-  	private String longitude = "${sensor.parking.longitude}";
+    @Value("${sensor.environmental.address}")
+    private String address;
+    @Value("${sensor.environmental.latitude}")
+  	private String latitude;
+  	@Value("${sensor.environmental.longitude}")
+  	private String longitude;
   	private Long fkSensorId = 18L;
     
     public TempReader(List<SensorsData> sensorsDatas, List<Temperature> tempData)

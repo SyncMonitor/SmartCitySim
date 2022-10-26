@@ -48,7 +48,7 @@ public class Sensors {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "fk_sensor_id", referencedColumnName = "id")
-	private List<SensorsMaintainer> maintainers;
+	private List<MaintainersRegistry> maintainers;
 	
 	@ManyToMany(mappedBy = "sensors")
 	private List<ParkingSpots> parkingSpots;

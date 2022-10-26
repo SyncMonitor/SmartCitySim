@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.synclab.smartparking.model.Maintainer;
-import it.synclab.smartparking.repository.model.SensorsMaintainer;
+import it.synclab.smartparking.repository.model.MaintainersRegistry;
 import it.synclab.smartparking.service.SensorMaintainerServices;
 
 
@@ -37,7 +37,7 @@ public class SensorMaintainerResources {
 	@ResponseBody
 	public ResponseEntity<Object> getSensorsMaintainersBySensorId(@PathVariable Long sensorId) {
 		logger.info("SensorMaintainerResources - START getSensorsMaintainersBySensorId");
-		List<SensorsMaintainer> mainteiners = null;
+		List<MaintainersRegistry> mainteiners = null;
 		try {
 			mainteiners = sensorsMaintainerServices.getSensorsMaintainerDataBySensorId(sensorId);
 		} catch (NullPointerException e) {
@@ -56,7 +56,7 @@ public class SensorMaintainerResources {
 	@ResponseBody
 	public ResponseEntity<Object> getSensorsMaintainersById(@PathVariable Long id) {
 		logger.info("SensorMaintainerResources - START getSensorsMaintainersBySensorId");
-		SensorsMaintainer mainteiner = null;
+		MaintainersRegistry mainteiner = null;
 		try {
 			mainteiner = sensorsMaintainerServices.getSensorsMaintainerDataById(id);
 		} catch (NullPointerException e) {
@@ -75,7 +75,7 @@ public class SensorMaintainerResources {
 	@ResponseBody
 	public ResponseEntity<Object> getAllSensorsMaintainersData() {
 		logger.info("SensorMaintainerResources - START getAllSensorsMaintainersData");
-		List<SensorsMaintainer> mainteiners = new ArrayList<>();
+		List<MaintainersRegistry> mainteiners = new ArrayList<>();
 		try {
 			mainteiners = sensorsMaintainerServices.getAllSensorsMaintainerData();
 		} catch (Exception e) {

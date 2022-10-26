@@ -1,5 +1,7 @@
 package it.synclab.smartparking.batch;
 
+import java.time.LocalDateTime;
+
 import org.springframework.batch.item.ItemProcessor;
 
 import it.synclab.smartparking.repository.model.ParkingSensors;
@@ -15,6 +17,7 @@ public class ParkingSensorsProcessor implements ItemProcessor<ParkingSensorsInpu
 	{		
 		ParkingSensors parkingSensors = new ParkingSensors(parkingSensorsInputData);
 	 	parkingSensors.setSensors(sensorsRepository.getSensorById(parkingSensorsInputData.getfkSensorId()));
+	 	sensorsRepository.updateLastSurveyById(LocalDateTime.now(), parkingSensorsInputData.getfkSensorId());
 	 	
 	  	return parkingSensors;
 	}

@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import it.synclab.smartparking.model.Maintainer;
 import it.synclab.smartparking.model.Marker;
 import it.synclab.smartparking.repository.model.Sensors;
-import it.synclab.smartparking.repository.model.SensorsMaintainer;
+import it.synclab.smartparking.repository.model.MaintainersRegistry;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -29,9 +29,9 @@ public class SensorMaintainerServicesTest {
 
     Marker marker = new Marker();
     Sensors sensor = new Sensors();
-    SensorsMaintainer maintainer = new SensorsMaintainer();
-    SensorsMaintainer maintainer2 = new SensorsMaintainer();
-    List<SensorsMaintainer> list = new ArrayList<>();
+    MaintainersRegistry maintainer = new MaintainersRegistry();
+    MaintainersRegistry maintainer2 = new MaintainersRegistry();
+    List<MaintainersRegistry> list = new ArrayList<>();
     Long id = 0L;
 
     int size = 0;
@@ -59,22 +59,22 @@ public class SensorMaintainerServicesTest {
 
     @Test
     public void buildSensorsMaintainerFromMarkerTest() {
-        SensorsMaintainer sensorsMaintainer = sensorMaintainerServices.buildSensorsMaintainerFromMarker(marker);
+        MaintainersRegistry maintainersRegistry = sensorMaintainerServices.buildSensorsMaintainerFromMarker(marker);
 
-        Assert.assertEquals(marker.getId(), sensorsMaintainer.getFkSensorId());
-        Assert.assertEquals("ParkingArea", sensorsMaintainer.getType());
-        Assert.assertNull(sensorsMaintainer.getId());
-        Assert.assertNull(sensorsMaintainer.getOwnerName());
-        Assert.assertNull(sensorsMaintainer.getOwnerSurname());
-        Assert.assertNull(sensorsMaintainer.getCompany());
-        Assert.assertNull(sensorsMaintainer.getPhoneNumber());
-        Assert.assertNull(sensorsMaintainer.getMail());
-        Assert.assertFalse(sensorsMaintainer.isToBeCharged());
-        Assert.assertFalse(sensorsMaintainer.isToBeRepaired());
+        Assert.assertEquals(marker.getId(), maintainersRegistry.getFkSensorId());
+        Assert.assertEquals("ParkingArea", maintainersRegistry.getType());
+        Assert.assertNull(maintainersRegistry.getId());
+        Assert.assertNull(maintainersRegistry.getOwnerName());
+        Assert.assertNull(maintainersRegistry.getOwnerSurname());
+        Assert.assertNull(maintainersRegistry.getCompany());
+        Assert.assertNull(maintainersRegistry.getPhoneNumber());
+        Assert.assertNull(maintainersRegistry.getMail());
+        Assert.assertFalse(maintainersRegistry.isToBeCharged());
+        Assert.assertFalse(maintainersRegistry.isToBeRepaired());
 
         marker.setId(null);
-        sensorsMaintainer = sensorMaintainerServices.buildSensorsMaintainerFromMarker(marker);
-        Assert.assertNull(sensorsMaintainer.getFkSensorId());
+        maintainersRegistry = sensorMaintainerServices.buildSensorsMaintainerFromMarker(marker);
+        Assert.assertNull(maintainersRegistry.getFkSensorId());
     }
 
     @Test
@@ -115,7 +115,7 @@ public class SensorMaintainerServicesTest {
     public void getSensorsMaintainerDataByIdTest() {
     	sensorsServices.saveSensorData(sensor);
         Long maintainerId = sensorsServices.getSensorById(sensor.getId()).getMaintainers().get(0).getId();
-        SensorsMaintainer result = sensorMaintainerServices.getSensorsMaintainerDataById(maintainerId);
+        MaintainersRegistry result = sensorMaintainerServices.getSensorsMaintainerDataById(maintainerId);
         Assert.assertEquals(maintainer.getFkSensorId(), result.getFkSensorId());
         Assert.assertEquals(maintainer.getType(), result.getType());
         Assert.assertNull(result.getOwnerName());

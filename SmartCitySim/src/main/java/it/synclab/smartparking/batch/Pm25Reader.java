@@ -19,7 +19,7 @@ public class Pm25Reader implements ItemReader<Pm25>
     private List<SensorsData> sensorsDatas;
     private List<Pm25> pm25Data;
     
-    //Set initial data that does not change
+    //Set initial data that does not change manually
     @Value("${sensor.environmental.address}")
     private String address;
     @Value("${sensor.environmental.latitude}")

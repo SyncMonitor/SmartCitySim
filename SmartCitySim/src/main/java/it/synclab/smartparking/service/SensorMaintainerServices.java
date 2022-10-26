@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import it.synclab.smartparking.model.Maintainer;
 import it.synclab.smartparking.model.Marker;
 import it.synclab.smartparking.repository.SensorsMaintainerRepository;
-import it.synclab.smartparking.repository.model.SensorsMaintainer;
+import it.synclab.smartparking.repository.model.MaintainersRegistry;
 
 @Component
 public class SensorMaintainerServices {
@@ -21,54 +21,54 @@ public class SensorMaintainerServices {
 	private static final Logger logger = LogManager.getLogger(SensorMaintainerServices.class);
 
 	
-	public SensorsMaintainer buildSensorsMaintainerFromMarker(Marker marker) {
+	public MaintainersRegistry buildSensorsMaintainerFromMarker(Marker marker) {
 		logger.debug("SensorMaintainerServices START buildSensorsMaintainerFromMarker");
-		SensorsMaintainer sensorsMaintainer = new SensorsMaintainer();
+		MaintainersRegistry maintainersRegistry = new MaintainersRegistry();
 		if (marker.getId() != null) {
-			sensorsMaintainer.setFkSensorId(marker.getId());
+			maintainersRegistry.setFkSensorId(marker.getId());
 		}
 //		Type attribute missing in XML file
 //		if(m.getType() != null) {}
-		sensorsMaintainer.setType("ParkingArea");
+		maintainersRegistry.setType("ParkingArea");
 		logger.debug("SensorMaintainerServices END buildSensorsMaintainerFromMarker");
-		return sensorsMaintainer;
+		return maintainersRegistry;
 	}
 
-	public void saveSensorsMaintainerData(SensorsMaintainer sensorsMaintainer) {
+	public void saveSensorsMaintainerData(MaintainersRegistry maintainersRegistry) {
 		logger.debug("SensorMaintainerServices START saveSensorsMaintainerData");
 		try {
-			sensorsMaintainerRepository.save(sensorsMaintainer);
+			sensorsMaintainerRepository.save(maintainersRegistry);
 		} catch (Exception e) {
 			logger.error("SensorMaintainerServices - Error", e);
 		}
 		logger.debug("SensorMaintainerServices END saveSensorsMaintainerData");
 	}
 
-	public List<SensorsMaintainer> getAllSensorsMaintainerData() {
+	public List<MaintainersRegistry> getAllSensorsMaintainerData() {
 		logger.debug("SensorMaintainerServices START getAllSensorsMaintainerData");
-		List<SensorsMaintainer> maintainers = sensorsMaintainerRepository.getAllSensorsMaintainerData();
+		List<MaintainersRegistry> maintainers = sensorsMaintainerRepository.getAllSensorsMaintainerData();
 		logger.debug("SensorMaintainerServices END getAllSensorsMaintainerData");
 		return maintainers;
 	}
 
-	public List<SensorsMaintainer> getSensorsMaintainerDataBySensorId(Long sensorId) {
+	public List<MaintainersRegistry> getSensorsMaintainerDataBySensorId(Long sensorId) {
 		logger.debug("SensorMaintainerServices START getSensorsMaintainerDataBySensorId");
-		List<SensorsMaintainer> maintainers = sensorsMaintainerRepository.getSensorsMaintainersByFkSensorId(sensorId);
+		List<MaintainersRegistry> maintainers = sensorsMaintainerRepository.getSensorsMaintainersByFkSensorId(sensorId);
 		logger.debug("SensorMaintainerServices END getSensorsMaintainerDataBySensorId");
 		return maintainers;
 	}
 
-	public SensorsMaintainer getSensorsMaintainerDataById(Long id) {
+	public MaintainersRegistry getSensorsMaintainerDataById(Long id) {
 		logger.debug("SensorMaintainerServices START getSensorsMaintainerDataById");
-		SensorsMaintainer maintainers = sensorsMaintainerRepository.getSensorsMaintainerById(id);
+		MaintainersRegistry maintainers = sensorsMaintainerRepository.getSensorsMaintainerById(id);
 		logger.debug("SensorMaintainerServices END getSensorsMaintainerDataById");
 		return maintainers;
 	}
 
 	public void updateSensorsMaintainerDataBySensorId(Maintainer maintainer, Long sensorId) {
 		logger.debug("SensorMaintainerServices START updateSensorsMaintainerDataBySensorId");
-		List<SensorsMaintainer> maintainers = getSensorsMaintainerDataBySensorId(sensorId);
-		for (SensorsMaintainer m : maintainers) {
+		List<MaintainersRegistry> maintainers = getSensorsMaintainerDataBySensorId(sensorId);
+		for (MaintainersRegistry m : maintainers) {
 			if (maintainer.getName() != null) {
 				sensorsMaintainerRepository.updateNameById(maintainer.getName(), m.getId());
 			}

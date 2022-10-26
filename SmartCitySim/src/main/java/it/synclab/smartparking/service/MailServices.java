@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import it.synclab.smartparking.repository.model.ParkingSensors;
 import it.synclab.smartparking.repository.model.Sensors;
-import it.synclab.smartparking.repository.model.SensorsMaintainer;
+import it.synclab.smartparking.repository.model.MaintainersRegistry;
 
 @Component
 public class MailServices {
@@ -90,9 +90,9 @@ public class MailServices {
 	}
 
 	public void sendCorruptedSensorsMail() {
-		List<SensorsMaintainer> maintainers;
+		List<MaintainersRegistry> maintainers;
 		maintainers = sensorMaintainerServices.getAllSensorsMaintainerData();
-		for (SensorsMaintainer m : maintainers) {
+		for (MaintainersRegistry m : maintainers) {
 			if (m.isToBeRepaired()) {
 				Sensors s = sensorService.getSensorById(m.getFkSensorId());
 				logger.debug("mail: " + m.getMail());
@@ -106,9 +106,9 @@ public class MailServices {
 	}
 
 	public void sendLowBatterySensorsMail() {
-		List<SensorsMaintainer> maintainers;
+		List<MaintainersRegistry> maintainers;
 		maintainers = sensorMaintainerServices.getAllSensorsMaintainerData();
-		for (SensorsMaintainer m : maintainers) {
+		for (MaintainersRegistry m : maintainers) {
 			if (m.isToBeCharged()) {
 				Sensors s = sensorService.getSensorById(m.getFkSensorId());
 				logger.debug("mail: " + m.getMail());
@@ -122,9 +122,9 @@ public class MailServices {
 	}
 
 	public void sendNotUpdatingSensorsMail() {
-		List<SensorsMaintainer> maintainers;
+		List<MaintainersRegistry> maintainers;
 		maintainers = sensorMaintainerServices.getAllSensorsMaintainerData();
-		for (SensorsMaintainer m : maintainers) {
+		for (MaintainersRegistry m : maintainers) {
 			if (!m.isUpdating()) {
 				Sensors s = sensorService.getSensorById(m.getFkSensorId());
 				logger.debug("mail: " + m.getMail());
@@ -132,7 +132,7 @@ public class MailServices {
 				notUpdating += printMail(s, s.getParkingSensors()) + "\n\n";
 				String notUpdatingSensorMessage = notUpdatingStartMessage + notUpdating + notUpdatingEndMessage;
 				sendEmailParametersToQue(m.getMail(), notUpdatingSubject + " " + s.getName(), notUpdatingSensorMessage);
-				m.setIsUpdating(true);
+				m.setUpdating(true);
 			}
 		}
 	}
