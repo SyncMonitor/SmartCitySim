@@ -14,40 +14,19 @@ import it.synclab.smartparking.service.StartUpServices;
 @Configuration
 public class ContextConfig {
 
-	// @Bean
-	public StartUpServices createStartUpServices() {
-		return new StartUpServices();
-	}
-	
-	// @Bean
-	public SensorServices createPSensorServices() {
-		return new SensorServices();
-	}
-	
-	// @Bean
-	public ParkingAreaServices createParkingService() {
-		return new ParkingAreaServices();
-	}
-	
-	// @Bean
-	public SensorMaintainerServices createSensorMaintainerServices() {
-		return new SensorMaintainerServices();
-	}
-	
-	// @Bean
-	public ParkingStatsServices createParkingStatsServices() {
-		return new ParkingStatsServices();
-	}
-	
-	// @Bean
-	public MailServices MailServices() {
-		return new MailServices();
-	}
+	@Value("${spring.datasource.url}")
+	private String jdbcURL;
+
+	@Value("${spring.datasource.username}")
+	private String username;
+
+	@Value("${spring.datasource.password}")
+	private String password;
 
 	// Uncomment this if you want to use PostgerSQL DB
 	@Bean
 	public PostgreClient createPostgresClient() {
-		return new PostgreClient();
+		return new PostgreClient(jdbcURL,username,password);
 	}
 
 	// Uncomment this if you want to use MySQL DB
